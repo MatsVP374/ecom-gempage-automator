@@ -1,12 +1,12 @@
 {
   "slug": "payo-top",
-  "product_name": "",
+  "product_name": "פאיו",
   "hebrew_product_name": "פאיו | טופ יום נעים",
-  "product_type": "",
+  "product_type": "טופ",
   "regular_price": 359,
   "sale_price": 179,
-  "promotion": "",
-  "sale_reason": "",
+  "promotion": "50% הנחה — ₪359 → ₪179 (Shopify compare-at price)",
+  "sale_reason": "מבצע סוף העונה",
   "colors": [
     "כחול",
     "ירוק",
@@ -21,7 +21,13 @@
     "2XL",
     "3XL"
   ],
-  "features": [],
+  "features": [
+    "Light and pleasant, designed to keep you cool and fresh on hot days and cool evenings (product page: 'קליל ונעים – מעוצב לשמור עליכם קרירים ורעננים')",
+    "Breathable (product page: 'נוחות, עמידות ונשימה')",
+    "Tailored cut that glides gently over the body for a flattering silhouette (product page: 'החיתוך המותאם שלו ... מחליק בעדינות על גופכם, יוצר סילואט מחמיא')",
+    "Easy to pair with jeans, skirts or shorts; goes from day to evening (product page: 'קל להתאים עם הג'ינס, החצאיות או השורטים ... מיום ללילה')",
+    "Available in 4 colors: כחול, ירוק, אפור, סגול (Shopify variants)"
+  ],
   "existing_product_page": {
     "url": "https://adina-fashion.com/products/%D7%A4%D7%90%D7%99%D7%95-%D7%98%D7%95%D7%A4-%D7%99%D7%95%D7%9D-%D7%A0%D7%A2%D7%99%D7%9D",
     "content": "🌞 פאיו | טופ יום נעים – נוחות ללא מאמץ, סגנון אינסופי 🌞\nצעדו לעונה של שמש וחום עם הטופ יום נעים של פאיו. הטופ הזה מציע את הנוחות והגמישות שאתם צריכים ליום מלא הרפתקאות, מהבקרים השמשיים ועד הערבים הקרירים. סגנון ללא מאמץ ונוחות מדהימה—זהו התוספת המושלמת לארון הבגדים שלכם בעונת האביב והקיץ.\nלמה תתאהבו בטופ יום נעים של פאיו:\n🌿 איכות פרימיום – טופ זה מספק את הטוב ביותר בנוחות, עמידות ונשימה.\n🌿 קליל ונעים – מעוצב לשמור עליכם קרירים ורעננים, טופ זה מושלם לימים החמים של הקיץ ולערבים הקרירים, ומציע לכם התאמה נוחה ונטולת דאגות.\n🌿 התאמה מחמיאה – עם החיתוך המותאם שלו, הטופ יום נעים של פאיו מחליק בעדינות על גופכם, יוצר סילואט מחמיא שמדגיש את הצורה הטבעית שלכם ומוסיף נגיעה אלגנטית לכל Outfit.\n🌿 אפשרויות סגנון אינסופיות – זמין במגוון רחב של צבעים מרהיבים, טופ זה רב-תכליתי קל להתאים עם הג'ינס, החצאיות או השורטים האהובים עליכם. ניתן בקלות להעביר אותו מיום ללילה, עם או בלי קישוטים.\nאל תפספסו—הוסיפו את הטופ יום נעים של פאיו לעגלת הקניות שלכם היום וחוו את האיזון המושלם של נוחות, סגנון ואיכות שישאירו אתכם רעננים כל העונה! 🌸"
@@ -39,7 +45,7 @@
   "known_customer_problems": "",
   "central_problem_hint": "",
   "competitor_reference": "",
-  "extra_info": "Source: Shopify product gid://shopify/Product/16238995538307 (status ACTIVE). Shopify productType is 'Default'. Options: צבע (כחול, ירוק, אפור, סגול) × מידה (S–3XL) = 24 variants, all price 179.00 / compareAtPrice 359.00.",
+  "extra_info": "Source: Shopify product gid://shopify/Product/16238995538307 (status ACTIVE). Shopify productType is 'Default'. Options: צבע (כחול, ירוק, אפור, סגול) × מידה (S–3XL) = 24 variants, all price 179.00 / compareAtPrice 359.00. product_name and product_type taken literally from the Shopify title 'פאיו | טופ יום נעים'. Features are the product page's own claims; no material, neckline, sleeve length, length or closure is stated anywhere in Shopify. 'איכות פרימיום' and 'עמידות' were left out as unverifiable marketing claims. Sale reason confirmed by the user.",
   "ugc_needed": false,
   "launch_month": "2026-09",
   "created_at": "2026-09-25"
