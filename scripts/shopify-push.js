@@ -8,62 +8,57 @@ import { pathToFileURL } from 'node:url';
 import { loadProduct, loadEnv, parseArgs, esc, writeJSON } from './lib.js';
 import { validateProduct } from './validate.js';
 
-// Short Hebrew description for Shopify's body; the full page lives in the adina.pdp metafield.
-function descriptionHtml(page) {
-  const sec = (t) => page.sections?.find((s) => s.type === t);
-  const features = sec('features');
-  const size = sec('size_guide');
-  const parts = [`<div dir="${esc(page.dir)}">`, `<p>${esc(page.subtitle)}</p>`];
-  parts.push(`<ul>${(page.bullets ?? []).map((b) => `<li>${esc(b)}</li>`).join('')}</ul>`);
-  if (features) parts.push(`<h3>${esc(features.title)}</h3><ul>${features.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>`);
-  if (size)
-    parts.push(
-      `<h3>${esc(size.title)}</h3><table><tr>${size.headers.map((h) => `<th>${esc(h)}</th>`).join('')}</tr>${size.rows
-        .map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`)
-        .join('')}</table>${size.note ? `<p>${esc(size.note)}</p>` : ''}`,
-    );
-  parts.push('</div>');
-  return parts.join('\n');
+// Short Hebrew description for Shopify's body; the full founder letter lives in the adina.gempage metafield.
+function descriptionHtml(p) {
+  const offer = p.gempage.he.blocks?.find((b) => b.type === 'offer_box');
+  const bullets = offer?.bullets ?? [];
+  return `<div dir="rtl"><ul>${bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul></div>`;
 }
 
+// Sizes given as a range ("S–5XL") cannot become variants automatically.
+const isRange = (s) => /[–—-]/.test(String(s));
+
 export function buildShopifyPayload(p) {
-  const prod = p.product;
-  const he = p.page.he;
-  if (!prod || !he) throw new Error('product.json and page.he.json are required');
-  const sizes = prod.specs?.sizes ?? [];
-  const colors = (prod.specs?.colors ?? []).map((c) => (typeof c === 'string' ? c : c.he || c.en));
+  const input = p.input;
+  const he = p.gempage.he;
+  if (!input || !he) throw new Error('input.json and 03-gempage-copy.he.json are required');
+  const warnings = [];
+  const sizes = input.sizes ?? [];
+  const sizeRange = sizes.some(isRange);
+  if (sizeRange) warnings.push(`sizes are a range (${sizes.join(', ')}) — size variants are not created; add them in Shopify`);
+  const colors = (p.facts?.colors?.length ? p.facts.colors.map((c) => c.he || c.name) : input.colors) ?? [];
   const options = [];
-  if (sizes.length) options.push({ name: 'מידה', values: sizes });
+  if (sizes.length && !sizeRange) options.push({ name: 'מידה', values: sizes });
   if (colors.length) options.push({ name: 'צבע', values: colors });
-  const images = (p.input?.images ?? []).filter((u) => /^https?:\/\//.test(u));
+  const images = (input.existing_product_images ?? []).filter((u) => /^https?:\/\//.test(u));
+  const price = { price: String(input.sale_price), compareAtPrice: input.regular_price ? String(input.regular_price) : null };
 
   // Cartesian product of option values -> variants.
   let combos = [[]];
   for (const o of options) combos = combos.flatMap((c) => o.values.map((v) => [...c, { optionName: o.name, name: v }]));
-  const variants = options.length
-    ? combos.map((optionValues) => ({ optionValues, price: String(prod.pricing.price), compareAtPrice: prod.pricing.compare_at ? String(prod.pricing.compare_at) : null }))
-    : [];
+  const variants = options.length ? combos.map((optionValues) => ({ optionValues, ...price })) : [];
+  const headline = he.blocks?.find((b) => b.type === 'headline');
 
   return {
     product: {
-      title: prod.full_title_he,
-      handle: prod.shopify?.handle,
-      descriptionHtml: descriptionHtml(he),
-      vendor: prod.shopify?.vendor ?? 'Adina',
-      productType: prod.shopify?.product_type,
-      tags: prod.shopify?.tags ?? [],
+      title: input.hebrew_product_name,
+      descriptionHtml: descriptionHtml(p),
+      vendor: 'Adina Fashion',
+      productType: input.product_type,
+      tags: ['adina-launch', input.slug],
       status: 'DRAFT',
-      seo: { title: he.seo?.title, description: he.seo?.description },
+      seo: { title: `${input.hebrew_product_name} | Adina Fashion`.slice(0, 70), description: String(headline?.subtitle ?? '').slice(0, 320) },
       productOptions: options.map((o) => ({ name: o.name, values: o.values.map((name) => ({ name })) })),
       metafields: [
-        { namespace: 'adina', key: 'pdp', type: 'json', value: JSON.stringify(he) },
-        ...(p.page.en ? [{ namespace: 'adina', key: 'pdp_en', type: 'json', value: JSON.stringify(p.page.en) }] : []),
-        { namespace: 'adina', key: 'name_en', type: 'single_line_text_field', value: prod.full_title_en ?? '' },
+        { namespace: 'adina', key: 'gempage', type: 'json', value: JSON.stringify(he) },
+        ...(p.gempage.en ? [{ namespace: 'adina', key: 'gempage_en', type: 'json', value: JSON.stringify(p.gempage.en) }] : []),
+        { namespace: 'adina', key: 'product_name', type: 'single_line_text_field', value: input.product_name },
       ],
     },
     media: images.map((originalSource) => ({ originalSource, mediaContentType: 'IMAGE' })),
-    price: { price: String(prod.pricing.price), compareAtPrice: prod.pricing.compare_at ? String(prod.pricing.compare_at) : null },
+    price,
     variants,
+    warnings,
   };
 }
 
@@ -147,7 +142,6 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
       const pl = buildShopifyPayload(loadProduct(slug));
       console.log('DRY RUN — nothing sent. Add --push to create the product as DRAFT.\n');
       console.log(`title        ${pl.product.title}`);
-      console.log(`handle       ${pl.product.handle}`);
       console.log(`price        ₪${pl.price.price}${pl.price.compareAtPrice ? ` (compare ₪${pl.price.compareAtPrice})` : ''}`);
       console.log(`options      ${pl.product.productOptions.map((o) => `${o.name}: ${o.values.map((x) => x.name).join('/')}`).join(' · ') || '—'}`);
       console.log(`variants     ${pl.variants.length || 1}`);
@@ -155,6 +149,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
       console.log(`tags         ${pl.product.tags.join(', ')}`);
       console.log(`metafields   ${pl.product.metafields.map((m) => `${m.namespace}.${m.key}`).join(', ')}`);
       console.log(`status       DRAFT`);
+      pl.warnings.forEach((w) => console.log(`warning      ${w}`));
     } else {
       const r = await pushToShopify(slug);
       console.log(`✓ Created DRAFT ${r.handle}\n  ${r.admin_url}`);

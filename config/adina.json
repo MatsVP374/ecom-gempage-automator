@@ -1,0 +1,57 @@
+{
+  "_comment": "Global Adina Fashion facts. The single source for brand/trust/offer values. Never put product-specific data (prices, colors, sizes) here.",
+  "brand": "Adina Fashion",
+  "market": "Israel",
+  "language": "he",
+  "currency": "ILS",
+  "founder": {
+    "name": "Adina",
+    "name_he": "עדינה",
+    "experience": "15+ years in fashion",
+    "experience_years_label": "15+",
+    "business": "small family women's fashion boutique",
+    "city": "Tel Aviv",
+    "city_he": "תל אביב",
+    "brand_line_he": "מתל אביב, באהבה!"
+  },
+  "target_customer": {
+    "age_range": "45-65+",
+    "strongest_age_range": "50-65",
+    "summary": "Israeli woman who still cares about looking feminine, elegant and well dressed, but will no longer sacrifice comfort for looks. Never make her feel old; never patronize her."
+  },
+  "trust": {
+    "rating": 4.7,
+    "rating_scale": 5,
+    "reviews_label": "2,550+",
+    "reviews_min": 2550,
+    "returns_days": 30,
+    "shipping": "Free shipping with Israel Post",
+    "shipping_he": "משלוח חינם בדואר ישראל",
+    "returns_he": "30 יום להחזרה"
+  },
+  "bundle_discount": [
+    { "items": 2, "extra_discount_pct": 10, "label_he": "2 פריטים — 10% הנחה נוספת" },
+    { "items": 3, "extra_discount_pct": 15, "label_he": "3 פריטים — 15% הנחה נוספת" },
+    { "items": 4, "extra_discount_pct": 20, "label_he": "4 פריטים — 20% הנחה נוספת" },
+    { "items": 5, "or_more": true, "extra_discount_pct": 25, "label_he": "5 פריטים ומעלה — 25% הנחה נוספת" }
+  ],
+  "landing_page": {
+    "type": "founder-letter advertorial",
+    "byline_he": "מכתב מעדינה · מייסדת Adina Fashion",
+    "badge_he": "מכתב מהמייסדת",
+    "note_prefix_he": "הערה מעדינה —",
+    "greeting_he": "שלום, אני עדינה.",
+    "cta_he": "בדקי אם המידה והצבע שלך עדיין במלאי",
+    "cta_no_color_he": "בדקי אם המידה שלך עדיין במלאי",
+    "about_title_he": "אודות הכותבת",
+    "image_count": 7
+  },
+  "meta_ads": {
+    "count": 2,
+    "format": "long-form",
+    "perspective": "real customer testimonial, first person",
+    "destination": "founder-letter GemPage",
+    "types": ["discovery", "routine"]
+  },
+  "static_creatives": ["customer_discovery", "raw_boutique_offer", "everyday_use", "designed_hook"]
+}

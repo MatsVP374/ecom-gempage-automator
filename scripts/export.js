@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-// Build products/<slug>/output/: previews, GemPages export, Meta ads CSV, ad pack, Shopify payload.
+// Build products/<slug>/output/: the final launch package for GemPages, image generation and Meta Ads Manager.
 // Usage: node scripts/export.js <slug> | --all
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { loadProduct, listSlugs, parseArgs, renderPageDocument, renderPageFragment, PAGE_CSS, writeJSON, formatPrice } from './lib.js';
+import { loadProduct, loadConfig, listSlugs, parseArgs, renderLetterDocument, renderLetterFragment, LETTER_CSS, writeJSON, shekel } from './lib.js';
+import { validateProduct } from './validate.js';
 import { buildShopifyPayload } from './shopify-push.js';
 
 const csvCell = (v) => {
@@ -12,117 +13,196 @@ const csvCell = (v) => {
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
 
-function sectionCopy(s) {
-  const lines = [];
-  const push = (label, v) => v && lines.push(`**${label}:** ${v}`);
-  switch (s.type) {
+// Which of the 26 GemPage elements each block covers.
+const ELEMENTS = {
+  founder_header: '1–4 · byline, place/date, green note, badge',
+  headline: '5–6 · problem-first headline + subtitle',
+  hero: '7 · hero lifestyle photo',
+  founder_story: '8–10 · personal intro, problem story, discovery',
+  benefits: '11–12 · numbered benefits + photos',
+  comparison: '13 · comparison',
+  founder_quote: '14 · founder quote',
+  sale: '15–16 · why on sale now + old → sale price',
+  trust_bar: '17 · trust/statistics',
+  packing: '18 · boutique packing photo',
+  founder_observation: '19 · founder observation',
+  social_proof: '20 · social proof',
+  offer_box: '21–22 · offer box + product benefits',
+  bundle: '23 · bundle discount',
+  cta: '24 · CTA',
+  about: '25 · about Adina',
+  sticky_cta: '26 · sticky CTA',
+};
+
+function blockCopy(b) {
+  const L = [];
+  const f = (label, v) => v != null && v !== '' && L.push(`**${label}:** ${v}`);
+  switch (b.type) {
+    case 'founder_header':
+      f('Byline', b.byline); f('Plaats/datum', b.place_date); f('Groene banner', b.note); f('Badge', b.badge);
+      break;
+    case 'headline':
+      f('Headline', b.headline); f('Subtitle', b.subtitle);
+      break;
     case 'hero':
-      push('Headline', s.headline);
-      push('Subheadline', s.subheadline);
-      push('Beeld', s.image_hint);
+      f('Beeld', b.image); f('Alt', b.alt);
       break;
-    case 'story':
-      push('Titel', s.title);
-      lines.push(s.text);
-      push('Beeld', s.image_hint);
-      break;
-    case 'guarantee':
-      push('Titel', s.title);
-      lines.push(s.text);
-      break;
-    case 'cta':
-      push('Headline', s.headline);
-      push('Knop', s.button);
-      push('Subtekst', s.subtext);
+    case 'founder_story':
+      f('Aanhef', b.greeting);
+      (b.parts ?? []).forEach((p) => L.push(`_${p.role}_\n\n${p.text}`));
       break;
     case 'benefits':
-      push('Titel', s.title);
-      s.items.forEach((i) => lines.push(`- ${i.icon} **${i.title}** — ${i.text}`));
-      break;
-    case 'features':
-      push('Titel', s.title);
-      s.items.forEach((i) => lines.push(`- ${i}`));
+      f('Titel', b.title);
+      (b.items ?? []).forEach((i) => L.push(`### ${i.n}. ${i.headline}\n\n${i.text}\n\n📷 ${i.image ?? '—'}`));
       break;
     case 'comparison':
-      push('Titel', s.title);
-      lines.push(`| | ${s.us_label} | ${s.them_label} |`, '|---|---|---|');
-      s.rows.forEach((r) => lines.push(`| ${r.label} | ${r.us ? '✓' : '✗'} | ${r.them ? '✓' : '✗'} |`));
+      f('Titel', b.title);
+      L.push(`| | ${b.columns?.a} | ${b.columns?.b} | **${b.columns?.product}** |\n|---|---|---|---|\n${(b.rows ?? []).map((r) => `| ${r.label} | ${r.a} | ${r.b} | **${r.product}** |`).join('\n')}`);
       break;
-    case 'size_guide':
-      push('Titel', s.title);
-      lines.push(`| ${s.headers.join(' | ')} |`, `|${s.headers.map(() => '---').join('|')}|`);
-      s.rows.forEach((r) => lines.push(`| ${r.join(' | ')} |`));
-      push('Noot', s.note);
+    case 'founder_quote':
+      L.push(`> "${b.quote}"\n> — ${b.author}`);
       break;
-    case 'reviews':
-      push('Titel', s.title);
-      if (s.placeholder) lines.push('> ⚠️ PLACEHOLDER — vervang door echte reviews (Judge.me/Loox) vóór publicatie.');
-      s.items.forEach((r) => lines.push(`- ${'★'.repeat(r.rating ?? 5)} "${r.text}" — ${r.name}`));
+    case 'sale':
+      f('Titel', b.title);
+      (b.paragraphs ?? []).forEach((p) => L.push(p));
+      f('Prijs', `~~${shekel(b.regular_price)}~~ → ${shekel(b.sale_price)}`);
+      f('Beschikbaarheid', b.availability_note);
       break;
-    case 'faq':
-      push('Titel', s.title);
-      s.items.forEach((i) => lines.push(`- **${i.q}**\n  ${i.a}`));
+    case 'trust_bar':
+      L.push((b.items ?? []).map((i) => `**${i.value}** ${i.label}`).join(' · '));
+      break;
+    case 'packing':
+      f('Beeld', b.image); f('Caption', b.caption);
+      break;
+    case 'founder_observation':
+      L.push(b.text);
+      break;
+    case 'social_proof':
+      f('Rating', `★★★★★ ${b.rating}/5 · ${b.reviews_label}`); L.push(b.text);
+      (b.quotes ?? []).forEach((q) => L.push(`> ${q.text} _(testimonial ${q.testimonial_id})_`));
+      break;
+    case 'offer_box':
+      f('Productnaam', b.product_name); f('Rating', b.rating_line); f('Prijs', `~~${shekel(b.regular_price)}~~ → ${shekel(b.sale_price)}`);
+      L.push((b.bullets ?? []).map((x) => `- ✓ ${x}`).join('\n'));
+      break;
+    case 'bundle':
+      f('Titel', b.title);
+      L.push((b.tiers ?? []).map((t) => `- ${t.label}`).join('\n'));
+      break;
+    case 'cta':
+      f('Knop', b.button); f('Subtekst', b.subtext);
+      break;
+    case 'about':
+      f('Titel', b.title); L.push(b.text); f('Afsluiting', b.signoff);
+      break;
+    case 'sticky_cta':
+      f('Sticky', b.text);
       break;
   }
-  return lines.join('\n');
+  return L.join('\n\n');
 }
 
-function gempagesCopy(page, product) {
+function gempageCopyMd(p) {
+  const g = p.gempage.he;
   const out = [
-    `# GemPages copy — ${page.title}`,
+    `# GemPage — ${p.input?.hebrew_product_name ?? p.slug}`,
     '',
-    `Taal: ${page.lang} · richting: ${page.dir}. Plak per blok in de GemPages-template (zelfde volgorde).`,
-    'Titel, prijs, varianten en afbeeldingen komen dynamisch uit Shopify.',
-    '',
-    '## Boven de vouw',
-    `**Titel:** ${page.title}`,
-    `**Subtitel:** ${page.subtitle}`,
-    `**Prijs:** ${formatPrice(page.price?.current, page.price?.currency)}${page.price?.compare_at ? ` (was ${formatPrice(page.price.compare_at, page.price.currency)})` : ''}`,
-    page.badge ? `**Badge:** ${page.badge}` : '',
-    '**Bullets:**',
-    ...(page.bullets ?? []).map((b) => `- ✓ ${b}`),
-    `**Knop:** ${page.cta}`,
-    `**Trust line:** ${page.trust_line}`,
+    'Founder-letter advertorial · Hebreeuws · RTL. Plak blok voor blok in de Adina GemPages-template.',
+    'Beelden: zie `image-prompts.md` (📷 = ID uit het beeldplan).',
     '',
   ];
-  (page.sections ?? []).forEach((s, i) => out.push(`## ${i + 1}. ${s.type}`, sectionCopy(s), ''));
-  out.push('## SEO', `**Title:** ${page.seo?.title}`, `**Description:** ${page.seo?.description}`);
-  if (product?.shopify?.handle) out.push(`**Handle:** ${product.shopify.handle}`);
-  return out.filter((l) => l !== '').join('\n\n').replace(/\n\n(- |\| )/g, '\n$1') + '\n';
+  for (const b of g.blocks ?? []) out.push(`## ${b.type}  \n<sub>GemPage-element ${ELEMENTS[b.type] ?? ''}</sub>`, '', `<div dir="rtl">\n\n${blockCopy(b)}\n\n</div>`, '');
+  return out.join('\n');
 }
 
-function metaCsv(slug, ads) {
-  const header = ['ad_name', 'language', 'angle_id', 'angle_name', 'awareness', 'format', 'primary_text', 'headline', 'description'];
-  const rows = [header];
-  const angles = Object.fromEntries((ads.angles ?? []).map((a) => [a.id, a]));
-  for (const lang of ['he', 'en'])
-    for (const set of ads.copy?.[lang] ?? []) {
-      const a = angles[set.angle_id] ?? {};
-      (set.primary_texts ?? []).forEach((pt, pi) =>
-        (set.headlines ?? []).forEach((h, hi) =>
-          rows.push([`${slug}_${set.angle_id}_${lang}_p${pi + 1}h${hi + 1}`, lang, set.angle_id, a.name, a.awareness, a.format, pt, h, (set.descriptions ?? [])[0] ?? '']),
-        ),
-      );
-    }
-  // BOM so Excel/Sheets open Hebrew correctly.
+function imagePromptsMd(p) {
+  const plan = p.plan?.images ?? [];
+  const prompts = Object.fromEntries((p.prompts?.prompts ?? []).map((x) => [x.image_id, x]));
+  const out = [`# GemPage image plan + prompts — ${p.input?.product_name ?? p.slug}`, ''];
+  out.push('Bestaande productfoto\'s worden niet opnieuw gegenereerd. Alleen beelden met `generate` hebben een prompt.', '');
+  out.push('| ID | Rol | Blok | Doel | Bron | Kleur |', '|---|---|---|---|---|---|');
+  plan.forEach((i) => out.push(`| ${i.id} | ${i.role} | ${i.block}${i.benefit_n ? ` #${i.benefit_n}` : ''} | ${i.purpose} | ${i.source === 'existing' ? `existing: ${i.existing_image}` : 'generate'} | ${i.product_color} |`));
+  for (const i of plan) {
+    const x = prompts[i.id];
+    if (!x) continue;
+    out.push('', `## ${i.id} — ${i.role} → ${i.block}${i.benefit_n ? ` #${i.benefit_n}` : ''}`, '');
+    out.push(`**Aspect ratio:** ${x.aspect_ratio ?? '—'} · **Referentiebeelden:** ${(x.reference_images ?? []).join(', ') || '—'}`, '');
+    out.push('| Veld | Waarde |', '|---|---|', ...Object.entries(x.fields ?? {}).map(([k, v]) => `| ${k} | ${String(v).replace(/\|/g, '/')} |`), '');
+    out.push('**Prompt:**', '', '```', x.prompt, '```');
+  }
+  return out.join('\n') + '\n';
+}
+
+function metaAdsMd(p) {
+  const a = p.ads;
+  const out = [];
+  if (a.status !== 'ready') out.push(`⚠️ STATUS: ${a.status.toUpperCase()}`, ...(a.flags ?? []).map((x) => `- ${x}`), '');
+  (a.ads ?? []).forEach((ad, i) => {
+    out.push(`AD ${ad.id === 'ad2' ? 2 : ad.id === 'ad1' ? 1 : i + 1} — ${ad.angle}`, '', 'PRIMARY TEXT:', ad.primary_text, '', 'HEADLINE:', ad.headline, '', 'DESCRIPTION:', ad.description, '', '');
+  });
+  return out.join('\n').trimEnd() + '\n';
+}
+
+function metaAdsCsv(p) {
+  const rows = [['ad', 'type', 'angle', 'testimonial_id', 'primary_text', 'headline', 'description']];
+  (p.ads.ads ?? []).forEach((a) => rows.push([a.id, a.type, a.angle, a.testimonial_id, a.primary_text, a.headline, a.description]));
   return '﻿' + rows.map((r) => r.map(csvCell).join(',')).join('\r\n') + '\r\n';
 }
 
-function adPackMd(p) {
-  const ads = p.ads;
-  const out = [`# Ad pack — ${p.product?.full_title_he ?? p.slug}`, ''];
-  out.push('## Angles', '', '| id | naam | awareness | hook | format |', '|---|---|---|---|---|');
-  for (const a of ads.angles ?? []) out.push(`| ${a.id} | ${a.name} | ${a.awareness} | ${a.hook_en} | ${a.format} |`);
-  for (const lang of ['he', 'en']) {
-    out.push('', `## Copy — ${lang.toUpperCase()}`);
-    for (const set of ads.copy?.[lang] ?? []) {
-      out.push('', `### ${set.angle_id}`, '', '**Primary texts**', '');
-      set.primary_texts.forEach((t, i) => out.push(`${i + 1}. ${t.replace(/\n/g, '  \n   ')}`, ''));
-      out.push('**Headlines**', '', ...set.headlines.map((h) => `- ${h}`), '');
-      if (set.descriptions?.length) out.push('**Descriptions**', '', ...set.descriptions.map((d) => `- ${d}`));
-    }
+function creativePlanMd(p) {
+  const out = [`# Creative plan — ${p.input?.product_name ?? p.slug}`, ''];
+  for (const c of p.creatives?.creatives ?? []) {
+    out.push(`## ${c.id} — ${c.type} (matches ${c.matches})`, '', `**Concept:** ${c.concept}`, '', `**Visual:** ${c.visual}`, '');
+    if (c.overlay_text_he) out.push(`**Tekst op beeld:** <span dir="rtl">${c.overlay_text_he}</span>`, '');
+    out.push(`**Kleur:** ${c.product_color} · **Formaat:** ${c.format}`, '', '```', c.prompt, '```', '');
+  }
+  const u = p.ugc;
+  out.push('## UGC-video', '');
+  if (!u?.needed) out.push(`Niet nodig (${u?.reason ?? 'not requested'}).`);
+  else {
+    out.push(`**Waarom:** ${u.reason ?? ''}`, '', `**Stem:** ${u.voice ?? ''}`, '', '| Tijd | Beeld | Voice-over (HE) |', '|---|---|---|');
+    (u.script ?? []).forEach((s) => out.push(`| ${s.time} | ${s.visual} | <span dir="rtl">${s.voice_he}</span> |`));
   }
   return out.join('\n') + '\n';
+}
+
+function launchPackageMd(p, v) {
+  const cfg = loadConfig();
+  const plan = p.plan?.images ?? [];
+  const gen = plan.filter((i) => i.source === 'generate').length;
+  const ads = p.ads;
+  const ok = (b) => (b ? '✓' : '✗');
+  const step = (id) => p.steps.find((s) => s.id === id)?.done;
+  const lines = [
+    `# ADINA PRODUCT LAUNCH — ${p.input?.hebrew_product_name ?? p.slug}`,
+    '',
+    '```',
+    `${ok(step('facts') && !(p.facts?.missing ?? []).length)} Product facts validated        ${(p.facts?.missing ?? []).length} missing · ${(p.facts?.unverified ?? []).length} unverified`,
+    `${ok(step('angle'))} Central angle created          "${p.angle?.central_problem ?? '—'}"`,
+    `${ok(step('gempage-he'))} GemPage copy complete          ${(p.gempage.he?.blocks ?? []).length} blocks · HE + EN master`,
+    `${ok(plan.length)} ${plan.length} GemPage images planned       ${gen} generate · ${plan.length - gen} existing`,
+    `${ok(step('image-prompts'))} Image prompts complete         ${(p.prompts?.prompts ?? []).length}`,
+    ads?.status === 'ready'
+      ? `✓ 2 Meta ads complete`
+      : `✗ Meta ads ${String(ads?.status ?? 'missing').toUpperCase()}${ads?.flags?.length ? ` — ${ads.flags[0]}` : ''}`,
+    `${ok(step('creatives'))} Creative plan complete         ${(p.creatives?.creatives ?? []).length} statics · UGC: ${p.ugc?.needed ? 'yes' : 'no'}`,
+    `${ok(!v.errors.length)} QA ${v.errors.length ? 'FAILED' : 'passed'}                      ${v.errors.length} errors · ${v.warnings.length} warnings`,
+    '',
+    v.ready ? 'READY FOR:' : 'NOT READY YET — resolve the flags/errors below. Available so far:',
+    '→ GemPages          gempage-copy.md · gempage.he.html · gempage-embed.html',
+    '→ Image generation  image-prompts.md',
+    `→ Meta Ads Manager  ${ads?.status === 'ready' ? 'meta-ads.md · meta-ads.csv · creative-plan.md' : '(blocked) · creative-plan.md'}`,
+    '```',
+    '',
+    '## Offer (from input + config)',
+    `- ${shekel(p.input?.regular_price)} → ${shekel(p.input?.sale_price)} · ${p.input?.promotion ?? ''} · ${p.input?.sale_reason ?? ''}`,
+    `- Bundle: ${cfg.bundle_discount.map((t) => `${t.items}${t.or_more ? '+' : ''} = ${t.extra_discount_pct}%`).join(' · ')}`,
+    `- ${cfg.trust.shipping} · ${cfg.trust.returns_days} days returns · ${cfg.trust.rating}/${cfg.trust.rating_scale} from ${cfg.trust.reviews_label} reviews · ${cfg.founder.experience}`,
+  ];
+  if (v.flags.length) lines.push('', '## Flags', ...v.flags.map((f) => `- ${f}`));
+  if (v.errors.length) lines.push('', '## Errors', ...v.errors.map((e) => `- ${e}`));
+  if (v.warnings.length) lines.push('', '## Warnings', ...v.warnings.map((w) => `- ${w}`));
+  return lines.join('\n') + '\n';
 }
 
 export function exportProduct(slug) {
@@ -135,20 +215,30 @@ export function exportProduct(slug) {
     fs.writeFileSync(path.join(out, name), content);
     written.push(name);
   };
-
-  for (const lang of ['en', 'he']) if (p.page[lang]) write(`page.${lang}.html`, renderPageDocument(p.page[lang]));
-  const main = p.page.he ?? p.page.en;
-  if (main) {
-    write('gempages.html', `<style>${PAGE_CSS}</style>\n${renderPageFragment(main)}\n`);
-    write('gempages-copy.md', gempagesCopy(main, p.product));
+  const opts = { plan: p.plan, input: p.input };
+  for (const lang of ['en', 'he']) if (p.gempage[lang]) write(`gempage.${lang}.html`, renderLetterDocument(p.gempage[lang], opts));
+  if (p.gempage.he) {
+    write('gempage-embed.html', `<style>${LETTER_CSS}</style>\n${renderLetterFragment(p.gempage.he, opts)}\n`);
+    write('gempage-copy.md', gempageCopyMd(p));
   }
-  if (p.ads?.copy) {
-    write('meta-ads.csv', metaCsv(slug, p.ads));
-    write('ad-pack.md', adPackMd(p));
+  if (p.plan) write('image-prompts.md', imagePromptsMd(p));
+  if (p.ads) {
+    write('meta-ads.md', metaAdsMd(p));
+    if (p.ads.ads?.length) write('meta-ads.csv', metaAdsCsv(p));
   }
-  if (p.product && p.page.he) {
-    writeJSON(path.join(out, 'shopify-product.json'), buildShopifyPayload(p));
-    written.push('shopify-product.json');
+  if (p.creatives) write('creative-plan.md', creativePlanMd(p));
+  if (p.input && p.gempage.he) {
+    try {
+      writeJSON(path.join(out, 'shopify-product.json'), buildShopifyPayload(p));
+      written.push('shopify-product.json');
+    } catch {}
+  }
+  // The package summary is written once the last pipeline steps exist.
+  if (p.ads && p.creatives && p.qa) {
+    const pre = validateProduct(slug);
+    // launch-package.md itself completes the last step, so recompute readiness as if it exists.
+    pre.ready = !pre.errors.length && p.ads.status === 'ready' && pre.steps.every((s) => s.done || s.id === 'package');
+    write('launch-package.md', launchPackageMd(p, pre));
   }
   return written;
 }
@@ -157,8 +247,8 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const a = parseArgs(process.argv.slice(2));
   const slugs = a.all ? listSlugs() : a._;
   if (!slugs.length) {
-    console.error('Usage: node scripts/export.js <slug> | --all');
-    process.exit(1);
+    console.log(a.all ? 'No products yet.' : 'Usage: node scripts/export.js <slug> | --all');
+    process.exit(a.all ? 0 : 1);
   }
   let failed = false;
   for (const slug of slugs) {

@@ -1,34 +1,29 @@
-# Klant-avatar
+# Klant
 
-> ✏️ Startversie — vul aan met echte klantinzichten (reviews, DM's, retourredenen).
+## Wie
+Israëlische vrouw van ongeveer **45–65+**. De sterkste copy spreekt vooral vrouwen van **50–65** aan.
 
-## "Orit", 54, Ra'anana
-- Getrouwd, 2–3 kinderen (deels uit huis), mogelijk al oma. Werkt (onderwijs, zorg,
-  administratie, eigen zaak) of net met pensioen.
-- Koopt op haar telefoon, 's avonds, via Facebook/Instagram. Vertrouwt pas na reviews,
-  duidelijke maattabel en retourbeleid.
-- Draagt maat M–XXL. Lichaam is veranderd; ze wil **flatteren en camoufleren** (buik, bovenarmen)
-  zonder zich "oud" of "verstopt" te voelen.
+Ze wil er nog steeds vrouwelijk, elegant en goed gekleed uitzien, maar is **niet meer bereid comfort
+op te offeren** alleen omdat iets er goed uitziet. Ze is een volwassen vrouw die weet wat ze mooi
+vindt, en ze waardeert producten die het dagelijkse aankleden makkelijker maken.
 
-## Pijn
-- Het is 8 maanden per jaar heet en vochtig. Synthetische stoffen plakken en zweten.
-- Winkels hebben óf jonge, strakke fast fashion óf "tante-kleding".
-- Online bestellen = gok met maten; retourneren naar het buitenland is gedoe.
-- Voelt zich onzichtbaar; wil zich weer verzorgd en mooi voelen op familiefeesten, shabbat-diner,
-  werk, bruiloften en bar/bat mitswa's.
+## Terugkerende problemen (afhankelijk van het product)
+- kleding die te veel plakt of nauw aansluit
+- oncomfortabele pasvormen
+- het te warm of te koud hebben; lastig laagjes combineren
+- schoenen die pijn doen na lopen of staan
+- comfortabele producten die er orthopedisch of onaantrekkelijk uitzien
+- kleding die er goed uitziet maar in het echte leven irritant is
+- een kast vol dingen die ze zelden echt draagt
 
-## Verlangen
-- Eén kledingstuk dat meteen "af" is: aan, goed, klaar.
-- Complimenten van dochter/vriendinnen: "איפה קנית את זה?"
-- Kwaliteit die voelt als een boetiek, voor een eerlijke prijs.
+Gebruik alleen de problemen die bij het aangeleverde product passen; `input.known_customer_problems`
+gaat voor.
 
-## Bezwaren
-- "Valt het klein/groot?" → maattabel in cm + advies ("twijfel je, neem een maat groter").
-- "Is het doorschijnend?" → eerlijk antwoord.
-- "Hoe lang duurt verzending?" → exact benoemen.
-- "Kan ik retourneren?" → 30 dagen, eenvoudig.
-- "Is het echt linnen/katoen?" → samenstelling in procenten.
+## Toon
+Laat haar zich **nooit "oud" voelen**. Geen betutteling. Noem haar leeftijd niet in ads.
 
-## Momenten (voor ads)
-Shabbat-diner, familiefeest, zomer in Tel Aviv/Eilat, werk, vakantie, kleinkinderen ophalen,
-koffie met vriendinnen, Rosh Hashana / Pesach (feestkleding).
+## Echte situaties (om voordelen in te laten landen)
+Met jeans · diner · koffie · boodschappen · wandelen · reizen · de ochtend · de avond ·
+wisselend weer · uren op de been · werk · familie · sjabbat/feestdagen · kleinkinderen.
+Gebruik alleen situaties die logisch uit de productfeiten volgen. In testimonial-ads alleen
+situaties die de klant zelf noemt.

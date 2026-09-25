@@ -2,12 +2,13 @@
 // Adina Product Launcher — local UI. Zero dependencies.
 // npm start  →  http://localhost:3000
 // "Generate" runs Claude Code headless (`claude -p "/launch-product <slug>"`) in this repo.
+// Generate is refused while required product input is missing: the workflow never invents facts.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
-import { ROOT, loadEnv, loadProduct, listSlugs, productDir, renderPageDocument } from '../scripts/lib.js';
-import { createProduct } from '../scripts/new-product.js';
+import { ROOT, loadEnv, loadProduct, listSlugs, productDir, renderLetterDocument, missingInput, loadConfig } from '../scripts/lib.js';
+import { saveInput } from '../scripts/new-product.js';
 import { validateProduct } from '../scripts/validate.js';
 import { exportProduct } from '../scripts/export.js';
 import { buildShopifyPayload, pushToShopify } from '../scripts/shopify-push.js';
@@ -23,8 +24,7 @@ const jobs = new Map();
 const COMMANDS = {
   launch: (slug, extra) => `/launch-product ${slug}${extra ? ' ' + extra : ''}`,
   step: (slug, extra) => `/launch-step ${slug} ${extra}`,
-  hebrew: (slug, extra) => `/translate-he ${slug}${extra ? ' ' + extra : ''}`,
-  ads: (slug, extra) => `/ad-pack ${slug}${extra ? ' ' + extra : ''}`,
+  'meta-ads': (slug, extra) => `/meta-ads ${slug}${extra ? ' ' + extra : ''}`,
 };
 
 function runClaude(slug, mode, extra = '') {
@@ -33,6 +33,8 @@ function runClaude(slug, mode, extra = '') {
   const build = COMMANDS[mode];
   if (!build) throw new Error(`Unknown mode "${mode}"`);
   if (mode === 'step' && !extra.trim()) throw new Error('Choose a step to re-run');
+  const missing = missingInput(loadProduct(slug).input);
+  if (missing.length) throw new Error(`Input incomplete — the workflow will not invent these. Missing: ${missing.map((m) => m.field).join(', ')}`);
   const prompt = build(slug, extra.replace(/[\r\n]+/g, ' ').trim());
   const job = { running: true, log: [`$ claude -p "${prompt}"`], started: new Date().toISOString(), finished: null, code: null };
   jobs.set(slug, job);
@@ -111,11 +113,11 @@ async function readBody(req) {
   return data ? JSON.parse(data) : {};
 }
 
-const MIME = { '.html': 'text/html; charset=utf-8', '.md': 'text/markdown; charset=utf-8', '.csv': 'text/csv; charset=utf-8', '.json': 'application/json; charset=utf-8', '.log': 'text/plain; charset=utf-8' };
+const MIME = { '.js': 'text/javascript; charset=utf-8', '.html': 'text/html; charset=utf-8', '.md': 'text/markdown; charset=utf-8', '.csv': 'text/csv; charset=utf-8', '.json': 'application/json; charset=utf-8', '.log': 'text/plain; charset=utf-8' };
 
 const summary = (slug) => {
   const p = loadProduct(slug);
-  return { slug, title: p.product?.full_title_he ?? p.product?.full_title_en ?? slug, steps: p.steps, running: !!jobs.get(slug)?.running };
+  return { slug, title: p.input?.hebrew_product_name || p.input?.product_name || slug, steps: p.steps, running: !!jobs.get(slug)?.running, missing: missingInput(p.input).length };
 };
 
 async function route(req, res) {
@@ -132,8 +134,7 @@ async function route(req, res) {
     if (m === 'GET') return send(res, 200, listSlugs().map(summary));
     if (m === 'POST') {
       const b = await readBody(req);
-      const n = (v) => (v === '' || v == null ? null : Number(v));
-      createProduct(b.slug, { url: b.url, price: n(b.price), compare: n(b.compare), cost: n(b.cost), costCurrency: b.cost_currency, category: b.category, target: b.target, notes: b.notes });
+      saveInput(b.slug, b, { create: true });
       return send(res, 201, summary(b.slug));
     }
   }
@@ -149,13 +150,20 @@ async function route(req, res) {
       const job = jobs.get(slug);
       const outDir = path.join(p.dir, 'output');
       const outputs = fs.existsSync(outDir) ? fs.readdirSync(outDir).sort() : [];
-      return send(res, 200, { ...p, dir: undefined, outputs, job: job ? { ...job, log: job.log.slice(-400) } : null });
+      return send(res, 200, { ...p, dir: undefined, outputs, missing: missingInput(p.input), config: loadConfig(), job: job ? { ...job, log: job.log.slice(-400) } : null });
+    }
+    if (m === 'PUT' && action === 'input') {
+      if (jobs.get(slug)?.running) throw new Error('A job is running for this product — wait until it finishes');
+      const b = await readBody(req);
+      const current = loadProduct(slug).input ?? {};
+      return send(res, 200, saveInput(slug, { ...b, created_at: current.created_at }));
     }
     if (m === 'GET' && action === 'preview') {
       const lang = url.searchParams.get('lang') === 'en' ? 'en' : 'he';
-      const page = loadProduct(slug).page[lang];
-      if (!page) return send(res, 200, `<p style="font-family:sans-serif;padding:2em;color:#888">page.${lang}.json does not exist yet.</p>`, MIME['.html']);
-      return send(res, 200, renderPageDocument(page), MIME['.html']);
+      const p = loadProduct(slug);
+      const page = p.gempage[lang];
+      if (!page) return send(res, 200, `<p style="font-family:sans-serif;padding:2em;color:#888">03-gempage-copy.${lang}.json does not exist yet.</p>`, MIME['.html']);
+      return send(res, 200, renderLetterDocument(page, { plan: p.plan, input: p.input }), MIME['.html']);
     }
     if (m === 'GET' && action === 'output' && parts[4]) {
       const file = path.join(productDir(slug), 'output', path.basename(parts[4]));
@@ -177,7 +185,7 @@ async function route(req, res) {
       const b = await readBody(req);
       if (!b.push) {
         const pl = buildShopifyPayload(loadProduct(slug));
-        return send(res, 200, { dryRun: true, title: pl.product.title, handle: pl.product.handle, price: pl.price, variants: pl.variants.length || 1, images: pl.media.length, tags: pl.product.tags, status: 'DRAFT' });
+        return send(res, 200, { dryRun: true, title: pl.product.title, price: pl.price, variants: pl.variants.length || 1, images: pl.media.length, tags: pl.product.tags, status: 'DRAFT', warnings: pl.warnings });
       }
       return send(res, 200, await pushToShopify(slug));
     }

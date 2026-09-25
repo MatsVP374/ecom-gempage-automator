@@ -4,21 +4,42 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const PRODUCTS_DIR = path.join(ROOT, 'products');
+export let PRODUCTS_DIR = process.env.ADINA_PRODUCTS_DIR ? path.resolve(process.env.ADINA_PRODUCTS_DIR) : path.join(ROOT, 'products');
+export const CONFIG_FILE = path.join(ROOT, 'config', 'adina.json');
 
-// Pipeline steps in order; `file` is what marks the step as done.
+// Output files per product, named as in the final launch package.
+export const FILES = {
+  input: 'input.json',
+  facts: '01-product-facts.json',
+  angle: '02-central-angle.json',
+  gempageEn: '03-gempage-copy.en.json',
+  plan: '04-gempage-image-plan.json',
+  prompts: '05-image-prompts.json',
+  gempageHe: '03-gempage-copy.he.json',
+  ads: '06-meta-ads.json',
+  creatives: '07-creative-plan.json',
+  ugc: '08-ugc.json',
+  qa: '09-qa-report.md',
+};
+
+// Pipeline steps in order; `file` marks the step as done.
 export const STEPS = [
-  { id: 'input', label: 'Input', file: 'input.json' },
-  { id: 'research', label: 'Research product', file: 'research.md' },
-  { id: 'positioning', label: 'Positioning + name', file: 'product.json' },
-  { id: 'page_en', label: 'English PDP', file: 'page.en.json' },
-  { id: 'page_he', label: 'Hebrew PDP', file: 'page.he.json' },
-  { id: 'angles', label: 'Ad angles', file: 'ads.json', check: (p) => p.ads?.angles?.length > 0 },
-  { id: 'copy', label: 'Ad copy', file: 'ads.json', check: (p) => (p.ads?.copy?.he?.length ?? 0) > 0 },
-  { id: 'creatives', label: 'Creative briefs', file: 'creatives.md' },
-  { id: 'qa', label: 'QA', file: 'qa.md' },
-  { id: 'export', label: 'Export', file: 'output/gempages.html' },
+  { id: 'input', n: 0, label: 'Product input', file: FILES.input },
+  { id: 'facts', n: 1, label: 'Product facts', file: FILES.facts },
+  { id: 'angle', n: 2, label: 'Central angle', file: FILES.angle },
+  { id: 'gempage', n: 3, label: 'GemPage copy (EN master)', file: FILES.gempageEn },
+  { id: 'image-plan', n: 4, label: 'GemPage image plan', file: FILES.plan },
+  { id: 'image-prompts', n: 5, label: 'Image prompts', file: FILES.prompts },
+  { id: 'gempage-he', n: 6, label: 'GemPage build (HE)', file: FILES.gempageHe },
+  { id: 'qc', n: 7, label: 'Quality control', file: FILES.qa },
+  { id: 'meta-ads', n: 8, label: '2 Meta ads', file: FILES.ads },
+  { id: 'creatives', n: 9, label: 'Creative plan + UGC', file: FILES.creatives },
+  { id: 'package', n: 10, label: 'Launch package', file: 'output/launch-package.md' },
 ];
+
+export function setProductsDir(dir) {
+  PRODUCTS_DIR = path.resolve(dir);
+}
 
 export function loadEnv() {
   const file = path.join(ROOT, '.env');
@@ -27,6 +48,10 @@ export function loadEnv() {
     const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
     if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
   }
+}
+
+export function loadConfig() {
+  return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
 }
 
 export function isValidSlug(slug) {
@@ -42,7 +67,7 @@ export function listSlugs() {
   if (!fs.existsSync(PRODUCTS_DIR)) return [];
   return fs
     .readdirSync(PRODUCTS_DIR, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && isValidSlug(d.name))
+    .filter((d) => d.isDirectory() && isValidSlug(d.name) && fs.existsSync(path.join(PRODUCTS_DIR, d.name, FILES.input)))
     .map((d) => d.name)
     .sort();
 }
@@ -53,7 +78,7 @@ export function readJSON(file) {
   try {
     return JSON.parse(raw);
   } catch (e) {
-    const err = new Error(`${path.relative(ROOT, file)}: invalid JSON (${e.message})`);
+    const err = new Error(`${path.basename(file)}: invalid JSON (${e.message})`);
     err.code = 'BAD_JSON';
     throw err;
   }
@@ -71,136 +96,68 @@ export function writeJSON(file, data) {
 // Load everything we know about a product. JSON parse errors are collected, not thrown.
 export function loadProduct(slug) {
   const dir = productDir(slug);
-  const errors = [];
+  const parseErrors = [];
   const json = (name) => {
     try {
       return readJSON(path.join(dir, name));
     } catch (e) {
-      errors.push(e.message);
+      parseErrors.push(e.message);
       return null;
     }
   };
   const p = {
     slug,
     dir,
-    input: json('input.json'),
-    product: json('product.json'),
-    page: { en: json('page.en.json'), he: json('page.he.json') },
-    ads: json('ads.json'),
-    research: readText(path.join(dir, 'research.md')),
-    creatives: readText(path.join(dir, 'creatives.md')),
-    qa: readText(path.join(dir, 'qa.md')),
-    parseErrors: errors,
+    input: json(FILES.input),
+    facts: json(FILES.facts),
+    angle: json(FILES.angle),
+    gempage: { en: json(FILES.gempageEn), he: json(FILES.gempageHe) },
+    plan: json(FILES.plan),
+    prompts: json(FILES.prompts),
+    ads: json(FILES.ads),
+    creatives: json(FILES.creatives),
+    ugc: json(FILES.ugc),
+    qa: readText(path.join(dir, FILES.qa)),
+    parseErrors,
   };
-  p.steps = STEPS.map((s) => ({
-    id: s.id,
-    label: s.label,
-    done: fs.existsSync(path.join(dir, s.file)) && (!s.check || !!s.check(p)),
-  }));
+  p.steps = STEPS.map((s) => ({ id: s.id, n: s.n, label: s.label, done: fs.existsSync(path.join(dir, s.file)) }));
   return p;
+}
+
+// Which input fields are required, and whether they are filled.
+export const REQUIRED_INPUT = [
+  ['product_name', 'identify the product everywhere'],
+  ['hebrew_product_name', 'offer box, ads, sticky CTA'],
+  ['product_type', 'fact sheet and image prompts'],
+  ['regular_price', 'sale section, offer box, ads'],
+  ['sale_price', 'sale section, offer box, ads, sticky CTA'],
+  ['promotion', 'sale section and ad descriptions'],
+  ['sale_reason', 'sale section ("why it is on sale now")'],
+  ['colors', 'offer box, image prompts, creatives'],
+  ['sizes', 'offer box and ads'],
+  ['features', 'benefits (every benefit must trace to a feature)'],
+  ['existing_product_page', 'fact sheet (url or pasted content)'],
+  ['existing_product_images', 'reference images for image prompts'],
+];
+
+export function isFilled(v) {
+  if (v == null) return false;
+  if (typeof v === 'string') return v.trim() !== '';
+  if (typeof v === 'number') return Number.isFinite(v) && v > 0;
+  if (Array.isArray(v)) return v.some(isFilled);
+  if (typeof v === 'object') return Object.values(v).some(isFilled);
+  return !!v;
+}
+
+export function missingInput(input) {
+  if (!input) return REQUIRED_INPUT.map(([field, why]) => ({ field, needed_for: why }));
+  return REQUIRED_INPUT.filter(([field]) => !isFilled(input[field])).map(([field, why]) => ({ field, needed_for: why }));
 }
 
 export const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-export function formatPrice(amount, currency = 'ILS') {
-  if (amount == null) return '';
-  const sym = { ILS: '₪', EUR: '€', USD: '$' }[currency] ?? '';
-  return `${sym}${Math.round(amount)}`;
-}
-
-const HE_LABELS = { size_guide_fallback: 'טבלת מידות', add: 'הוסיפי לסל', placeholder: 'ביקורות לדוגמה – יוחלפו בביקורות אמיתיות' };
-const EN_LABELS = { size_guide_fallback: 'Size guide', add: 'Add to cart', placeholder: 'Example reviews – replace with real reviews' };
-
-function renderSection(s, L) {
-  const t = s.title ? `<h2>${esc(s.title)}</h2>` : '';
-  switch (s.type) {
-    case 'hero':
-      return `<section class="ad-hero"><h1>${esc(s.headline)}</h1><p>${esc(s.subheadline)}</p>${hint(s.image_hint)}</section>`;
-    case 'benefits':
-      return `<section class="ad-benefits">${t}<div class="ad-grid">${(s.items ?? [])
-        .map((i) => `<div class="ad-card"><div class="ad-icon">${esc(i.icon)}</div><h3>${esc(i.title)}</h3><p>${esc(i.text)}</p></div>`)
-        .join('')}</div></section>`;
-    case 'story':
-      return `<section class="ad-story">${t}<p>${esc(s.text)}</p>${hint(s.image_hint)}</section>`;
-    case 'features':
-      return `<section class="ad-features">${t}<ul>${(s.items ?? []).map((i) => `<li>${esc(i)}</li>`).join('')}</ul></section>`;
-    case 'comparison':
-      return `<section class="ad-comparison">${t}<table><thead><tr><th></th><th>${esc(s.us_label)}</th><th>${esc(s.them_label)}</th></tr></thead><tbody>${(s.rows ?? [])
-        .map((r) => `<tr><td>${esc(r.label)}</td><td>${r.us ? '✓' : '✗'}</td><td>${r.them ? '✓' : '✗'}</td></tr>`)
-        .join('')}</tbody></table></section>`;
-    case 'size_guide':
-      return `<section class="ad-size">${s.title ? t : `<h2>${L.size_guide_fallback}</h2>`}<table><thead><tr>${(s.headers ?? [])
-        .map((h) => `<th>${esc(h)}</th>`)
-        .join('')}</tr></thead><tbody>${(s.rows ?? []).map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>${
-        s.note ? `<p class="ad-note">${esc(s.note)}</p>` : ''
-      }</section>`;
-    case 'reviews':
-      return `<section class="ad-reviews">${t}${s.placeholder ? `<p class="ad-placeholder">${L.placeholder}</p>` : ''}<div class="ad-grid">${(s.items ?? [])
-        .map((r) => `<div class="ad-card"><div class="ad-stars">${'★'.repeat(r.rating ?? 5)}</div><p>${esc(r.text)}</p><small>${esc(r.name)}${r.city ? ', ' + esc(r.city) : ''}</small></div>`)
-        .join('')}</div></section>`;
-    case 'faq':
-      return `<section class="ad-faq">${t}${(s.items ?? []).map((i) => `<details><summary>${esc(i.q)}</summary><p>${esc(i.a)}</p></details>`).join('')}</section>`;
-    case 'guarantee':
-      return `<section class="ad-guarantee">${t}<p>${esc(s.text)}</p></section>`;
-    case 'cta':
-      return `<section class="ad-cta"><h2>${esc(s.headline)}</h2><button type="button">${esc(s.button)}</button><p>${esc(s.subtext)}</p></section>`;
-    default:
-      return `<!-- unknown section type: ${esc(s.type)} -->`;
-  }
-}
-
-function hint(h) {
-  return h ? `<div class="ad-image-hint">📷 ${esc(h)}</div>` : '';
-}
-
-export const PAGE_CSS = `
-.adina-pdp{--ink:#2b2522;--muted:#7a6f69;--accent:#8a5a44;--bg:#fbf8f5;--card:#fff;--line:#eadfd6;
-  font-family:"Assistant","Heebo",system-ui,sans-serif;color:var(--ink);background:var(--bg);max-width:720px;margin:0 auto;padding:16px;line-height:1.6}
-.adina-pdp h1{font-size:1.7rem;margin:.2em 0}.adina-pdp h2{font-size:1.3rem;margin:1.6em 0 .6em}
-.adina-pdp .ad-top h1{font-size:1.5rem}.adina-pdp .ad-sub{color:var(--muted);margin:0 0 .6em}
-.adina-pdp .ad-price{font-size:1.5rem;font-weight:700;display:flex;gap:.5em;align-items:baseline}.adina-pdp .ad-price s{color:var(--muted);font-weight:400;font-size:1rem}
-.adina-pdp .ad-badge{display:inline-block;background:var(--accent);color:#fff;border-radius:99px;padding:2px 12px;font-size:.85rem;margin:.4em 0}
-.adina-pdp .ad-bullets{list-style:none;padding:0}.adina-pdp .ad-bullets li::before{content:"✓ ";color:var(--accent);font-weight:700}
-.adina-pdp button{background:var(--ink);color:#fff;border:0;border-radius:10px;padding:14px;font-size:1.05rem;width:100%;cursor:pointer;font-family:inherit}
-.adina-pdp .ad-trust{text-align:center;color:var(--muted);font-size:.85rem}
-.adina-pdp section{border-top:1px solid var(--line);padding-top:4px}.adina-pdp .ad-hero{text-align:center;border:0}
-.adina-pdp .ad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.adina-pdp .ad-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}.adina-pdp .ad-card h3{margin:.2em 0;font-size:1rem}.adina-pdp .ad-card p{margin:0}
-.adina-pdp .ad-icon{font-size:1.5rem}.adina-pdp .ad-stars{color:#c9973b}
-.adina-pdp table{width:100%;border-collapse:collapse;background:var(--card)}.adina-pdp td,.adina-pdp th{border:1px solid var(--line);padding:6px;text-align:center}
-.adina-pdp details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin:6px 0}.adina-pdp summary{font-weight:600;cursor:pointer}
-.adina-pdp .ad-image-hint{border:2px dashed var(--line);border-radius:12px;padding:18px;color:var(--muted);font-size:.85rem;margin:8px 0}
-.adina-pdp .ad-placeholder{background:#fff4d6;border-radius:8px;padding:6px 10px;font-size:.85rem}
-.adina-pdp .ad-note{color:var(--muted);font-size:.9rem}.adina-pdp .ad-cta{text-align:center}
-`;
-
-// Renders a page.{lang}.json into a self-contained HTML fragment (no <html>).
-export function renderPageFragment(page) {
-  const L = page.lang === 'he' ? HE_LABELS : EN_LABELS;
-  const price = page.price ?? {};
-  return `<div class="adina-pdp" dir="${esc(page.dir ?? (page.lang === 'he' ? 'rtl' : 'ltr'))}" lang="${esc(page.lang)}">
-<div class="ad-top">
-<h1>${esc(page.title)}</h1>
-<p class="ad-sub">${esc(page.subtitle)}</p>
-<div class="ad-price"><span>${formatPrice(price.current, price.currency)}</span>${price.compare_at ? `<s>${formatPrice(price.compare_at, price.currency)}</s>` : ''}</div>
-${page.badge ? `<span class="ad-badge">${esc(page.badge)}</span>` : ''}
-<ul class="ad-bullets">${(page.bullets ?? []).map((b) => `<li>${esc(b)}</li>`).join('')}</ul>
-<button type="button">${esc(page.cta ?? L.add)}</button>
-<p class="ad-trust">${esc(page.trust_line)}</p>
-</div>
-${(page.sections ?? []).map((s) => renderSection(s, L)).join('\n')}
-</div>`;
-}
-
-export function renderPageDocument(page) {
-  return `<!doctype html>
-<html lang="${esc(page.lang)}" dir="${esc(page.dir)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(page.seo?.title ?? page.title)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
-<style>body{margin:0;background:#fbf8f5}${PAGE_CSS}</style></head>
-<body>${renderPageFragment(page)}</body></html>`;
-}
+export const shekel = (n) => (n == null || n === '' ? '' : `₪${n}`);
 
 // Parse "--key value" / "--flag" style args.
 export function parseArgs(argv) {
@@ -215,4 +172,119 @@ export function parseArgs(argv) {
     } else args._.push(a);
   }
   return args;
+}
+
+// ---------- Founder-letter renderer (preview + GemPages paste) ----------
+
+export const LETTER_CSS = `
+.adina-letter{--ink:#2b2522;--muted:#6f655f;--green:#2f6b4f;--green-soft:#e6f0ea;--accent:#8a5a44;--bg:#fbf8f5;--card:#fff;--line:#eadfd6;
+  font-family:"Assistant","Heebo",system-ui,sans-serif;color:var(--ink);background:var(--bg);max-width:720px;margin:0 auto;padding:16px 16px 96px;line-height:1.75;font-size:17px}
+.adina-letter h1{font-size:1.9rem;line-height:1.25;margin:.3em 0}.adina-letter h2{font-size:1.35rem;margin:1.6em 0 .5em;line-height:1.3}
+.adina-letter p{margin:.6em 0}.adina-letter .muted{color:var(--muted)}
+.adina-letter .al-byline{font-weight:700}.adina-letter .al-date{color:var(--muted);font-size:.9rem}
+.adina-letter .al-note{background:var(--green-soft);color:var(--green);border-radius:10px;padding:10px 14px;margin:12px 0;font-weight:600}
+.adina-letter .al-badge{display:inline-block;border:1px solid var(--green);color:var(--green);border-radius:99px;padding:2px 12px;font-size:.85rem}
+.adina-letter .al-subtitle{font-size:1.15rem;color:var(--muted)}
+.adina-letter .al-img{border:2px dashed var(--line);border-radius:14px;padding:22px 14px;color:var(--muted);font-size:.85rem;margin:14px 0;text-align:center;background:#fff}
+.adina-letter .al-img b{color:var(--ink)}.adina-letter img.al-photo{width:100%;border-radius:14px;margin:14px 0}
+.adina-letter .al-benefit{margin:26px 0}.adina-letter .al-num{display:inline-flex;width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;align-items:center;justify-content:center;font-weight:700;margin-inline-end:8px}
+.adina-letter table{width:100%;border-collapse:collapse;background:var(--card);font-size:.95rem}.adina-letter td,.adina-letter th{border:1px solid var(--line);padding:8px;text-align:center}
+.adina-letter .al-hl{background:var(--green-soft);font-weight:700}
+.adina-letter blockquote{margin:24px 0;padding:14px 18px;border-inline-start:4px solid var(--accent);background:var(--card);font-size:1.2rem;font-style:italic}
+.adina-letter .al-prices{font-size:1.6rem;font-weight:700;display:flex;gap:.6em;align-items:baseline}.adina-letter .al-prices s{font-size:1.05rem;color:var(--muted);font-weight:400}
+.adina-letter .al-trust{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin:18px 0}
+.adina-letter .al-trust div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 4px}.adina-letter .al-trust b{display:block;font-size:1.2rem}
+.adina-letter .al-trust span{font-size:.8rem;color:var(--muted)}
+.adina-letter .al-stars{color:#c9973b;font-size:1.3rem}
+.adina-letter .al-offer{background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:18px;margin:24px 0}
+.adina-letter .al-offer ul{list-style:none;padding:0}.adina-letter .al-offer li::before{content:"✓ ";color:var(--green);font-weight:700}
+.adina-letter .al-bundle div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0}
+.adina-letter button{background:var(--ink);color:#fff;border:0;border-radius:12px;padding:15px;font-size:1.05rem;width:100%;cursor:pointer;font-family:inherit;margin:10px 0}
+.adina-letter .al-sticky{position:fixed;bottom:0;inset-inline:0;background:var(--ink);color:#fff;text-align:center;padding:14px;font-weight:600}
+.adina-letter .al-signoff{font-weight:700;font-size:1.1rem}
+@media (max-width:480px){.adina-letter .al-trust{grid-template-columns:repeat(2,1fr)}}
+`;
+
+// Escape + keep "15+" / "2,550+" / "4.7/5" left-to-right inside RTL text (otherwise they render as "+15").
+const bidi = (s) => esc(s).replace(/(\d[\d.,/]*\+|\d+(?:\.\d+)?\/\d+)/g, '<bdi dir="ltr">$1</bdi>');
+
+function imageSlot(id, planById, input) {
+  if (!id) return '';
+  const img = planById[id];
+  const existing = img?.source === 'existing' ? img.existing_image : null;
+  if (existing && /^https?:\/\//.test(existing)) return `<img class="al-photo" src="${esc(existing)}" alt="${esc(img.purpose)}">`;
+  const label = img ? `${img.role} · ${img.source === 'existing' ? `existing: ${img.existing_image}` : `generate · ${img.product_color ?? ''}`}` : 'not in image plan';
+  return `<div class="al-img">📷 <b>${esc(id)}</b> — ${esc(label)}${img?.purpose ? `<br>${esc(img.purpose)}` : ''}</div>`;
+}
+
+function block(b, ctx) {
+  const img = (id) => imageSlot(id, ctx.planById, ctx.input);
+  switch (b.type) {
+    case 'founder_header':
+      return `<header><div class="al-byline">${bidi(b.byline)}</div><div class="al-date">${bidi(b.place_date)}</div>
+<div class="al-note">${bidi(b.note)}</div><span class="al-badge">${bidi(b.badge)}</span></header>`;
+    case 'headline':
+      return `<h1>${bidi(b.headline)}</h1><p class="al-subtitle">${bidi(b.subtitle)}</p>`;
+    case 'hero':
+      return img(b.image);
+    case 'founder_story':
+      return `<section><p><b>${bidi(b.greeting)}</b></p>${(b.parts ?? []).map((p) => `<p data-role="${bidi(p.role)}">${bidi(p.text)}</p>`).join('')}</section>`;
+    case 'benefits':
+      return `<section>${b.title ? `<h2>${bidi(b.title)}</h2>` : ''}${(b.items ?? [])
+        .map((i) => `<div class="al-benefit"><h2><span class="al-num">${bidi(i.n)}</span>${bidi(i.headline)}</h2><p>${bidi(i.text)}</p>${img(i.image)}</div>`)
+        .join('')}</section>`;
+    case 'comparison': {
+      const c = b.columns ?? {};
+      return `<section><h2>${bidi(b.title)}</h2><table><thead><tr><th></th><th>${bidi(c.a)}</th><th>${bidi(c.b)}</th><th class="al-hl">${bidi(c.product)}</th></tr></thead><tbody>${(b.rows ?? [])
+        .map((r) => `<tr><td>${bidi(r.label)}</td><td>${bidi(r.a)}</td><td>${bidi(r.b)}</td><td class="al-hl">${bidi(r.product)}</td></tr>`)
+        .join('')}</tbody></table></section>`;
+    }
+    case 'founder_quote':
+      return `<blockquote>"${bidi(b.quote)}"<br><small>— ${bidi(b.author)}</small></blockquote>`;
+    case 'sale':
+      return `<section><h2>${bidi(b.title)}</h2>${(b.paragraphs ?? []).map((p) => `<p>${bidi(p)}</p>`).join('')}
+<div class="al-prices"><span>${shekel(b.sale_price)}</span><s>${shekel(b.regular_price)}</s></div>${b.availability_note ? `<p class="muted">${bidi(b.availability_note)}</p>` : ''}</section>`;
+    case 'trust_bar':
+      return `<div class="al-trust">${(b.items ?? []).map((i) => `<div><b>${bidi(i.value)}</b><span>${bidi(i.label)}</span></div>`).join('')}</div>`;
+    case 'packing':
+      return `<section>${img(b.image)}<p class="muted">${bidi(b.caption)}</p></section>`;
+    case 'founder_observation':
+      return `<section><p>${bidi(b.text)}</p></section>`;
+    case 'social_proof':
+      return `<section><div class="al-stars">★★★★★</div><p><b>${bidi(b.rating)}/5</b> · ${bidi(b.reviews_label)}</p><p>${bidi(b.text)}</p>${(b.quotes ?? [])
+        .map((q) => `<blockquote>${bidi(q.text)}</blockquote>`)
+        .join('')}</section>`;
+    case 'offer_box':
+      return `<div class="al-offer"><h2>${bidi(b.product_name)}</h2><div class="al-stars">${bidi(b.rating_line)}</div>
+<div class="al-prices"><span>${shekel(b.sale_price)}</span><s>${shekel(b.regular_price)}</s></div><ul>${(b.bullets ?? []).map((x) => `<li>${bidi(x)}</li>`).join('')}</ul></div>`;
+    case 'bundle':
+      return `<section class="al-bundle"><h2>${bidi(b.title)}</h2>${(b.tiers ?? []).map((t) => `<div><span>${bidi(t.label)}</span></div>`).join('')}</section>`;
+    case 'cta':
+      return `<button type="button">${bidi(b.button)}</button>${b.subtext ? `<p class="muted" style="text-align:center">${bidi(b.subtext)}</p>` : ''}`;
+    case 'about':
+      return `<section><h2>${bidi(b.title)}</h2><p>${bidi(b.text)}</p><p class="al-signoff">${bidi(b.signoff)}</p></section>`;
+    case 'sticky_cta':
+      return `<div class="al-sticky">${bidi(b.text)}</div>`;
+    default:
+      return `<!-- unknown block type: ${bidi(b.type)} -->`;
+  }
+}
+
+// Renders a 03-gempage-copy.*.json into a self-contained HTML fragment.
+export function renderLetterFragment(page, { plan = null, input = null } = {}) {
+  const planById = Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i]));
+  const ctx = { planById, input };
+  return `<div class="adina-letter" dir="${esc(page.dir ?? (page.lang === 'he' ? 'rtl' : 'ltr'))}" lang="${esc(page.lang)}">
+${(page.blocks ?? []).map((b) => block(b, ctx)).join('\n')}
+</div>`;
+}
+
+export function renderLetterDocument(page, opts = {}) {
+  const title = page.blocks?.find((b) => b.type === 'headline')?.headline ?? 'Adina Fashion';
+  return `<!doctype html>
+<html lang="${esc(page.lang)}" dir="${esc(page.dir)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(title)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#fbf8f5}${LETTER_CSS}</style></head>
+<body>${renderLetterFragment(page, opts)}</body></html>`;
 }

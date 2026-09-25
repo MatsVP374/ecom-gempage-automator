@@ -7,22 +7,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#2b2522;--muted:#7a6f69;--accent:#8a5a44;--accent-soft:#f3e7df;--bg:#fbf8f5;--card:#fff;--line:#eadfd6;--ok:#3f7d4e;--err:#b3412f;--warn:#b07a1b}
+  :root{--ink:#2b2522;--muted:#7a6f69;--accent:#8a5a44;--accent-soft:#f3e7df;--bg:#fbf8f5;--card:#fff;--line:#eadfd6;--ok:#2f6b4f;--ok-soft:#e6f0ea;--err:#b3412f;--err-soft:#fbe9e5;--warn:#9a6a12;--warn-soft:#fdf3dc}
   *{box-sizing:border-box}
   body{margin:0;font-family:"Assistant",system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:15px}
-  header{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--card)}
-  header h1{font-size:1.1rem;margin:0;letter-spacing:.08em;text-transform:uppercase}
+  header{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap}
+  header h1{font-size:1.05rem;margin:0;letter-spacing:.08em;text-transform:uppercase}
   header span{color:var(--muted)}
-  .layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 54px)}
+  .layout{display:grid;grid-template-columns:270px 1fr;min-height:calc(100vh - 54px)}
   aside{border-inline-end:1px solid var(--line);padding:16px;background:var(--card)}
   main{padding:20px;min-width:0}
   button,.btn{font:inherit;border:1px solid var(--ink);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-block}
   button.primary{background:var(--ink);color:#fff}
   button.big{font-size:1.1rem;padding:14px 20px;width:100%}
-  button:disabled{opacity:.5;cursor:wait}
+  button.small{padding:3px 9px;font-size:.85rem}
+  button:disabled{opacity:.45;cursor:not-allowed}
   input,select,textarea{font:inherit;width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:#fff}
-  label{display:block;font-size:.85rem;color:var(--muted);margin:8px 0 3px}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  textarea{resize:vertical}
+  label{display:block;font-size:.85rem;color:var(--muted);margin:10px 0 3px}
+  label b{color:var(--err)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
   .plist{list-style:none;padding:0;margin:12px 0}
   .plist li{padding:10px;border-radius:10px;cursor:pointer;margin-bottom:4px}
   .plist li:hover{background:var(--accent-soft)}
@@ -30,60 +34,52 @@
   .plist .t{font-weight:600}
   .bar{height:4px;background:var(--line);border-radius:4px;margin-top:6px;overflow:hidden}
   .bar i{display:block;height:100%;background:var(--accent)}
-  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
-  .tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 12px;letter-spacing:.06em;font-size:.85rem;font-weight:600;color:var(--muted)}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+  .tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 10px;letter-spacing:.05em;font-size:.8rem;font-weight:600;color:var(--muted)}
   .tabs button.on{color:var(--ink);border-color:var(--ink)}
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+  .card h3{margin:0 0 8px;font-size:1rem}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .steps{list-style:none;padding:0;margin:0;columns:2}
+  .steps{list-style:none;padding:0;margin:0}
   .steps li{padding:3px 0}
   .steps li.done::before{content:"✓ ";color:var(--ok);font-weight:700}
   .steps li:not(.done)::before{content:"○ ";color:var(--muted)}
   .log{background:#1f1b19;color:#e8e1dc;font:12px/1.5 ui-monospace,monospace;padding:12px;border-radius:10px;max-height:340px;overflow:auto;white-space:pre-wrap}
-  iframe{width:100%;height:78vh;border:1px solid var(--line);border-radius:12px;background:#fff}
+  iframe{width:100%;height:80vh;border:1px solid var(--line);border-radius:12px;background:#fff}
   table{border-collapse:collapse;width:100%}
   td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:start;vertical-align:top}
+  th{color:var(--muted);font-weight:600;white-space:nowrap}
   .pill{display:inline-block;padding:1px 8px;border-radius:99px;background:var(--accent-soft);font-size:.8rem}
-  .copy{white-space:pre-wrap;background:var(--bg);border-radius:8px;padding:10px 10px 22px;margin:6px 0;position:relative}
-  .copy small{position:absolute;inset-inline-end:8px;bottom:4px;color:var(--muted)}
-  .copy.over small{color:var(--err);font-weight:700}
+  .alert{border-radius:10px;padding:10px 14px;margin-bottom:12px}
+  .alert.err{background:var(--err-soft);color:var(--err)}.alert.warn{background:var(--warn-soft);color:var(--warn)}.alert.ok{background:var(--ok-soft);color:var(--ok)}
+  .alert ul{margin:6px 0 0;padding-inline-start:20px}
+  .copy{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;margin:6px 0;line-height:1.7}
+  .fieldhead{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+  .fieldhead b{font-size:.8rem;letter-spacing:.06em}
   .err{color:var(--err)}.warn{color:var(--warn)}.ok{color:var(--ok)}
   .muted{color:var(--muted)}
   .md h1,.md h2,.md h3{margin:1em 0 .4em}.md p{margin:.4em 0}
   .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
   .empty{text-align:center;padding:60px 20px;color:var(--muted)}
-  @media (max-width:800px){.layout{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.steps{columns:1}}
+  .testimonial{border:1px dashed var(--line);border-radius:10px;padding:10px;margin:8px 0}
+  details summary{cursor:pointer;color:var(--muted)}
+  pre{white-space:pre-wrap;margin:0}
+  @media (max-width:860px){.layout{grid-template-columns:1fr}.grid2,.row3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><h1>Adina Product Launcher</h1><span>URL → Hebreeuwse PDP → GemPages → Ads</span></header>
+<header><h1>Adina Product Launcher</h1><span>Klant-verhaal (Meta) → Adina's brief (GemPage) → aanbod</span></header>
 <div class="layout">
   <aside>
-    <details id="newbox">
-      <summary><b>+ Nieuw product</b></summary>
-      <form id="newform">
-        <label>Supplier URL</label><input name="url" placeholder="https://…" required>
-        <label>Slug (Engels, kebab-case)</label><input name="slug" placeholder="noa-linen-top" pattern="[a-z0-9][a-z0-9-]*" required>
-        <div class="row">
-          <div><label>Inkoop (€)</label><input name="cost" type="number" step="0.01"></div>
-          <div><label>Verkoop (₪)</label><input name="price" type="number"></div>
-        </div>
-        <div class="row">
-          <div><label>Compare-at (₪)</label><input name="compare" type="number"></div>
-          <div><label>Categorie</label><input name="category" placeholder="blouse"></div>
-        </div>
-        <label>Doelgroep</label><input name="target" value="women 45-65">
-        <label>Notes</label><textarea name="notes" rows="3" placeholder="Focus op ademende stof en flatterende pasvorm"></textarea>
-        <p><button class="primary" type="submit">Aanmaken</button></p>
-      </form>
-    </details>
+    <button class="primary" style="width:100%" id="newbtn">+ New Adina product launch</button>
     <ul class="plist" id="plist"></ul>
   </aside>
-  <main id="main"><div class="empty">Kies een product of maak een nieuw product aan.</div></main>
+  <main id="main"><div class="empty">Kies een product of start een nieuwe launch.</div></main>
 </div>
 
 <script>
 const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const api = async (path, opts = {}) => {
   const r = await fetch('/api' + path, { headers: { 'Content-Type': 'application/json' }, ...opts, body: opts.body ? JSON.stringify(opts.body) : undefined });
@@ -91,24 +87,26 @@ const api = async (path, opts = {}) => {
   if (!r.ok) throw new Error(data.error || r.statusText);
   return data;
 };
-const TABS = ['overview', 'page', 'hebrew', 'ads', 'creatives', 'qa', 'export'];
-const state = { slug: null, tab: 'overview', data: null, lang: 'he', adLang: 'he', poll: null };
-try { Object.assign(state, JSON.parse(localStorage.getItem('adina-ui') || '{}'), { data: null, poll: null }); } catch {}
-const save = () => { try { localStorage.setItem('adina-ui', JSON.stringify({ slug: state.slug, tab: state.tab, lang: state.lang, adLang: state.adLang })); } catch {} };
+const TABS = ['overview', 'input', 'angle', 'gempage', 'images', 'meta ads', 'creatives', 'qa', 'export'];
+const STEP_ARGS = { facts: 'facts', angle: 'angle', gempage: 'gempage', 'image-plan': 'image-plan', 'image-prompts': 'image-prompts', 'gempage-he': 'gempage-he', qc: 'qc', 'meta-ads': 'meta-ads', creatives: 'creatives', package: 'package' };
+const state = { slug: null, tab: 'overview', data: null, lang: 'he', poll: null, creating: false };
+try { Object.assign(state, JSON.parse(localStorage.getItem('adina-ui') || '{}'), { data: null, poll: null, creating: false }); } catch {}
+const save = () => { try { localStorage.setItem('adina-ui', JSON.stringify({ slug: state.slug, tab: state.tab, lang: state.lang })); } catch {} };
+if (!TABS.includes(state.tab)) state.tab = 'overview';
 
 async function loadList() {
   const list = await api('/products');
   $('#plist').innerHTML = list.map((p) => {
     const done = p.steps.filter((s) => s.done).length;
-    return `<li data-slug="${esc(p.slug)}" class="${p.slug === state.slug ? 'active' : ''}">
-      <div class="t" dir="auto">${esc(p.title)}</div><div class="muted">${esc(p.slug)} ${p.running ? '· ⏳ bezig' : ''}</div>
+    return `<li data-slug="${esc(p.slug)}" class="${p.slug === state.slug && !state.creating ? 'active' : ''}">
+      <div class="t" dir="auto">${esc(p.title)}</div><div class="muted">${esc(p.slug)}${p.running ? ' · ⏳ bezig' : ''}${p.missing ? ` · <span class="err">${p.missing} input ontbreekt</span>` : ''}</div>
       <div class="bar"><i style="width:${(done / p.steps.length) * 100}%"></i></div></li>`;
   }).join('') || '<li class="muted">Nog geen producten.</li>';
   if (state.slug && !list.some((p) => p.slug === state.slug)) state.slug = null;
 }
 
 async function select(slug) {
-  state.slug = slug; save();
+  state.slug = slug; state.creating = false; save();
   await refresh();
   loadList();
 }
@@ -118,135 +116,242 @@ async function refresh() {
   state.data = await api('/products/' + encodeURIComponent(state.slug));
   render();
   clearTimeout(state.poll);
-  if (state.data.job?.running) state.poll = setTimeout(() => { refresh(); loadList(); }, 2000);
+  if (state.data.job?.running) state.poll = setTimeout(() => { if (state.tab !== 'input') refresh(); loadList(); }, 2500);
 }
 
 function render() {
   const d = state.data;
-  const title = d.product?.full_title_he ?? d.slug;
   $('#main').innerHTML = `
-    <div class="toolbar"><h2 style="margin:0" dir="auto">${esc(title)}</h2><span class="pill">${esc(d.slug)}</span></div>
+    <div class="toolbar"><h2 style="margin:0" dir="auto">${esc(d.input?.hebrew_product_name || d.input?.product_name || d.slug)}</h2><span class="pill">${esc(d.slug)}</span></div>
     <nav class="tabs">${TABS.map((t) => `<button data-tab="${t}" class="${t === state.tab ? 'on' : ''}">${t.toUpperCase()}</button>`).join('')}</nav>
     <div id="tab"></div>`;
-  ({ overview, page, hebrew, ads, creatives, qa, export: exportTab })[state.tab]($('#tab'), d);
+  ({ overview, input: inputTab, angle, gempage, images, 'meta ads': metaAds, creatives, qa, export: exportTab })[state.tab]($('#tab'), d);
 }
 
-function jobLog(d) {
-  if (!d.job) return '';
-  return `<div class="card"><b>Laatste run</b> <span class="muted">${esc(d.job.started)}</span> ${d.job.running ? '⏳' : d.job.code === 0 ? '<span class="ok">✓</span>' : '<span class="err">✗</span>'}
-    <div class="log" id="log">${esc(d.job.log.join('\n'))}</div></div>`;
-}
-
+// ---------- OVERVIEW ----------
 function overview(el, d) {
-  const p = d.product;
   const running = d.job?.running;
+  const blocked = d.missing.length > 0;
+  const flags = [...(d.facts?.missing ?? []).map((m) => `MISSING: ${m.field}`), ...(d.ads?.flags ?? [])];
+  if (!(d.input?.testimonials ?? []).length) flags.unshift('Geen testimonials → de 2 Meta-ads worden geblokkeerd (er wordt geen klantverhaal verzonnen).');
   el.innerHTML = `
+    ${blocked ? `<div class="alert err"><b>Input onvolledig — de workflow verzint niets.</b><ul>${d.missing.map((m) => `<li><b>${esc(m.field)}</b> — nodig voor ${esc(m.needed_for)}</li>`).join('')}</ul><p><button class="small" data-goto="input">Naar INPUT</button></p></div>` : ''}
+    ${flags.length ? `<div class="alert warn"><b>Flags</b><ul>${flags.map((f) => `<li>${esc(f)}</li>`).join('')}</ul></div>` : ''}
     <div class="grid2">
       <div class="card">
-        <button class="primary big" id="gen" ${running ? 'disabled' : ''}>${running ? '⏳ Bezig…' : '🚀 GENERATE COMPLETE LAUNCH'}</button>
+        <button class="primary big" id="gen" ${running || blocked ? 'disabled' : ''}>${running ? '⏳ Bezig…' : '🚀 GENERATE COMPLETE LAUNCH'}</button>
         <p class="muted">Draait <code>/launch-product ${esc(d.slug)}</code> in Claude Code. Bestaande stappen worden overgeslagen.</p>
         <div class="row">
-          <div><label>Of voer één ding uit</label>
+          <div><label>Of één ding (opnieuw)</label>
             <select id="mode">
-              <option value="launch">Volledige launch (opnieuw, --force)</option>
               <option value="step">Eén stap opnieuw…</option>
-              <option value="hebrew">Hebreeuws opnieuw lokaliseren</option>
-              <option value="ads">Ad pack (angles/copy/creatives)</option>
+              <option value="meta-ads">De 2 Meta-ads opnieuw</option>
+              <option value="launch">Volledige launch opnieuw (--force)</option>
             </select></div>
-          <div><label>Stap / extra instructies</label><input id="extra" placeholder="bv. positioning, of 'korter en feestelijker'"></div>
+          <div><label>Stap</label>
+            <select id="stepsel">${Object.keys(STEP_ARGS).map((k) => `<option>${k}</option>`).join('')}</select></div>
         </div>
-        <p><button id="run" ${running ? 'disabled' : ''}>Uitvoeren</button></p>
+        <label>Extra instructies (optioneel)</label><input id="extra" placeholder="bv. 'Ad 2 met een andere opening' of 'benefit 3 concreter'">
+        <p><button id="run" ${running || blocked ? 'disabled' : ''}>Uitvoeren</button></p>
       </div>
-      <div class="card"><b>Pipeline</b><ul class="steps">${d.steps.map((s) => `<li class="${s.done ? 'done' : ''}">${esc(s.label)}</li>`).join('')}</ul></div>
+      <div class="card"><h3>Pipeline</h3><ul class="steps">${d.steps.map((s) => `<li class="${s.done ? 'done' : ''}">${s.n} · ${esc(s.label)}</li>`).join('')}</ul></div>
     </div>
-    ${jobLog(d)}
-    ${p ? `<div class="card"><b>Positionering</b><table>
-      <tr><th>Naam</th><td dir="auto">${esc(p.full_title_he)} · ${esc(p.full_title_en)}</td></tr>
-      <tr><th>Belofte</th><td>${esc(p.positioning?.core_promise)}</td></tr>
-      <tr><th>Pijn</th><td>${esc(p.positioning?.primary_pain)}</td></tr>
-      <tr><th>Verlangen</th><td>${esc(p.positioning?.primary_desire)}</td></tr>
-      <tr><th>Anders dan</th><td>${esc(p.positioning?.differentiator)}</td></tr>
-      <tr><th>Prijs</th><td>₪${esc(p.pricing?.price)} <s class="muted">₪${esc(p.pricing?.compare_at)}</s> · ${esc(p.pricing?.offer)}</td></tr>
-    </table></div>` : ''}
-    ${d.research ? `<div class="card md">${md(d.research)}</div>` : ''}`;
+    ${d.job ? `<div class="card"><h3>Laatste run <span class="muted">${esc(d.job.started)}</span> ${d.job.running ? '⏳' : d.job.code === 0 ? '<span class="ok">✓</span>' : '<span class="err">✗</span>'}</h3>
+      <div class="log" id="log">${esc(d.job.log.join('\n'))}</div></div>` : ''}
+    ${d.angle ? `<div class="card"><h3>Centrale angle</h3><p><b>${esc(d.angle.central_problem)}</b></p><p class="muted">${esc(d.angle.core_promise)}</p></div>` : ''}`;
   const log = $('#log'); if (log) log.scrollTop = log.scrollHeight;
   const go = async (mode, extra) => {
     try { await api(`/products/${d.slug}/generate`, { method: 'POST', body: { mode, extra } }); await refresh(); loadList(); }
     catch (e) { alert(e.message); }
   };
   $('#gen').onclick = () => go('launch', '');
+  const syncMode = () => ($('#stepsel').disabled = $('#mode').value !== 'step');
+  $('#mode').onchange = syncMode; syncMode();
   $('#run').onclick = () => {
     const mode = $('#mode').value, extra = $('#extra').value.trim();
-    go(mode, mode === 'launch' ? ('--force ' + extra).trim() : extra);
+    if (mode === 'step') go('step', `${$('#stepsel').value} ${extra}`.trim());
+    else if (mode === 'launch') go('launch', `--force ${extra}`.trim());
+    else go(mode, extra);
   };
 }
 
-function page(el, d) {
+// ---------- INPUT (also used for a new product) ----------
+function inputForm(i, { isNew }) {
+  i = i ?? {};
+  const v = (x) => esc(x ?? '');
+  const lines = (a) => esc((a ?? []).join('\n'));
+  const comma = (a) => esc((a ?? []).join(', '));
+  const t = (i.testimonials ?? []);
+  return `<form id="inputform" class="card">
+    ${isNew ? `<label>Slug <b>*</b> (Engels, kebab-case — wordt de mapnaam)</label><input name="slug" required pattern="[a-z0-9][a-z0-9-]*" placeholder="bv. soft-hooded-cardigan">` : ''}
+    <h3 style="margin-top:12px">Product</h3>
+    <div class="row3">
+      <div><label>Product name <b>*</b></label><input name="product_name" value="${v(i.product_name)}"></div>
+      <div><label>Hebrew product name <b>*</b></label><input name="hebrew_product_name" dir="rtl" value="${v(i.hebrew_product_name)}"></div>
+      <div><label>Product type <b>*</b></label><input name="product_type" value="${v(i.product_type)}"></div>
+    </div>
+    <div class="row3">
+      <div><label>Regular price ₪ <b>*</b></label><input name="regular_price" type="number" value="${v(i.regular_price)}"></div>
+      <div><label>Sale price ₪ <b>*</b></label><input name="sale_price" type="number" value="${v(i.sale_price)}"></div>
+      <div><label>Launch month</label><input name="launch_month" type="month" value="${v(i.launch_month)}"></div>
+    </div>
+    <div class="row">
+      <div><label>Promotion <b>*</b></label><input name="promotion" value="${v(i.promotion)}" placeholder="bv. 50% discount — seasonal promotion"></div>
+      <div><label>Current sale reason <b>*</b></label><input name="sale_reason" value="${v(i.sale_reason)}" placeholder="bv. End of Season Sale"></div>
+    </div>
+    <div class="row">
+      <div><label>Available colors <b>*</b> (komma-gescheiden, exact)</label><input name="colors" value="${comma(i.colors)}"></div>
+      <div><label>Available sizes <b>*</b> (komma-gescheiden of range)</label><input name="sizes" value="${comma(i.sizes)}" placeholder="S–5XL"></div>
+    </div>
+    <label>Product features <b>*</b> (één per regel)</label><textarea name="features" rows="5">${lines(i.features)}</textarea>
+    <div class="row">
+      <div><label>Existing product page URL <b>*</b> (of plak de content)</label><input name="page_url" value="${v(i.existing_product_page?.url)}"></div>
+      <div><label>Existing product images <b>*</b> (URL's of source/…, één per regel)</label><textarea name="existing_product_images" rows="2">${lines(i.existing_product_images)}</textarea></div>
+    </div>
+    <label>Existing product page content (geplakte tekst)</label><textarea name="page_content" rows="3">${v(i.existing_product_page?.content)}</textarea>
+    <h3 style="margin-top:16px">Customer reviews / testimonials <span class="muted" style="font-weight:400">(nodig voor de 2 ads — naam/leeftijd alleen als je ze echt weet)</span></h3>
+    <div id="tlist">${t.map(testimonialRow).join('')}</div>
+    <button type="button" class="small" id="addt">+ Testimonial</button>
+    <h3 style="margin-top:16px">Optioneel</h3>
+    <div class="row">
+      <div><label>Known customer problems</label><textarea name="known_customer_problems" rows="2">${v(i.known_customer_problems)}</textarea></div>
+      <div><label>Central problem (als je hem al weet)</label><textarea name="central_problem_hint" rows="2">${v(i.central_problem_hint)}</textarea></div>
+    </div>
+    <div class="row">
+      <div><label>Competitor / reference</label><textarea name="competitor_reference" rows="2">${v(i.competitor_reference)}</textarea></div>
+      <div><label>Extra product information</label><textarea name="extra_info" rows="2">${v(i.extra_info)}</textarea></div>
+    </div>
+    <label><input type="checkbox" name="ugc_needed" style="width:auto" ${i.ugc_needed ? 'checked' : ''}> UGC-videoscript nodig</label>
+    <p class="muted">Vast uit config (niet per product): gratis verzending met Israel Post · 30 dagen retour · bundel 2=10% · 3=15% · 4=20% · 5+=25% · 4.7/5 · 2,550+ reviews · 15+ jaar.</p>
+    <p><button class="primary" type="submit">${isNew ? 'Aanmaken' : 'Opslaan'}</button></p>
+  </form>`;
+}
+function testimonialRow(t = {}) {
+  return `<div class="testimonial" data-id="${esc(t.id ?? '')}"><div class="row3">
+    <div><label>Name (alleen als bekend)</label><input data-k="name" value="${esc(t.name ?? '')}"></div>
+    <div><label>Age (alleen als bekend)</label><input data-k="age" value="${esc(t.age ?? '')}"></div>
+    <div><label>Source</label><input data-k="source" value="${esc(t.source ?? '')}" placeholder="bv. Judge.me review 2026-08-12"></div></div>
+    <label>Testimonial text (letterlijk)</label><textarea data-k="text" rows="3" dir="auto">${esc(t.text ?? '')}</textarea>
+    <label>Extra details (wat je zeker weet over haar situatie/gebruik)</label><textarea data-k="details" rows="2" dir="auto">${esc(t.details ?? '')}</textarea>
+    <button type="button" class="small" data-remove>Verwijderen</button></div>`;
+}
+function readForm(form) {
+  const f = Object.fromEntries(new FormData(form));
+  return {
+    ...f,
+    features: f.features,
+    existing_product_images: f.existing_product_images,
+    existing_product_page: { url: f.page_url, content: f.page_content },
+    ugc_needed: !!f.ugc_needed,
+    testimonials: $$('.testimonial', form).map((div, i) => ({
+      id: div.dataset.id || `t${i + 1}`,
+      ...Object.fromEntries($$('[data-k]', div).map((x) => [x.dataset.k, x.value])),
+    })),
+  };
+}
+function wireForm(onSubmit) {
+  const form = $('#inputform');
+  $('#addt').onclick = () => $('#tlist').insertAdjacentHTML('beforeend', testimonialRow());
+  form.addEventListener('click', (e) => { if (e.target.matches('[data-remove]')) e.target.closest('.testimonial').remove(); });
+  form.onsubmit = async (e) => { e.preventDefault(); try { await onSubmit(readForm(form)); } catch (err) { alert(err.message); } };
+}
+function inputTab(el, d) {
+  el.innerHTML = (d.missing.length ? `<div class="alert err">Ontbreekt: ${d.missing.map((m) => esc(m.field)).join(', ')}</div>` : '<div class="alert ok">Alle verplichte input is aanwezig.</div>') + inputForm(d.input, { isNew: false });
+  wireForm(async (body) => { await api(`/products/${d.slug}/input`, { method: 'PUT', body }); await refresh(); loadList(); });
+}
+function newProduct() {
+  state.creating = true; clearTimeout(state.poll);
+  $$('#plist li').forEach((li) => li.classList.remove('active'));
+  $('#main').innerHTML = `<h2>New Adina product launch</h2><p class="muted">Vul in wat je weet. Laat onbekende velden leeg: het systeem verzint niets en flagt wat ontbreekt.</p>${inputForm({ launch_month: new Date().toISOString().slice(0, 7) }, { isNew: true })}`;
+  wireForm(async (body) => { await api('/products', { method: 'POST', body }); state.tab = 'overview'; await select(body.slug); });
+}
+
+// ---------- ANGLE ----------
+function angle(el, d) {
+  const a = d.angle, f = d.facts;
+  if (!a && !f) { el.innerHTML = '<div class="empty">Nog geen fact sheet / angle (stap 1–2).</div>'; return; }
+  const row = (k, v) => `<tr><th>${esc(k)}</th><td>${esc(Array.isArray(v) ? v.join(', ') : v)}</td></tr>`;
+  el.innerHTML = `
+    ${a ? `<div class="card"><h3>Centrale angle — single source of truth</h3><table>
+      ${['central_problem', 'customer_insight', 'product_solution', 'adina_belief', 'core_promise', 'old_alternative_a', 'old_alternative_b', 'why_now', 'founder_letter_hook'].map((k) => row(k, a[k])).join('')}</table></div>
+    <div class="card"><h3>Voordelen</h3><table><tr><th>#</th><th>Menselijk probleem</th><th>Features</th><th>Effect → leven</th><th>Situaties</th></tr>
+      ${(a.benefits ?? []).map((b) => `<tr><td>${b.n}</td><td>${esc(b.human_problem)}</td><td>${esc((b.feature_ids ?? []).join(', '))}</td><td>${esc(b.practical_effect)} → ${esc(b.real_life_benefit)}</td><td>${esc((b.situations ?? []).join(', '))}</td></tr>`).join('')}</table></div>
+    <div class="card"><details><summary>De 10 vragen</summary><table>${Object.entries(a.questions ?? {}).map(([k, v]) => row(k, v)).join('')}</table></details></div>` : ''}
+    ${f ? `<div class="card"><h3>Fact sheet</h3><table><tr><th>id</th><th>Feit</th><th>Bron</th></tr>${(f.features ?? []).map((x) => `<tr><td>${esc(x.id)}</td><td>${esc(x.fact)}</td><td><span class="pill">${esc(x.source)}</span></td></tr>`).join('')}</table>
+      ${(f.unverified ?? []).length ? `<p class="warn"><b>Niet geverifieerd:</b> ${esc(f.unverified.join(' · '))}</p>` : ''}
+      ${(f.missing ?? []).length ? `<p class="err"><b>Ontbreekt:</b> ${esc(f.missing.map((m) => m.field).join(' · '))}</p>` : ''}
+      ${(f.testimonials ?? []).map((t) => `<p><b>${esc(t.id)}</b> ${t.sufficient_for_ad ? '<span class="ok">genoeg voor een ad</span>' : '<span class="err">onvoldoende</span>'} ${esc((t.gaps ?? []).join('; '))}</p>`).join('')}</div>` : ''}`;
+}
+
+// ---------- GEMPAGE ----------
+function gempage(el, d) {
   el.innerHTML = `<div class="toolbar">
-      <button data-lang="he" class="${state.lang === 'he' ? 'primary' : ''}">עברית</button>
-      <button data-lang="en" class="${state.lang === 'en' ? 'primary' : ''}">English</button>
+      <button data-lang="he" class="${state.lang === 'he' ? 'primary' : ''}">עברית (live)</button>
+      <button data-lang="en" class="${state.lang === 'en' ? 'primary' : ''}">English master</button>
       <a class="btn" target="_blank" href="/api/products/${d.slug}/preview?lang=${state.lang}">Open in nieuw tabblad ↗</a>
+      ${d.outputs.includes('gempage-copy.md') ? `<a class="btn" target="_blank" href="/api/products/${d.slug}/output/gempage-copy.md">Copy per blok</a>` : ''}
     </div>
     <iframe src="/api/products/${d.slug}/preview?lang=${state.lang}"></iframe>`;
-  el.querySelectorAll('[data-lang]').forEach((b) => (b.onclick = () => { state.lang = b.dataset.lang; save(); render(); }));
+  $$('[data-lang]', el).forEach((b) => (b.onclick = () => { state.lang = b.dataset.lang; save(); render(); }));
 }
 
-function hebrew(el, d) {
-  const en = d.page.en, he = d.page.he;
-  if (!en || !he) { el.innerHTML = '<div class="empty">page.en.json en page.he.json zijn allebei nodig.</div>'; return; }
-  const pair = (a, b, label) => `<tr><th class="muted">${esc(label)}</th><td>${esc(a)}</td><td dir="rtl">${esc(b)}</td></tr>`;
-  const rows = [pair(en.title, he.title, 'title'), pair(en.subtitle, he.subtitle, 'subtitle'), pair(en.badge, he.badge, 'badge')];
-  en.bullets.forEach((b, i) => rows.push(pair(b, he.bullets[i], `bullet ${i + 1}`)));
-  rows.push(pair(en.cta, he.cta, 'cta'), pair(en.trust_line, he.trust_line, 'trust line'));
-  en.sections.forEach((s, i) => {
-    const h = he.sections[i] ?? {};
-    for (const k of ['headline', 'subheadline', 'title', 'text', 'note', 'button', 'subtext']) if (s[k]) rows.push(pair(s[k], h[k], `${s.type}.${k}`));
-    (s.items ?? []).forEach((it, j) => {
-      const hi = (h.items ?? [])[j] ?? {};
-      if (typeof it === 'string') rows.push(pair(it, hi, `${s.type}[${j}]`));
-      else if (it.q) rows.push(pair(`${it.q}\n${it.a}`, `${hi.q}\n${hi.a}`, `faq ${j + 1}`));
-      else if (it.title) rows.push(pair(`${it.title} — ${it.text}`, `${hi.title} — ${hi.text}`, `${s.type}[${j}]`));
-    });
-  });
-  el.innerHTML = `<div class="card"><p class="muted">Engels (basis) naast Hebreeuws (verkooptaal). Aanpassen? Gebruik OVERVIEW → "Hebreeuws opnieuw lokaliseren" met instructies, of bewerk <code>page.he.json</code>.</p>
-    <table><thead><tr><th></th><th>EN</th><th dir="rtl">HE</th></tr></thead><tbody style="white-space:pre-wrap">${rows.join('')}</tbody></table></div>`;
+// ---------- IMAGES ----------
+function images(el, d) {
+  const plan = d.plan?.images ?? [];
+  if (!plan.length) { el.innerHTML = '<div class="empty">Nog geen beeldplan (stap 4).</div>'; return; }
+  const prompts = Object.fromEntries((d.prompts?.prompts ?? []).map((p) => [p.image_id, p]));
+  el.innerHTML = `<div class="card"><h3>GemPage image plan</h3><p class="muted">Bestaande productfoto's worden niet opnieuw gegenereerd.</p><table>
+    <tr><th>ID</th><th>Rol</th><th>Blok</th><th>Doel</th><th>Bron</th><th>Kleur</th></tr>
+    ${plan.map((i) => `<tr><td><b>${esc(i.id)}</b></td><td>${esc(i.role)}</td><td>${esc(i.block)}${i.benefit_n ? ` #${i.benefit_n}` : ''}</td><td>${esc(i.purpose)}</td><td>${i.source === 'existing' ? `existing<br><small>${esc(i.existing_image)}</small>` : 'generate'}</td><td>${esc(i.product_color)}</td></tr>`).join('')}</table></div>
+    ${plan.filter((i) => prompts[i.id]).map((i) => { const p = prompts[i.id]; return `<div class="card">
+      <div class="fieldhead"><h3>${esc(i.id)} — ${esc(i.role)} <span class="muted">${esc(p.aspect_ratio ?? '')}</span></h3><button class="small" data-copy="${esc(p.prompt)}">Kopieer prompt</button></div>
+      <div class="copy">${esc(p.prompt)}</div>
+      <p class="muted">Referenties: ${esc((p.reference_images ?? []).join(', ') || '—')}</p>
+      <details><summary>13 velden</summary><table>${Object.entries(p.fields ?? {}).map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</table></details></div>`; }).join('')}`;
 }
 
-function ads(el, d) {
+// ---------- META ADS ----------
+function metaAds(el, d) {
   const a = d.ads;
-  if (!a) { el.innerHTML = '<div class="empty">Nog geen ads.json.</div>'; return; }
-  const sets = a.copy?.[state.adLang] ?? [];
-  const n = (k) => sets.reduce((t, s) => t + (s[k]?.length ?? 0), 0);
-  const counter = (t, max) => `<div class="copy ${t.length > max ? 'over' : ''}" dir="auto">${esc(t)}<small>${t.length}/${max}</small></div>`;
+  if (!a) { el.innerHTML = '<div class="empty">Nog geen Meta-ads (stap 8).</div>'; return; }
+  const field = (label, text, max) => `<div class="fieldhead"><b>${label}</b><span><span class="muted">${String(text ?? '').length}${max ? `/${max}` : ''} tekens</span> <button class="small" data-copy="${esc(text)}">Kopieer</button></span></div><div class="copy" dir="rtl">${esc(text)}</div>`;
   el.innerHTML = `
-    <div class="card"><b>Angle matrix</b><table><thead><tr><th>Angle</th><th>Hook</th><th>Awareness</th><th>Creative</th><th>Format</th></tr></thead><tbody>
-      ${(a.angles ?? []).map((x) => `<tr><td><b>${esc(x.name)}</b><br><span class="muted">${esc(x.id)}</span></td><td>${esc(x.hook_en)}</td><td><span class="pill">${esc(x.awareness)}</span></td><td>${esc(x.creative_idea)}</td><td>${esc(x.format)}</td></tr>`).join('')}
-    </tbody></table>
-    <p class="muted">${a.angles?.length ?? 0} angles · ${n('primary_texts')} primary texts · ${n('headlines')} headlines → ${sets.reduce((t, s) => t + (s.primary_texts?.length ?? 0) * (s.headlines?.length ?? 0), 0)} combinaties (${state.adLang.toUpperCase()})</p></div>
-    <div class="toolbar"><button data-l="he" class="${state.adLang === 'he' ? 'primary' : ''}">עברית</button><button data-l="en" class="${state.adLang === 'en' ? 'primary' : ''}">English</button>
-      ${d.outputs.includes('meta-ads.csv') ? `<a class="btn" href="/api/products/${d.slug}/output/meta-ads.csv?download">⬇ Meta CSV</a>` : ''}</div>
-    ${sets.map((s) => `<div class="card"><b>${esc(s.angle_id)}</b>
-      <div class="grid2"><div><label>Primary texts (eerste 125 tekens = hook)</label>${s.primary_texts.map((t) => counter(t, 400)).join('')}</div>
-      <div><label>Headlines (max 40)</label>${s.headlines.map((t) => counter(t, 40)).join('')}
-      <label>Descriptions (max 30)</label>${(s.descriptions ?? []).map((t) => counter(t, 30)).join('')}</div></div></div>`).join('')}`;
-  el.querySelectorAll('[data-l]').forEach((b) => (b.onclick = () => { state.adLang = b.dataset.l; save(); render(); }));
+    ${a.status !== 'ready' ? `<div class="alert err"><b>${esc(a.status.toUpperCase())}</b><ul>${(a.flags ?? []).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p>Voeg echte testimonials toe in INPUT en draai daarna "De 2 Meta-ads opnieuw".</p></div>` : ''}
+    <div class="toolbar">${d.outputs.includes('meta-ads.md') ? `<a class="btn" target="_blank" href="/api/products/${d.slug}/output/meta-ads.md">meta-ads.md</a>` : ''}${d.outputs.includes('meta-ads.csv') ? `<a class="btn" href="/api/products/${d.slug}/output/meta-ads.csv?download">⬇ CSV</a>` : ''}</div>
+    ${(a.ads ?? []).map((ad, i) => `<div class="card">
+      <h3>AD ${ad.id === 'ad2' ? 2 : i + 1} — ${esc(ad.angle)} <span class="pill">${esc(ad.type)}</span> <span class="pill">testimonial ${esc(ad.testimonial_id)}</span></h3>
+      ${field('PRIMARY TEXT', ad.primary_text)}${field('HEADLINE', ad.headline, 40)}${field('DESCRIPTION', ad.description)}
+      <details><summary>Leesversie (EN)</summary><div class="copy">${esc(ad.review_en ?? '—')}</div></details>
+      <details><summary>Trace — waar elke claim vandaan komt (${(ad.trace ?? []).length})</summary><table>${(ad.trace ?? []).map((t) => `<tr><td>${esc(t.claim)}</td><td><span class="pill">${esc(t.source)}</span></td></tr>`).join('')}</table></details>
+    </div>`).join('')}`;
 }
 
+// ---------- CREATIVES ----------
 function creatives(el, d) {
-  el.innerHTML = d.creatives ? `<div class="card md">${md(d.creatives)}</div>` : '<div class="empty">Nog geen creatives.md.</div>';
+  const c = d.creatives?.creatives ?? [];
+  if (!c.length) { el.innerHTML = '<div class="empty">Nog geen creative plan (stap 9).</div>'; return; }
+  const u = d.ugc;
+  el.innerHTML = `<div class="grid2">${c.map((x) => `<div class="card"><h3>${esc(x.id)} — ${esc(x.type)} <span class="pill">${esc(x.matches)}</span></h3>
+      <p>${esc(x.concept)}</p><p class="muted">${esc(x.visual)}</p>
+      ${x.overlay_text_he ? `<p dir="rtl"><b>${esc(x.overlay_text_he)}</b></p>` : ''}
+      <p class="muted">${esc(x.product_color)} · ${esc(x.format)}</p>
+      <div class="fieldhead"><b>PROMPT</b><button class="small" data-copy="${esc(x.prompt)}">Kopieer</button></div><div class="copy">${esc(x.prompt)}</div></div>`).join('')}</div>
+    <div class="card"><h3>UGC</h3>${u?.needed ? `<p class="muted">${esc(u.voice ?? '')}</p><table><tr><th>Tijd</th><th>Beeld</th><th>Voice-over</th></tr>${(u.script ?? []).map((s) => `<tr><td>${esc(s.time)}</td><td>${esc(s.visual)}</td><td dir="rtl">${esc(s.voice_he)}</td></tr>`).join('')}</table>` : `<p class="muted">Niet nodig (${esc(u?.reason ?? 'not requested')}).</p>`}</div>`;
 }
 
+// ---------- QA ----------
 async function qa(el, d) {
   el.innerHTML = `<div class="card" id="vres">Valideren…</div>${d.qa ? `<div class="card md">${md(d.qa)}</div>` : ''}`;
   try {
     const v = await api(`/products/${d.slug}/validate`, { method: 'POST' });
-    $('#vres').innerHTML = `<b class="${v.errors.length ? 'err' : 'ok'}">${v.errors.length} errors · ${v.warnings.length} warnings</b>
-      <ul>${v.errors.map((e) => `<li class="err">${esc(e)}</li>`).join('')}${v.warnings.map((w) => `<li class="warn">${esc(w)}</li>`).join('')}</ul>`;
+    $('#vres').innerHTML = `<h3 class="${v.errors.length ? 'err' : 'ok'}">${v.errors.length} errors · ${v.warnings.length} warnings · ${v.flags.length} flags ${v.ready ? '· READY' : ''}</h3>
+      <ul>${v.errors.map((e) => `<li class="err">${esc(e)}</li>`).join('')}${v.flags.map((f) => `<li class="warn"><b>FLAG</b> ${esc(f)}</li>`).join('')}${v.warnings.map((w) => `<li class="muted">${esc(w)}</li>`).join('')}</ul>`;
   } catch (e) { $('#vres').innerHTML = `<span class="err">${esc(e.message)}</span>`; }
 }
 
+// ---------- EXPORT ----------
 function exportTab(el, d) {
-  const labels = { 'gempages.html': 'GemPages HTML (RTL, plakbaar)', 'gempages-copy.md': 'GemPages copy per sectie', 'meta-ads.csv': 'Meta ads CSV', 'ad-pack.md': 'Ad pack', 'shopify-product.json': 'Shopify payload', 'page.he.html': 'Preview HE', 'page.en.html': 'Preview EN', 'shopify-result.json': 'Shopify resultaat' };
+  const labels = { 'launch-package.md': 'Launch package (samenvatting)', 'gempage-copy.md': 'GemPage copy per blok', 'gempage.he.html': 'GemPage preview HE', 'gempage.en.html': 'GemPage preview EN (master)', 'gempage-embed.html': 'GemPage embed (Custom HTML)', 'image-prompts.md': 'Beeldplan + prompts', 'meta-ads.md': 'Meta-ads (Ads Manager-formaat)', 'meta-ads.csv': 'Meta-ads CSV', 'creative-plan.md': 'Creative plan + UGC', 'shopify-product.json': 'Shopify payload', 'shopify-result.json': 'Shopify resultaat' };
   el.innerHTML = `
     <div class="card toolbar">
       <button id="exp">Export opnieuw bouwen</button>
@@ -254,12 +359,12 @@ function exportTab(el, d) {
       <button class="primary" id="push">Push naar Shopify (DRAFT)</button>
     </div>
     <div class="card" id="res" hidden></div>
-    <div class="card"><b>Bestanden</b><table>${d.outputs.map((f) => `<tr><td>${esc(labels[f] ?? f)}</td><td><code>${esc(f)}</code></td>
-      <td><a class="btn" target="_blank" href="/api/products/${d.slug}/output/${encodeURIComponent(f)}">Open</a> <a class="btn" href="/api/products/${d.slug}/output/${encodeURIComponent(f)}?download">⬇</a></td></tr>`).join('') || '<tr><td class="muted">Nog niets geëxporteerd.</td></tr>'}</table></div>`;
+    <div class="card"><h3>Launch package</h3><table>${d.outputs.map((f) => `<tr><td>${esc(labels[f] ?? f)}</td><td><code>${esc(f)}</code></td>
+      <td style="white-space:nowrap"><a class="btn" target="_blank" href="/api/products/${d.slug}/output/${encodeURIComponent(f)}">Open</a> <a class="btn" href="/api/products/${d.slug}/output/${encodeURIComponent(f)}?download">⬇</a></td></tr>`).join('') || '<tr><td class="muted">Nog niets geëxporteerd.</td></tr>'}</table></div>`;
   const show = (html) => { const r = $('#res'); r.hidden = false; r.innerHTML = html; };
   const act = (btn, fn) => async () => { btn.disabled = true; try { await fn(); } catch (e) { show(`<span class="err">${esc(e.message)}</span>`); } btn.disabled = false; };
   $('#exp').onclick = act($('#exp'), async () => { await api(`/products/${d.slug}/export`, { method: 'POST' }); await refresh(); });
-  $('#dry').onclick = act($('#dry'), async () => { const r = await api(`/products/${d.slug}/shopify`, { method: 'POST', body: {} }); show(`<b>Dry run</b><pre dir="auto">${esc(JSON.stringify(r, null, 2))}</pre>`); });
+  $('#dry').onclick = act($('#dry'), async () => { const r = await api(`/products/${d.slug}/shopify`, { method: 'POST', body: {} }); show(`<h3>Dry run</h3><pre dir="auto">${esc(JSON.stringify(r, null, 2))}</pre>`); });
   $('#push').onclick = act($('#push'), async () => {
     if (!confirm('Product als DRAFT aanmaken in Shopify?')) return;
     const r = await api(`/products/${d.slug}/shopify`, { method: 'POST', body: { push: true } });
@@ -278,7 +383,7 @@ function md(src) {
     if (/^```/.test(line)) continue;
     if ((m = line.match(/^(#{1,4})\s+(.*)/))) { flush(); out.push(`<h${m[1].length + 1} dir="auto">${inline(m[2])}</h${m[1].length + 1}>`); }
     else if (/^\|/.test(line)) { if (/^\|[\s|:-]+\|$/.test(line)) continue; if (!table) { flush(); table = 1; out.push('<table>'); } out.push('<tr>' + line.slice(1, -1).split('|').map((c) => `<td dir="auto">${inline(c.trim())}</td>`).join('') + '</tr>'); }
-    else if ((m = line.match(/^\s*(?:[-*]|\d+\.)\s+(.*)/))) { if (table) flush(); if (!list) { list = 'ul'; out.push('<ul>'); } out.push(`<li dir="auto">${inline(m[1].replace(/^\[( |x)\]\s*/, (x, c) => (c === 'x' ? '☑ ' : '☐ ')))}</li>`); }
+    else if ((m = line.match(/^\s*(?:[-*]|\d+\.)\s+(.*)/))) { if (table) flush(); if (!list) { list = 'ul'; out.push('<ul>'); } out.push(`<li dir="auto">${inline(m[1])}</li>`); }
     else if ((m = line.match(/^>\s?(.*)/))) { flush(); out.push(`<p class="muted">${inline(m[1])}</p>`); }
     else if (!line.trim()) flush();
     else { flush(); out.push(`<p dir="auto">${inline(line)}</p>`); }
@@ -288,17 +393,12 @@ function md(src) {
 }
 
 $('#plist').onclick = (e) => { const li = e.target.closest('li[data-slug]'); if (li) select(li.dataset.slug); };
-$('#main').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) { state.tab = b.dataset.tab; save(); render(); } });
-$('#newform').onsubmit = async (e) => {
-  e.preventDefault();
-  const body = Object.fromEntries(new FormData(e.target));
-  try { await api('/products', { method: 'POST', body }); e.target.reset(); $('#newbox').open = false; state.tab = 'overview'; await select(body.slug); }
-  catch (err) { alert(err.message); }
-};
-$('#newform [name=url]').addEventListener('change', (e) => {
-  const slugEl = $('#newform [name=slug]');
-  if (slugEl.value) return;
-  try { const last = new URL(e.target.value).pathname.split('/').filter(Boolean).pop() || ''; slugEl.value = last.toLowerCase().replace(/\.html?$/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40); } catch {}
+$('#newbtn').onclick = newProduct;
+$('#main').addEventListener('click', async (e) => {
+  const tab = e.target.closest('[data-tab]') ?? e.target.closest('[data-goto]');
+  if (tab) { state.tab = tab.dataset.tab ?? tab.dataset.goto; save(); render(); return; }
+  const c = e.target.closest('[data-copy]');
+  if (c) { try { await navigator.clipboard.writeText(c.dataset.copy); c.textContent = '✓ Gekopieerd'; setTimeout(() => (c.textContent = 'Kopieer'), 1500); } catch { alert('Kopiëren niet toegestaan in deze browser.'); } }
 });
 
 loadList().then(() => state.slug && select(state.slug));

@@ -1,132 +1,148 @@
-# Adina Launch Engine
+# Adina Fashion Launch Engine
 
-Van **leverancier-URL** naar een **Hebreeuwse productpagina**, **GemPages/Shopify** en een compleet
-**advertentiepakket**, met Claude Code als motor.
+De vaste product-launch-workflow van **Adina Fashion**, uitgevoerd door Claude Code.
 
 ```
-URL → analyse → positionering + naam → Engelse PDP → Hebreeuwse PDP (RTL-check)
-    → ad angles → ad copy HE/EN → creative briefs → QA → export (GemPages · Shopify · Meta CSV)
+META CREATIVE → CUSTOMER AD STORY → ADINA FOUNDER LETTER → PRODUCT/OFFER → PURCHASE
+                 (klant-hoofdstuk)    (Adina's hoofdstuk)    (conversie)
 ```
 
-Geen `npm install` nodig: alles is Node 20+ zonder dependencies.
+Voor elk nieuw product:
+
+```
+INPUT NEW PRODUCT
+  → [1] Product research / fact sheet
+  → [2] Marketing angle            ← single source of truth voor alles hierna
+  → [3] GemPage founder-letter copy (Engelse master)
+  → [4] GemPage image plan         ← welke extra storytelling-foto's de brief nodig heeft
+  → [5] Image-generation prompts
+  → [6] GemPage build (Hebreeuws)
+  → [7] Quality control
+  → [8] 2 long-form Meta-ads       ← vanuit een echte klanttestimonial
+  → [9] Creative plan (4 statics + optioneel UGC)
+  → [10] FINAL LAUNCH PACKAGE
+```
+
+**Er wordt niets verzonnen.** Ontbreekt een verplicht veld, dan stopt de workflow met `MISSING INPUT`.
+Zijn er geen of te weinig testimonials, dan worden de ads geblokkeerd met
+`TESTIMONIAL DATA INSUFFICIENT` in plaats van een nep-klantverhaal te schrijven.
+
+Geen `npm install` nodig (Node 20+, geen dependencies).
 
 ---
 
-## Snel starten
+## Een nieuw product starten
 
+### Optie A: de UI
 ```bash
-git clone <deze repo> && cd ecom-gempage-automator
-cp .env.example .env          # alleen nodig voor Shopify-push
-npm start                     # → http://localhost:3000
+npm start          # → http://localhost:3000
 ```
+1. **+ New Adina product launch** → vul het formulier in (zie "Wat je aanlevert").
+2. Ontbreekt er iets verplicht, dan zie je het in rood en blijft Generate uit.
+3. **🚀 GENERATE COMPLETE LAUNCH**: Claude Code draait de hele pipeline op de achtergrond, met live log.
+4. Bekijk en kopieer het resultaat in de tabs: ANGLE · GEMPAGE · IMAGES · META ADS · CREATIVES · QA · EXPORT.
 
-Klik in de UI op **+ Nieuw product**, vul de URL + prijzen in, en druk op
-**🚀 GENERATE COMPLETE LAUNCH**. De UI start Claude Code op de achtergrond
-(`claude -p "/launch-product <slug>"`) en je ziet live welke stap bezig is.
+Vereist: [Claude Code](https://docs.claude.com/en/docs/claude-code) geïnstalleerd en ingelogd (`claude`).
+Anders pad: `CLAUDE_BIN=/pad/naar/claude npm start`.
 
-Daarvoor moet [Claude Code](https://docs.claude.com/en/docs/claude-code) geïnstalleerd en ingelogd zijn
-(`claude` in je terminal). Staat hij ergens anders: `CLAUDE_BIN=/pad/naar/claude npm start`.
-
-### Of helemaal vanuit Claude Code
-
+### Optie B: in Claude Code
 ```
 claude
-> /launch-product https://supplier.com/product/123 price=179 cost=12.5 notes="focus op ademende stof"
+> /new-launch            ← toont het input-template; plak het ingevuld terug
+> /launch-product <slug> ← draait stap 1–10
 ```
 
 | Commando | Wat het doet |
 |---|---|
-| `/launch-product <slug\|url>` | Volledige pipeline, slaat bestaande stappen over (`--force` = alles opnieuw) |
-| `/launch-step <slug> <stap>` | Eén stap opnieuw: `research`, `positioning`, `page`, `hebrew`, `angles`, `copy`, `creatives`, `qa` |
-| `/translate-he <slug> [instructies]` | Hebreeuws opnieuw lokaliseren, bv. "korter en feestelijker" |
-| `/ad-pack <slug> [instructies]` | Angles/copy/creatives (opnieuw), of extra angles toevoegen ("3 angles voor Rosh Hashana") |
+| `/new-launch [input]` | Intake: zet jouw productinput om naar `products/<slug>/input.json` en flagt wat ontbreekt |
+| `/launch-product <slug> [--force]` | Volledige pipeline; slaat bestaande stappen over (`--force` = alles opnieuw) |
+| `/launch-step <slug> <stap> [instructies]` | Eén stap opnieuw: `facts`, `angle`, `gempage`, `image-plan`, `image-prompts`, `gempage-he`, `qc`, `meta-ads`, `creatives`, `package` |
+| `/meta-ads <slug> [instructies]` | Alleen de 2 Meta-ads (opnieuw), bv. nadat je testimonials hebt toegevoegd |
 | `/push-shopify <slug>` | Validatie → dry-run → na jouw "ja" als DRAFT in Shopify |
 
-## De UI
+## Wat je aanlevert
 
-| Tab | Inhoud |
-|---|---|
-| **OVERVIEW** | Generate-knop, pipeline-checklist, live log, positionering, research |
-| **PAGE** | Preview van de productpagina, HE (RTL) en EN |
-| **HEBREW** | Engels en Hebreeuws naast elkaar, veld voor veld |
-| **ADS** | Angle-matrix + alle copy met tekenteller (Meta-limieten), Meta CSV-download |
-| **CREATIVES** | Image- en videobriefs met kant-en-klare beeldprompts |
-| **QA** | Validator-uitslag (errors/warnings) + menselijke checklist |
-| **EXPORT** | Export opnieuw bouwen, Shopify dry-run/push, alle outputbestanden |
+Template: `templates/product-input.md` (hetzelfde als het formulier in de UI).
 
-## Wat er per product ontstaat
+**Verplicht:** product name · Hebrew product name · product type · regular price · sale price ·
+promotion · current sale reason · available colors · available sizes · product features ·
+existing product page (URL en/of geplakte tekst) · existing product images (URL's of bestanden in
+`products/<slug>/source/`).
+
+**Nodig voor de ads:** echte customer reviews/testimonials. Per testimonial: de letterlijke tekst, de
+bron, en naam/leeftijd/details **alleen als je ze echt weet**.
+
+**Optioneel:** known customer problems · central problem (als je hem al weet) · competitor/reference ·
+extra product info · UGC nodig (ja/nee) · launch month.
+
+**Niet per product** (staat vast in `config/adina.json`): gratis verzending met Israel Post · 30 dagen
+retour · bundel 2 = 10% · 3 = 15% · 4 = 20% · 5+ = 25% extra · 4.7/5 uit 2,550+ reviews · 15+ jaar.
+
+## Wat eruit komt
 
 ```
 products/<slug>/
-├── input.json          jouw input (URL, prijzen, notes)
-├── source/             leveranciersfoto's (optioneel, Claude bekijkt ze)
-├── research.md         feiten, te-verifiëren, pijn/verlangen/bezwaren, marge
-├── product.json        naam (נועה), positionering, prijs, aanbod, specs, Shopify-velden
-├── page.en.json        productpagina — Engelse basis
-├── page.he.json        productpagina — Hebreeuws (verkooptaal)
-├── ads.json            5 angles + copy HE/EN (3 primary texts × 3 headlines per angle)
-├── creatives.md        7 image briefs + 3 videoconcepten + shotlist
-├── qa.md               wat gefixt is + wat jij nog moet checken
-└── output/             (gegenereerd, niet in git)
-    ├── gempages.html         RTL-secties, plakbaar in GemPages Custom HTML
-    ├── gempages-copy.md      copy per sectie in template-volgorde
-    ├── page.he.html / page.en.html   previews
-    ├── meta-ads.csv          alle combinaties (angle × primary × headline), UTF-8 met BOM
-    ├── ad-pack.md            leesbaar advertentiepakket
-    └── shopify-product.json  exacte payload voor Shopify
+├── input.json                 jouw input
+├── source/                    bestaande productfoto's (optioneel)
+├── 01-product-facts.json      geverifieerde feiten (+ bron per feit), missing, unverified
+├── 02-central-angle.json      de 10 vragen + centrale angle + 5–6 voordelen
+├── 03-gempage-copy.en.json    founder letter, Engelse master (voor review)
+├── 03-gempage-copy.he.json    founder letter, Hebreeuws (live)
+├── 04-gempage-image-plan.json ±7 beelden, elk gekoppeld aan een GemPage-blok
+├── 05-image-prompts.json      production-ready prompts (13 vaste velden)
+├── 06-meta-ads.json           2 ads + trace (bron van elke claim) + Engelse leesversie
+├── 07-creative-plan.json      4 statics (A discovery · B boutique/offer · C everyday · D designed hook)
+├── 08-ugc.json                UGC-script (alleen als gevraagd)
+├── 09-qa-report.md            QA-checklist + flags + "voor de mens"
+└── output/                    ← het launch package
+    ├── launch-package.md      ✓/✗-overzicht + READY FOR
+    ├── gempage-copy.md        copy per GemPage-blok (26 elementen), plakklaar
+    ├── gempage.he.html        preview (RTL) · gempage.en.html (master)
+    ├── gempage-embed.html     plakbaar in een GemPages Custom HTML-element
+    ├── image-prompts.md       beeldplan + prompts
+    ├── meta-ads.md            exact Ads Manager-formaat (AD 1 / PRIMARY TEXT / HEADLINE / DESCRIPTION)
+    ├── meta-ads.csv
+    ├── creative-plan.md       statics + UGC
+    └── shopify-product.json   DRAFT-payload
 ```
 
-`products/noa-linen-top/` is een volledig uitgewerkt voorbeeld én de kwaliteitsreferentie voor Claude.
-
-## GemPages & Shopify
-
-De repo is de **source of truth**; Shopify slaat op, GemPages presenteert.
-
-1. **Eén keer**: bouw in GemPages een productpagina-template met de secties uit
-   `brand/product-page-rules.md` (hero, benefits, story, features, comparison, size guide,
-   reviews, FAQ, guarantee, CTA). Titel/prijs/varianten/foto's koppel je dynamisch aan Shopify.
-2. **Per product**: `npm run shopify -- <slug>` (dry-run) → `npm run shopify -- <slug> --push`.
-   Het product komt als **DRAFT** in Shopify met Hebreeuwse titel en beschrijving, prijs en
-   compare-at, maat/kleur-varianten, tags, SEO, en metafield **`adina.pdp`** (de volledige
-   Hebreeuwse pagina als JSON) voor dynamische GemPages-content.
-3. Wijs de GemPages-template toe aan het product, en vul de sectie-teksten via de metafield of
-   plak ze uit `output/gempages-copy.md`.
-
-Shopify-token: maak in Shopify Admin → *Settings → Apps → Develop apps* een custom app met
-`write_products`, en zet `SHOPIFY_STORE_DOMAIN` + `SHOPIFY_ADMIN_TOKEN` in `.env`.
-
-## Scripts
-
-```bash
-npm run new -- <slug> --url <url> --price 179 --cost 12.5 --notes "..."
-npm run validate -- <slug>        # of --all; exit 1 bij errors
-npm run export -- <slug>          # of --all
-npm run shopify -- <slug> [--push]
-npm test                          # validate + export voor alle producten (ook in GitHub Actions)
-```
-
-De validator bewaakt o.a.: datacontract, prijs gelijk in alle bestanden, marge ≥ 3× inkoop,
-Hebreeuwse velden echt Hebreeuws (geen achtergebleven Engels, bidi-sprongen), Meta-lengtes
-(headline ≤ 40, description ≤ 30), sectie-volgorde, reviews als placeholder, en verboden claims
-(valse schaarste, afslank/anti-aging, verzonnen klantaantallen, leeftijd van de lezer benoemen).
-
-## Jouw workflow vastleggen
-
-Alles wat Claude over Adina weet staat in platte tekst, pas het aan en elke volgende launch volgt het:
+## Waar het systeem staat (hier pas je Adina aan)
 
 | Bestand | Inhoud |
 |---|---|
-| `CLAUDE.md` | pipeline, datacontract, harde regels |
-| `brand/adina.md` | merk, tone of voice, naamgeving, prijsstrategie, verzending/retour |
-| `brand/customer-avatar.md` | klant, pijn, verlangens, bezwaren, momenten |
-| `brand/copywriting-rules.md` | wel/niet, Meta-regels, awareness-niveaus |
-| `brand/hebrew-style.md` | Hebreeuwse stijl, woordenlijst, RTL-regels |
-| `brand/product-page-rules.md` | vaste PDP-structuur |
-| `prompts/01…08-*.md` | instructies per pipeline-stap |
+| `config/adina.json` | **Globale feiten**: trust, verzending, retour, bundel, vaste Hebreeuwse teksten (byline, badge, CTA's, brand line) |
+| `CLAUDE.md` | Pipeline, datacontract, harde regels |
+| `brand/gempage-blueprint.md` | De founder-letter GemPage, blok voor blok |
+| `brand/ad-system.md` | De 2 long-form testimonial-ads, stijl, UGC |
+| `brand/testimonial-rules.md` | Wat wel/niet mag met testimonials |
+| `brand/image-rules.md` | Beeldplan, promptformaat, statische creatives |
+| `brand/fact-rules.md` | Nooit verzinnen + hoe ontbrekende input geflagd wordt |
+| `brand/adina.md` · `customer-avatar.md` · `hebrew-style.md` | Merk, klant, Hebreeuws/RTL |
+| `prompts/01…10-*.md` | Instructies per pipeline-stap |
 
-## Volgende stappen (nog niet gebouwd)
+Wijzigingen aan `config/` vragen in Claude Code altijd eerst bevestiging.
 
-- **Creatives genereren**: de beeldprompts uit `creatives.md` automatisch door een image/video-API halen.
-- **Meta Ads API**: campagnes direct als paused aanmaken vanuit `ads.json`.
-- **GitHub-issue → launch**: met `anthropics/claude-code-action` een issue "Launch: <url>" automatisch
-  laten uitvoeren en als PR laten opleveren.
+## Controles (`npm run validate -- <slug>`)
+
+De validator houdt de workflow eerlijk:
+- verplichte input aanwezig; prijzen overal gelijk aan input; geen onbekende ₪-bedragen
+- kleuren alleen uit input (feiten, beeldplan, prompts, creatives)
+- elk voordeel verwijst naar een aangeleverd feature
+- GemPage: exacte blokvolgorde, vaste Hebreeuwse teksten, probleem-eerst (geen korting of product in de header),
+  bundel exact 10/15/20/25, trust-waarden uit config
+- oude logica geblokkeerd: "2e item 20%", "7–14 werkdagen", voorraadclaims, medische claims
+- beelden: elk beeld een doel en een blok, alle 13 promptvelden, geen regeneratie van bestaande foto's
+- ads: precies 2 (discovery + routine), elke ad gekoppeld aan een echte testimonial, elke claim getraced,
+  geen verzonnen leeftijd, Adina + brief-brug aanwezig, prijs laat in de tekst, twee echt verschillende verhalen,
+  geen clichés/emoji-regens
+
+`npm test` draait de testsuite (met een DEMO-fixture, geen echt product) + validatie van alle producten; ook in GitHub Actions.
+
+## Shopify & GemPages
+- `npm run shopify -- <slug>` = dry-run; `--push` maakt het product als **DRAFT** (Hebreeuwse naam, sale- en
+  compare-at-prijs, kleurvarianten, metafield `adina.gempage` met de volledige brief). Maten als range
+  (`S–5XL`) worden niet automatisch varianten. Dat meldt de dry-run.
+- Token: Shopify Admin → Settings → Apps → Develop apps → custom app met `write_products`; zet
+  `SHOPIFY_STORE_DOMAIN` + `SHOPIFY_ADMIN_TOKEN` in `.env`.
+- GemPages: bouw één keer de Adina founder-letter template met de 17 blokken uit `brand/gempage-blueprint.md`;
+  vul hem per product vanuit `output/gempage-copy.md`.
