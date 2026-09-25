@@ -1,0 +1,350 @@
+{
+ "manifest": {
+  "export_version": "export_v2",
+  "theme_page_count": 1,
+  "theme_section_count": 0,
+  "image_url_count": 0,
+  "shop_curr_version": 317576412
+ },
+ "pages_info": [
+  {
+   "id": 692596929263659007,
+   "name": "Anzhela - Founder Letter",
+   "type": "GP_STATIC"
+  }
+ ],
+ "page": {
+  "id": 692596929263659007,
+  "isMobile": false,
+  "splitPercentage": 0,
+  "name": "Anzhela - Founder Letter",
+  "type": "GP_STATIC",
+  "description": "",
+  "handle": "anzhela-founder-letter",
+  "sectionPosition": [
+   "691652820617901466"
+  ],
+  "meta": [
+   {
+    "id": 677046002048478922,
+    "createdAt": "2026-08-26T13:53:00.926100Z",
+    "updatedAt": "2026-08-26T13:53:00.926100Z",
+    "deletedAt": null,
+    "themePageID": 692596929263659007,
+    "key": "seo_title",
+    "value": "\"מכתב מהמייסדת: אנג'לה (עדינה, המייסדת)\"",
+    "edges": {}
+   },
+   {
+    "id": 638016227043273920,
+    "createdAt": "2026-08-26T13:53:00.926100Z",
+    "updatedAt": "2026-08-26T13:53:00.926100Z",
+    "deletedAt": null,
+    "themePageID": 692596929263659007,
+    "key": "global_layout",
+    "value": "{\"showHeader\": true, \"showFooter\": true}",
+    "edges": {}
+   }
+  ],
+  "pageSections": [
+   {
+    "id": 691652820617901466,
+    "createdAt": "2026-08-26T13:53:00.926100Z",
+    "updatedAt": "2026-08-26T13:53:00.926100Z",
+    "deletedAt": null,
+    "shopId": 0,
+    "themePageID": 692596929263659007,
+    "cid": "6MyKrZ4C0e",
+    "name": "Section anzhela-founder-letter",
+    "display": true,
+    "isGlobal": false,
+    "isMobile": false,
+    "appBlocks": "",
+    "libraryPosition": null,
+    "librarySectionID": null,
+    "elementNames": "CSSCode",
+    "globalStoreReleaseID": 317576412,
+    "customFontIDs": null,
+    "checksum": "3f78281d712a7a373c80ae2ffd40888135afa26c8749e00a875244524975aa99",
+    "layoutColumns": null,
+    "layoutRows": null,
+    "edges": {},
+    "component": {
+     "uid": "g2KRkKYNS7",
+     "tag": "Section",
+     "label": "Section",
+     "settings": {
+      "layout": {
+       "desktop": {
+        "cols": [
+         12
+        ],
+        "display": "fill"
+       }
+      },
+      "horizontalAlign": {
+       "desktop": "start"
+      },
+      "verticalAlign": {
+       "desktop": "start"
+      },
+      "lazy": false
+     },
+     "styles": {
+      "verticalGutter": {
+       "desktop": "0px"
+      },
+      "background": {
+       "desktop": {
+        "type": "color",
+        "color": "transparent",
+        "image": {
+         "src": "",
+         "width": 0,
+         "height": 0
+        },
+        "size": "cover",
+        "position": {
+         "x": 50,
+         "y": 50
+        },
+        "repeat": "no-repeat",
+        "attachment": "scroll"
+       }
+      },
+      "preloadBgImage": false,
+      "width": {
+       "desktop": "100%"
+      }
+     },
+     "advanced": {
+      "spacing-setting": {
+       "edited": [
+        "desktop"
+       ],
+       "desktop": {
+        "padding": {
+         "top": "0px",
+         "bottom": "0px"
+        },
+        "link": false
+       },
+       "tablet": {
+        "padding": {
+         "top": "0px",
+         "bottom": "0px"
+        }
+       },
+       "mobile": {
+        "padding": {
+         "top": "0px",
+         "bottom": "0px"
+        }
+       }
+      },
+      "d": {
+       "desktop": true,
+       "tablet": true,
+       "mobile": true
+      },
+      "border": {
+       "desktop": {
+        "normal": {
+         "borderType": "none",
+         "border": "solid",
+         "borderWidth": "0px",
+         "width": "0px",
+         "color": "#121212",
+         "isCustom": true
+        }
+       }
+      },
+      "rounded": {
+       "desktop": {
+        "normal": {
+         "btrr": "0px",
+         "bblr": "0px",
+         "bbrr": "0px",
+         "btlr": "0px",
+         "radiusType": "none"
+        }
+       }
+      },
+      "hasBoxShadow": {
+       "desktop": {
+        "normal": false
+       }
+      },
+      "boxShadow": {
+       "desktop": {
+        "normal": {
+         "type": "shadow-1",
+         "distance": "4px",
+         "blur": "12px",
+         "spread": "0px",
+         "color": "rgba(0,0,0,0.20)",
+         "angle": 90
+        }
+       }
+      },
+      "op": {
+       "desktop": "100%"
+      }
+     },
+     "childrens": [
+      {
+       "uid": "gMkNU1IYAW",
+       "tag": "Col",
+       "label": "Block",
+       "settings": {},
+       "styles": {},
+       "advanced": {
+        "d": {
+         "desktop": true,
+         "tablet": true,
+         "mobile": true
+        },
+        "border": {
+         "desktop": {
+          "normal": {
+           "borderType": "none",
+           "border": "solid",
+           "borderWidth": "0px",
+           "width": "0px",
+           "color": "#121212",
+           "isCustom": true
+          }
+         }
+        },
+        "rounded": {
+         "desktop": {
+          "normal": {
+           "btrr": "0px",
+           "bblr": "0px",
+           "bbrr": "0px",
+           "btlr": "0px",
+           "radiusType": "none"
+          }
+         }
+        },
+        "hasBoxShadow": {
+         "desktop": {
+          "normal": false
+         }
+        },
+        "boxShadow": {
+         "desktop": {
+          "normal": {
+           "type": "shadow-1",
+           "distance": "4px",
+           "blur": "12px",
+           "spread": "0px",
+           "color": "rgba(0,0,0,0.20)",
+           "angle": 90
+          }
+         }
+        },
+        "op": {
+         "desktop": "100%"
+        }
+       },
+       "childrens": [
+        {
+         "uid": "gUBYWpbywi",
+         "tag": "CSSCode",
+         "label": "Custom Code",
+         "customLabel": "Custom Code",
+         "settings": {
+          "editorData": {
+           "customLabel": "Custom Code"
+          },
+          "customLabel": "Custom code",
+          "background": {
+           "desktop": {
+            "type": "color",
+            "color": "transparent",
+            "image": {
+             "src": "",
+             "width": 0,
+             "height": 0
+            },
+            "size": "cover",
+            "position": {
+             "x": 50,
+             "y": 50
+            },
+            "repeat": "no-repeat",
+            "attachment": "scroll"
+           }
+          },
+          "align": {
+           "desktop": "left"
+          }
+         },
+         "styles": {},
+         "advanced": {
+          "d": {
+           "desktop": true,
+           "tablet": true,
+           "mobile": true
+          },
+          "border": {
+           "desktop": {
+            "normal": {
+             "borderType": "none",
+             "border": "none",
+             "borderWidth": "1px",
+             "width": "1px 1px 1px 1px",
+             "color": "line-3",
+             "isCustom": true
+            }
+           }
+          },
+          "rounded": {
+           "desktop": {
+            "normal": {
+             "btrr": "0px",
+             "bblr": "0px",
+             "bbrr": "0px",
+             "btlr": "0px",
+             "radiusType": "none"
+            }
+           }
+          },
+          "hasBoxShadow": {
+           "desktop": {
+            "normal": false
+           }
+          },
+          "boxShadow": {
+           "desktop": {
+            "normal": {}
+           }
+          },
+          "op": {
+           "desktop": "100%"
+          },
+          "spacing-setting": {
+           "desktop": {
+            "margin": {
+             "bottom": 0
+            }
+           }
+          },
+          "editorData": {
+           "customLabel": "Custom Code",
+           "rootClassName": "{{rootClassName}}",
+           "html": "{{HTML}}",
+           "css": "{{CSS}}",
+           "javascript": ""
+          }
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

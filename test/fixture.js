@@ -133,6 +133,7 @@ export function demoProduct() {
       product_color: role === 'variation' ? 'Gray' : 'Blue',
       model: role === 'variation' ? 'model B' : 'model A',
       setting: 'test',
+      url: `https://cdn.example.com/demo/IMG-0${i + 1}.png`,
     })),
     existing_images_reviewed: input.existing_product_images,
     notes: '',

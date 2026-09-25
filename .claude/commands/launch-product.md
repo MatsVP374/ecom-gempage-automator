@@ -12,6 +12,8 @@ Voer de volledige Adina Fashion launch-pipeline uit voor: `$ARGUMENTS`
 4. Voer stap 1 t/m 10 uit volgens de tabel in `CLAUDE.md`, telkens met de instructies uit
    `prompts/<nr>-*.md`. Sla stappen met bestaande output over, tenzij `--force`.
    - Stap 1 met `status: "missing_input"` → STOP en meld.
+   - Stap 5b = `node scripts/images.js <slug>` (OpenAI → Shopify). Mislukt het, neem de foutmelding op als
+     flag `IMAGES NOT GENERATED — …` en ga door.
    - Stap 8 zonder bruikbare testimonial → `status: "blocked"` + flag, ga door met 9–10.
 5. Na stap 6, 8 en 9 en aan het eind: `node scripts/validate.js <slug>` → fix errors tot 0.
 6. `node scripts/export.js <slug>`.

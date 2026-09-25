@@ -62,9 +62,10 @@ export function buildShopifyPayload(p) {
   };
 }
 
-async function gql(query, variables) {
-  const { SHOPIFY_STORE_DOMAIN: shop, SHOPIFY_ADMIN_TOKEN: token, SHOPIFY_API_VERSION: v = '2025-07' } = process.env;
-  const res = await fetch(`https://${shop}/admin/api/${v}/graphql.json`, {
+export async function gql(query, variables) {
+  const { SHOPIFY_STORE_DOMAIN: shop, SHOPIFY_ADMIN_TOKEN: token, SHOPIFY_API_VERSION: v = '2025-07', SHOPIFY_GRAPHQL_URL } = process.env;
+  if (!token || (!shop && !SHOPIFY_GRAPHQL_URL)) throw new Error('SHOPIFY_STORE_DOMAIN and SHOPIFY_ADMIN_TOKEN must be set in .env');
+  const res = await fetch(SHOPIFY_GRAPHQL_URL || `https://${shop}/admin/api/${v}/graphql.json`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token },
     body: JSON.stringify({ query, variables }),
@@ -74,7 +75,7 @@ async function gql(query, variables) {
   return body.data;
 }
 
-const userErrors = (r, what) => {
+export const userErrors = (r, what) => {
   if (r.userErrors?.length) throw new Error(`${what}: ${r.userErrors.map((e) => `${e.field?.join('.')}: ${e.message}`).join('; ')}`);
 };
 

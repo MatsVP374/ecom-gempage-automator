@@ -1,7 +1,9 @@
 # Stap 10: Final launch package → `09-qa-report.md` (compleet) + `output/`
 
 1. `node scripts/validate.js <slug>` → 0 errors (fix wat nodig is).
-2. `node scripts/export.js <slug>` → `output/`.
+2. `node scripts/export.js <slug>` → `output/`, inclusief `output/<slug>-founder-letter.gempages`.
+   Controleer in `output/launch-package.md` dat alle beelden een Shopify-URL hebben; zo niet, flag
+   `IMAGES NOT GENERATED — <welke IMG's>` (de `.gempages` bevat dan placeholders).
 3. Vul `09-qa-report.md` aan met `## Stap 10: Final QA`:
 
 TESTIMONIAL

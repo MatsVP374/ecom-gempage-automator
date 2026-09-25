@@ -3,3 +3,4 @@ node_modules/
 .DS_Store
 products/*/output/
 products/*/.job.log
+products/*/images/

@@ -290,6 +290,7 @@ function gempage(el, d) {
       <button data-lang="en" class="${state.lang === 'en' ? 'primary' : ''}">English master</button>
       <a class="btn" target="_blank" href="/api/products/${d.slug}/preview?lang=${state.lang}">Open in nieuw tabblad ↗</a>
       ${d.outputs.includes('gempage-copy.md') ? `<a class="btn" target="_blank" href="/api/products/${d.slug}/output/gempage-copy.md">Copy per blok</a>` : ''}
+      ${d.outputs.some((f) => f.endsWith('.gempages')) ? `<a class="btn primary" href="/api/products/${d.slug}/output/${d.slug}-founder-letter.gempages">⬇ .gempages (Import)</a>` : ''}
     </div>
     <iframe src="/api/products/${d.slug}/preview?lang=${state.lang}"></iframe>`;
   $$('[data-lang]', el).forEach((b) => (b.onclick = () => { state.lang = b.dataset.lang; save(); render(); }));
@@ -300,14 +301,24 @@ function images(el, d) {
   const plan = d.plan?.images ?? [];
   if (!plan.length) { el.innerHTML = '<div class="empty">Nog geen beeldplan (stap 4).</div>'; return; }
   const prompts = Object.fromEntries((d.prompts?.prompts ?? []).map((p) => [p.image_id, p]));
-  el.innerHTML = `<div class="card"><h3>GemPage image plan</h3><p class="muted">Bestaande productfoto's worden niet opnieuw gegenereerd.</p><table>
-    <tr><th>ID</th><th>Rol</th><th>Blok</th><th>Doel</th><th>Bron</th><th>Kleur</th></tr>
-    ${plan.map((i) => `<tr><td><b>${esc(i.id)}</b></td><td>${esc(i.role)}</td><td>${esc(i.block)}${i.benefit_n ? ` #${i.benefit_n}` : ''}</td><td>${esc(i.purpose)}</td><td>${i.source === 'existing' ? `existing<br><small>${esc(i.existing_image)}</small>` : 'generate'}</td><td>${esc(i.product_color)}</td></tr>`).join('')}</table></div>
+  const running = d.job?.running;
+  const thumb = (i) => i.url ? `<img src="${esc(i.url)}" style="width:72px;height:72px;object-fit:cover;border-radius:6px">` : i.file ? `<img src="/api/products/${d.slug}/image/${esc(i.id)}.png" style="width:72px;height:72px;object-fit:cover;border-radius:6px;opacity:.6" title="nog niet op Shopify">` : '<span class="muted">—</span>';
+  const done = plan.filter((i) => i.url).length;
+  el.innerHTML = `<div class="card"><div class="toolbar" style="justify-content:space-between"><h3 style="margin:0">GemPage image plan · ${done}/${plan.length} op Shopify</h3>
+      <span><button class="primary" id="genimg" ${running || !d.prompts ? 'disabled' : ''}>${running ? '⏳ Bezig…' : '🎨 Genereer (OpenAI) + upload naar Shopify'}</button>
+      <button class="small" id="regen" ${running ? 'disabled' : ''}>Alles opnieuw</button></span></div>
+    <p class="muted">Bestaande productfoto's worden niet opnieuw gegenereerd. OpenAI krijgt de productfoto's mee als referentie, zodat het product hetzelfde blijft.</p><table>
+    <tr><th></th><th>ID</th><th>Rol</th><th>Blok</th><th>Doel</th><th>Bron</th><th>Kleur</th></tr>
+    ${plan.map((i) => `<tr><td>${thumb(i)}</td><td><b>${esc(i.id)}</b></td><td>${esc(i.role)}</td><td>${esc(i.block)}${i.benefit_n ? ` #${i.benefit_n}` : ''}</td><td>${esc(i.purpose)}</td><td>${i.source === 'existing' ? `existing` : 'generate'}</td><td>${esc(i.product_color)}</td></tr>`).join('')}</table></div>
+    ${d.job ? `<div class="card"><div class="log">${esc(d.job.log.slice(-30).join('\n'))}</div></div>` : ''}
     ${plan.filter((i) => prompts[i.id]).map((i) => { const p = prompts[i.id]; return `<div class="card">
-      <div class="fieldhead"><h3>${esc(i.id)} — ${esc(i.role)} <span class="muted">${esc(p.aspect_ratio ?? '')}</span></h3><button class="small" data-copy="${esc(p.prompt)}">Kopieer prompt</button></div>
+      <div class="fieldhead"><h3>${esc(i.id)} — ${esc(i.role)} <span class="muted">${esc(p.aspect_ratio ?? '')}</span></h3><button class="small" data-copy="${esc(p.prompt)}">Kopieer</button></div>
       <div class="copy">${esc(p.prompt)}</div>
       <p class="muted">Referenties: ${esc((p.reference_images ?? []).join(', ') || '—')}</p>
       <details><summary>13 velden</summary><table>${Object.entries(p.fields ?? {}).map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</table></details></div>`; }).join('')}`;
+  const go = async (force) => { try { await api(`/products/${d.slug}/images`, { method: 'POST', body: { mode: 'all', force } }); await refresh(); } catch (e) { alert(e.message); } };
+  $('#genimg').onclick = () => go(false);
+  $('#regen').onclick = () => confirm('Alle beelden opnieuw genereren (kost OpenAI-credits)?') && go(true);
 }
 
 // ---------- META ADS ----------
@@ -351,7 +362,7 @@ async function qa(el, d) {
 
 // ---------- EXPORT ----------
 function exportTab(el, d) {
-  const labels = { 'launch-package.md': 'Launch package (samenvatting)', 'gempage-copy.md': 'GemPage copy per blok', 'gempage.he.html': 'GemPage preview HE', 'gempage.en.html': 'GemPage preview EN (master)', 'gempage-embed.html': 'GemPage embed (Custom HTML)', 'image-prompts.md': 'Beeldplan + prompts', 'meta-ads.md': 'Meta-ads (Ads Manager-formaat)', 'meta-ads.csv': 'Meta-ads CSV', 'creative-plan.md': 'Creative plan + UGC', 'shopify-product.json': 'Shopify payload', 'shopify-result.json': 'Shopify resultaat' };
+  const labels = { [`${d.slug}-founder-letter.gempages`]: '⭐ GemPages-bestand (Import in GemPages)', 'launch-package.md': 'Launch package (samenvatting)', 'gempage-copy.md': 'GemPage copy per blok', 'gempage.he.html': 'GemPage preview HE', 'gempage.en.html': 'GemPage preview EN (master)', 'image-prompts.md': 'Beeldplan + prompts', 'meta-ads.md': 'Meta-ads (Ads Manager-formaat)', 'meta-ads.csv': 'Meta-ads CSV', 'creative-plan.md': 'Creative plan + UGC', 'shopify-product.json': 'Shopify payload', 'shopify-result.json': 'Shopify resultaat' };
   el.innerHTML = `
     <div class="card toolbar">
       <button id="exp">Export opnieuw bouwen</button>

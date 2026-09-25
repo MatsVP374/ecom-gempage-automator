@@ -16,6 +16,7 @@ INPUT NEW PRODUCT
   → [3] GemPage founder-letter copy (Engelse master)
   → [4] GemPage image plan         ← welke extra storytelling-foto's de brief nodig heeft
   → [5] Image-generation prompts
+  → [5b] Beelden genereren (OpenAI) + uploaden naar Shopify-CDN   ← script, volledig automatisch
   → [6] GemPage build (Hebreeuws)
   → [7] Quality control
   → [8] 2 long-form Meta-ads       ← vanuit een echte klanttestimonial
@@ -60,6 +61,20 @@ claude
 | `/meta-ads <slug> [instructies]` | Alleen de 2 Meta-ads (opnieuw), bv. nadat je testimonials hebt toegevoegd |
 | `/push-shopify <slug>` | Validatie → dry-run → na jouw "ja" als DRAFT in Shopify |
 
+## Automatisering: OpenAI-beelden + importeerbare GemPage
+
+- **Tekst** (fact sheet, angle, brief, ads, creatives) schrijft Claude Code volgens de blueprints.
+- **Beelden**: `npm run images -- <slug>` stuurt elke beeldprompt, met de bestaande productfoto's als referentie,
+  naar de OpenAI Images API (`gpt-image-1`, instelbaar met `OPENAI_IMAGE_MODEL`). Het resultaat gaat naar
+  Shopify Files en de CDN-URL komt in het beeldplan. Bestaande productfoto's worden nooit opnieuw gegenereerd.
+  In de UI: tab IMAGES → **🎨 Genereer + upload**.
+- **GemPage**: `output/<slug>-founder-letter.gempages` is een echt GemPages-exportbestand (zelfde formaat als
+  een export uit GemPages), met de brief in het Adina-design. In GemPages: **Pages → Import → upload**.
+
+Nodig in `.env` (zie `.env.example`): `OPENAI_API_KEY`, `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_ADMIN_TOKEN`
+(custom app met `write_files` en `write_products`). Draai je het in de cloud, laat dan netwerktoegang toe tot
+`api.openai.com`, `<winkel>.myshopify.com`, `cdn.shopify.com` en `storage.googleapis.com` (Shopify-uploads).
+
 ## Wat je aanlevert
 
 Template: `templates/product-input.md` (hetzelfde als het formulier in de UI).
@@ -95,10 +110,10 @@ products/<slug>/
 ├── 08-ugc.json                UGC-script (alleen als gevraagd)
 ├── 09-qa-report.md            QA-checklist + flags + "voor de mens"
 └── output/                    ← het launch package
+    ├── <slug>-founder-letter.gempages   ⭐ importeerbaar in GemPages
     ├── launch-package.md      ✓/✗-overzicht + READY FOR
     ├── gempage-copy.md        copy per GemPage-blok (26 elementen), plakklaar
     ├── gempage.he.html        preview (RTL) · gempage.en.html (master)
-    ├── gempage-embed.html     plakbaar in een GemPages Custom HTML-element
     ├── image-prompts.md       beeldplan + prompts
     ├── meta-ads.md            exact Ads Manager-formaat (AD 1 / PRIMARY TEXT / HEADLINE / DESCRIPTION)
     ├── meta-ads.csv

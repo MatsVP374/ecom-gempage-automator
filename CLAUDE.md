@@ -47,11 +47,12 @@ Commando: `/launch-product <slug>` (volledig) · `/launch-step <slug> <stap>` (�
 | 3 | GemPage founder-letter copy (Engelse master) | `prompts/03-gempage-copy.md` | `03-gempage-copy.en.json` |
 | 4 | GemPage image plan | `prompts/04-gempage-image-plan.md` | `04-gempage-image-plan.json` |
 | 5 | Image-generation prompts | `prompts/05-image-prompts.md` | `05-image-prompts.json` |
+| 5b | Beelden genereren (OpenAI) + uploaden (Shopify CDN) | `node scripts/images.js <slug>` | `images/IMG-xx.png`, `url` per beeld in `04-…plan.json` |
 | 6 | GemPage build / Hebreeuws | `prompts/06-gempage-build-he.md` | `03-gempage-copy.he.json` |
 | 7 | Quality control (feiten, GemPage, beelden) | `prompts/07-quality-control.md` | `09-qa-report.md` (deel 1) |
 | 8 | 2 Meta-ads | `prompts/08-meta-ads.md` | `06-meta-ads.json` |
 | 9 | Creative plan + UGC | `prompts/09-creative-plan.md` | `07-creative-plan.json`, `08-ugc.json` |
-| 10 | Final launch package | `prompts/10-final-package.md` | `09-qa-report.md` (compleet) + `output/` |
+| 10 | Final launch package | `prompts/10-final-package.md` | `09-qa-report.md` (compleet) + `output/` incl. **`<slug>-founder-letter.gempages`** |
 
 Regels:
 - **Stap 0 is een poort.** Draai eerst `node scripts/validate.js <slug> --stage input`. Ontbreken
@@ -59,6 +60,11 @@ Regels:
 - Elke stap leest de output van alle eerdere stappen opnieuw. Na stap 2 wijk je niet meer af van de
   centrale angle; wil je dat, zeg het dan en pas stap 2 aan.
 - Bestaat een outputbestand al, sla de stap dan over, tenzij `--force` of een expliciete opdracht.
+- Stap 5b is een script, geen schrijfwerk: `node scripts/images.js <slug>`. Het stuurt elke prompt met de
+  bestaande productfoto's als referentie naar de OpenAI Images API, uploadt het resultaat naar Shopify Files
+  en zet de CDN-URL in het beeldplan. Faalt het (geen `OPENAI_API_KEY`/Shopify-token, netwerk geblokkeerd),
+  meld dan de exacte foutmelding als flag `IMAGES NOT GENERATED — …` en ga door; de `.gempages` krijgt dan
+  zichtbare placeholders. Genereer nooit beelden op een andere manier en verzin geen beeld-URL's.
 - Na stap 6, 8 en 9: `node scripts/validate.js <slug>` en fix alle **errors** vóór je verdergaat.
 - Stap 8 zonder bruikbare testimonial → schrijf `06-meta-ads.json` met `"status": "blocked"` en de
   flag `TESTIMONIAL DATA INSUFFICIENT`, ga door met stap 9–10, en meld het in de eindchecklist.
@@ -245,6 +251,13 @@ Als `input.ugc_needed` false is: `{ "needed": false, "reason": "not requested" }
 ### `09-qa-report.md`
 Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle flags, en "Voor de mens".
 
+## GemPages-bestand (`.gempages`)
+
+`node scripts/gempages.js <slug>` (ook onderdeel van `export.js`) bouwt een importeerbaar GemPages-bestand:
+één pagina → één sectie → één Custom Code-element met de brief in Adina's design
+(`templates/gempage/letter.css` + `skeleton.json`, afgeleid van een echte GemPages-export). In GemPages:
+**Pages → Import → upload het bestand**. Beelden komen van de Shopify-CDN-URL's uit stap 5b.
+
 ## Harde regels
 
 - **Nooit feiten verzinnen** (materiaal, kleuren, maten, pasvorm, functies, prijzen, voorraad,
@@ -268,12 +281,13 @@ ADINA PRODUCT LAUNCH — <hebrew_product_name>
 ✓ GemPage copy complete          17 blocks · HE + EN master
 ✓ 7 GemPage images planned       5 generate · 2 existing
 ✓ Image prompts complete         5
+✓ Images generated + on Shopify  7/7
 ✓ 2 Meta ads complete            (of: ✗ BLOCKED — TESTIMONIAL DATA INSUFFICIENT)
 ✓ Creative plan complete         4 statics · UGC: no
 ✓ QA passed                      0 errors · 3 warnings
 
 READY FOR:
-→ GemPages          output/gempage-copy.md · output/gempage.he.html
+→ GemPages          output/<slug>-founder-letter.gempages (Import) · output/gempage.he.html (preview)
 → Image generation  output/image-prompts.md
 → Meta Ads Manager  output/meta-ads.md · output/meta-ads.csv
 ```

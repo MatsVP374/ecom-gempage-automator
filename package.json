@@ -13,6 +13,8 @@
     "validate": "node scripts/validate.js",
     "export": "node scripts/export.js",
     "shopify": "node scripts/shopify-push.js",
-    "test": "node --test test/*.test.js && node scripts/validate.js --all"
+    "test": "node --test test/*.test.js && node scripts/validate.js --all",
+    "images": "node scripts/images.js",
+    "gempages": "node scripts/gempages.js"
   }
 }

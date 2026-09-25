@@ -4,7 +4,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { loadProduct, loadConfig, listSlugs, parseArgs, renderLetterDocument, renderLetterFragment, LETTER_CSS, writeJSON, shekel } from './lib.js';
+import { loadProduct, loadConfig, listSlugs, parseArgs, writeJSON, shekel } from './lib.js';
+import { renderGpDocument, buildGempages } from './gempages.js';
 import { validateProduct } from './validate.js';
 import { buildShopifyPayload } from './shopify-push.js';
 
@@ -120,8 +121,8 @@ function imagePromptsMd(p) {
   const prompts = Object.fromEntries((p.prompts?.prompts ?? []).map((x) => [x.image_id, x]));
   const out = [`# GemPage image plan + prompts — ${p.input?.product_name ?? p.slug}`, ''];
   out.push('Bestaande productfoto\'s worden niet opnieuw gegenereerd. Alleen beelden met `generate` hebben een prompt.', '');
-  out.push('| ID | Rol | Blok | Doel | Bron | Kleur |', '|---|---|---|---|---|---|');
-  plan.forEach((i) => out.push(`| ${i.id} | ${i.role} | ${i.block}${i.benefit_n ? ` #${i.benefit_n}` : ''} | ${i.purpose} | ${i.source === 'existing' ? `existing: ${i.existing_image}` : 'generate'} | ${i.product_color} |`));
+  out.push('| ID | Rol | Blok | Doel | Bron | Kleur | Shopify URL |', '|---|---|---|---|---|---|---|');
+  plan.forEach((i) => out.push(`| ${i.id} | ${i.role} | ${i.block}${i.benefit_n ? ` #${i.benefit_n}` : ''} | ${i.purpose} | ${i.source === 'existing' ? `existing: ${i.existing_image}` : 'generate'} | ${i.product_color} | ${i.url ?? '—'} |`));
   for (const i of plan) {
     const x = prompts[i.id];
     if (!x) continue;
@@ -166,7 +167,7 @@ function creativePlanMd(p) {
   return out.join('\n') + '\n';
 }
 
-function launchPackageMd(p, v) {
+function launchPackageMd(p, v, gp) {
   const cfg = loadConfig();
   const plan = p.plan?.images ?? [];
   const gen = plan.filter((i) => i.source === 'generate').length;
@@ -182,6 +183,7 @@ function launchPackageMd(p, v) {
     `${ok(step('gempage-he'))} GemPage copy complete          ${(p.gempage.he?.blocks ?? []).length} blocks · HE + EN master`,
     `${ok(plan.length)} ${plan.length} GemPage images planned       ${gen} generate · ${plan.length - gen} existing`,
     `${ok(step('image-prompts'))} Image prompts complete         ${(p.prompts?.prompts ?? []).length}`,
+    `${ok(step('images'))} Images generated + on Shopify  ${plan.filter((i) => i.url).length}/${plan.length}${gp?.missingImages?.length ? ` · missing: ${gp.missingImages.join(', ')}` : ''}`,
     ads?.status === 'ready'
       ? `✓ 2 Meta ads complete`
       : `✗ Meta ads ${String(ads?.status ?? 'missing').toUpperCase()}${ads?.flags?.length ? ` — ${ads.flags[0]}` : ''}`,
@@ -189,7 +191,7 @@ function launchPackageMd(p, v) {
     `${ok(!v.errors.length)} QA ${v.errors.length ? 'FAILED' : 'passed'}                      ${v.errors.length} errors · ${v.warnings.length} warnings`,
     '',
     v.ready ? 'READY FOR:' : 'NOT READY YET — resolve the flags/errors below. Available so far:',
-    '→ GemPages          gempage-copy.md · gempage.he.html · gempage-embed.html',
+    `→ GemPages          ${gp ? gp.name + ' (Import)' : '—'} · gempage.he.html (preview) · gempage-copy.md`,
     '→ Image generation  image-prompts.md',
     `→ Meta Ads Manager  ${ads?.status === 'ready' ? 'meta-ads.md · meta-ads.csv · creative-plan.md' : '(blocked) · creative-plan.md'}`,
     '```',
@@ -216,10 +218,14 @@ export function exportProduct(slug) {
     written.push(name);
   };
   const opts = { plan: p.plan, input: p.input };
-  for (const lang of ['en', 'he']) if (p.gempage[lang]) write(`gempage.${lang}.html`, renderLetterDocument(p.gempage[lang], opts));
+  for (const lang of ['en', 'he']) if (p.gempage[lang]) write(`gempage.${lang}.html`, renderGpDocument(p.gempage[lang], opts));
+  let gp = null;
   if (p.gempage.he) {
-    write('gempage-embed.html', `<style>${LETTER_CSS}</style>\n${renderLetterFragment(p.gempage.he, opts)}\n`);
     write('gempage-copy.md', gempageCopyMd(p));
+    // Importable GemPages file. Images without a Shopify URL become visible placeholders (see launch-package.md).
+    gp = buildGempages(p, { allowMissingImages: true });
+    for (const f of fs.readdirSync(out)) if (f.endsWith('.gempages')) fs.rmSync(path.join(out, f));
+    write(gp.name, gp.file);
   }
   if (p.plan) write('image-prompts.md', imagePromptsMd(p));
   if (p.ads) {
@@ -238,7 +244,7 @@ export function exportProduct(slug) {
     const pre = validateProduct(slug);
     // launch-package.md itself completes the last step, so recompute readiness as if it exists.
     pre.ready = !pre.errors.length && p.ads.status === 'ready' && pre.steps.every((s) => s.done || s.id === 'package');
-    write('launch-package.md', launchPackageMd(p, pre));
+    write('launch-package.md', launchPackageMd(p, pre, gp));
   }
   return written;
 }

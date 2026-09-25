@@ -7,7 +7,9 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
-import { ROOT, loadEnv, loadProduct, listSlugs, productDir, renderLetterDocument, missingInput, loadConfig } from '../scripts/lib.js';
+import { ROOT, loadEnv, loadProduct, listSlugs, productDir, missingInput, loadConfig } from '../scripts/lib.js';
+import { renderGpDocument } from '../scripts/gempages.js';
+import { runImages } from '../scripts/images.js';
 import { saveInput } from '../scripts/new-product.js';
 import { validateProduct } from '../scripts/validate.js';
 import { exportProduct } from '../scripts/export.js';
@@ -26,6 +28,27 @@ const COMMANDS = {
   step: (slug, extra) => `/launch-step ${slug} ${extra}`,
   'meta-ads': (slug, extra) => `/meta-ads ${slug}${extra ? ' ' + extra : ''}`,
 };
+
+// Images (OpenAI → Shopify) run in-process as a job with the same live log as Claude runs.
+function runImagesJob(slug, mode = 'all', { force = false, only = null } = {}) {
+  if (jobs.get(slug)?.running) throw new Error('A job is already running for this product');
+  const job = { running: true, log: [`$ node scripts/images.js ${slug} ${mode}${force ? ' --force' : ''}`], started: new Date().toISOString(), finished: null, code: null };
+  jobs.set(slug, job);
+  runImages(slug, { mode, force, only, log: (l) => job.log.push(l) })
+    .then((s) => {
+      job.log.push(`✓ generated: ${s.generated.join(', ') || '—'} · uploaded: ${s.uploaded.join(', ') || '—'}`, ...s.skipped.map((x) => `  skipped ${x}`), ...s.errors.map((e) => `✗ ${e}`));
+      job.code = s.errors.length ? 1 : 0;
+    })
+    .catch((e) => {
+      job.log.push(`✗ ${e.message}`);
+      job.code = 1;
+    })
+    .finally(() => {
+      job.running = false;
+      job.finished = new Date().toISOString();
+    });
+  return job;
+}
 
 function runClaude(slug, mode, extra = '') {
   const existing = jobs.get(slug);
@@ -113,7 +136,7 @@ async function readBody(req) {
   return data ? JSON.parse(data) : {};
 }
 
-const MIME = { '.js': 'text/javascript; charset=utf-8', '.html': 'text/html; charset=utf-8', '.md': 'text/markdown; charset=utf-8', '.csv': 'text/csv; charset=utf-8', '.json': 'application/json; charset=utf-8', '.log': 'text/plain; charset=utf-8' };
+const MIME = { '.gempages': 'application/zip', '.png': 'image/png', '.js': 'text/javascript; charset=utf-8', '.html': 'text/html; charset=utf-8', '.md': 'text/markdown; charset=utf-8', '.csv': 'text/csv; charset=utf-8', '.json': 'application/json; charset=utf-8', '.log': 'text/plain; charset=utf-8' };
 
 const summary = (slug) => {
   const p = loadProduct(slug);
@@ -163,15 +186,26 @@ async function route(req, res) {
       const p = loadProduct(slug);
       const page = p.gempage[lang];
       if (!page) return send(res, 200, `<p style="font-family:sans-serif;padding:2em;color:#888">03-gempage-copy.${lang}.json does not exist yet.</p>`, MIME['.html']);
-      return send(res, 200, renderLetterDocument(page, { plan: p.plan, input: p.input }), MIME['.html']);
+      return send(res, 200, renderGpDocument(page, { plan: p.plan, input: p.input }), MIME['.html']);
     }
     if (m === 'GET' && action === 'output' && parts[4]) {
       const file = path.join(productDir(slug), 'output', path.basename(parts[4]));
       if (!fs.existsSync(file)) return send(res, 404, { error: 'Not found' });
       const type = MIME[path.extname(file)] ?? 'application/octet-stream';
       const headers = { 'Content-Type': type };
-      if (url.searchParams.has('download')) headers['Content-Disposition'] = `attachment; filename="${slug}-${path.basename(file)}"`;
+      if (url.searchParams.has('download') || file.endsWith('.gempages')) headers['Content-Disposition'] = `attachment; filename="${slug}-${path.basename(file)}"`;
       res.writeHead(200, headers);
+      return fs.createReadStream(file).pipe(res);
+    }
+    if (m === 'POST' && action === 'images') {
+      const b = await readBody(req);
+      runImagesJob(slug, ['all', 'generate', 'upload'].includes(b.mode) ? b.mode : 'all', { force: !!b.force, only: b.only ?? null });
+      return send(res, 202, { ok: true });
+    }
+    if (m === 'GET' && action === 'image' && parts[4]) {
+      const file = path.join(productDir(slug), 'images', path.basename(parts[4]));
+      if (!/\.png$/.test(file) || !fs.existsSync(file)) return send(res, 404, { error: 'Not found' });
+      res.writeHead(200, { 'Content-Type': 'image/png' });
       return fs.createReadStream(file).pipe(res);
     }
     if (m === 'POST' && action === 'generate') {

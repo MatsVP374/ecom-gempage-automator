@@ -10,7 +10,9 @@
       "Bash(node scripts/new-product.js:*)",
       "Bash(node scripts/validate.js:*)",
       "Bash(node scripts/export.js:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(node scripts/images.js:*)",
+      "Bash(node scripts/gempages.js:*)"
     ],
     "deny": [
       "Read(.env)"

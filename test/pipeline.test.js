@@ -30,6 +30,16 @@ test('complete demo product validates with 0 errors and exports a ready launch p
   assert.equal(validateProduct(slug).ready, true);
 });
 
+test('launch without generated images is not ready and the .gempages shows placeholders', () => {
+  const slug = writeDemo(dir, (d) => d.plan.images.forEach((i) => delete i.url));
+  exportProduct(slug);
+  const v = validateProduct(slug);
+  assert.equal(v.ready, false);
+  assert.equal(v.steps.find((s) => s.id === 'images').done, false);
+  const pkg = fs.readFileSync(path.join(dir, slug, 'output', 'launch-package.md'), 'utf8');
+  assert.match(pkg, /missing: IMG-01/);
+});
+
 test('meta-ads.md uses the exact Meta output format', () => {
   const slug = writeDemo(dir);
   exportProduct(slug);

@@ -42,6 +42,6 @@
   "המידות: S עד XXL" dan "S-XXL מידות".
 - Getallen met een plus (`15+`, `2,550+`) worden in RTL als `+15` getoond. In lopende tekst liever
   `יותר מ־15 שנה` / `יותר מ־2,550 ביקורות`. In GemPages-velden met alleen het getal (trust bar): zet het
-  element op LTR of gebruik de export (`gempage-embed.html` isoleert het al).
+  element op LTR of gebruik het `.gempages`-bestand (dat isoleert het al).
 - Geen losse haakjes/aanhalingstekens rond gemengde tekst; gebruik ״ (gershayim) voor afkortingen.
 - In ads: geen of hooguit 1–2 emoji. In de GemPage: ✓ voor offer-bullets, ★ voor rating, verder niets.
