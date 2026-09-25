@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adina Product Launcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#2b2522;--muted:#7a6f69;--accent:#8a5a44;--accent-soft:#f3e7df;--bg:#fbf8f5;--card:#fff;--line:#eadfd6;--ok:#3f7d4e;--err:#b3412f;--warn:#b07a1b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Assistant",system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:15px}
+  header{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--card)}
+  header h1{font-size:1.1rem;margin:0;letter-spacing:.08em;text-transform:uppercase}
+  header span{color:var(--muted)}
+  .layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 54px)}
+  aside{border-inline-end:1px solid var(--line);padding:16px;background:var(--card)}
+  main{padding:20px;min-width:0}
+  button,.btn{font:inherit;border:1px solid var(--ink);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-block}
+  button.primary{background:var(--ink);color:#fff}
+  button.big{font-size:1.1rem;padding:14px 20px;width:100%}
+  button:disabled{opacity:.5;cursor:wait}
+  input,select,textarea{font:inherit;width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  label{display:block;font-size:.85rem;color:var(--muted);margin:8px 0 3px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .plist{list-style:none;padding:0;margin:12px 0}
+  .plist li{padding:10px;border-radius:10px;cursor:pointer;margin-bottom:4px}
+  .plist li:hover{background:var(--accent-soft)}
+  .plist li.active{background:var(--accent-soft);outline:1px solid var(--accent)}
+  .plist .t{font-weight:600}
+  .bar{height:4px;background:var(--line);border-radius:4px;margin-top:6px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent)}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+  .tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 12px;letter-spacing:.06em;font-size:.85rem;font-weight:600;color:var(--muted)}
+  .tabs button.on{color:var(--ink);border-color:var(--ink)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .steps{list-style:none;padding:0;margin:0;columns:2}
+  .steps li{padding:3px 0}
+  .steps li.done::before{content:"✓ ";color:var(--ok);font-weight:700}
+  .steps li:not(.done)::before{content:"○ ";color:var(--muted)}
+  .log{background:#1f1b19;color:#e8e1dc;font:12px/1.5 ui-monospace,monospace;padding:12px;border-radius:10px;max-height:340px;overflow:auto;white-space:pre-wrap}
+  iframe{width:100%;height:78vh;border:1px solid var(--line);border-radius:12px;background:#fff}
+  table{border-collapse:collapse;width:100%}
+  td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:start;vertical-align:top}
+  .pill{display:inline-block;padding:1px 8px;border-radius:99px;background:var(--accent-soft);font-size:.8rem}
+  .copy{white-space:pre-wrap;background:var(--bg);border-radius:8px;padding:10px 10px 22px;margin:6px 0;position:relative}
+  .copy small{position:absolute;inset-inline-end:8px;bottom:4px;color:var(--muted)}
+  .copy.over small{color:var(--err);font-weight:700}
+  .err{color:var(--err)}.warn{color:var(--warn)}.ok{color:var(--ok)}
+  .muted{color:var(--muted)}
+  .md h1,.md h2,.md h3{margin:1em 0 .4em}.md p{margin:.4em 0}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .empty{text-align:center;padding:60px 20px;color:var(--muted)}
+  @media (max-width:800px){.layout{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.steps{columns:1}}
+</style>
+</head>
+<body>
+<header><h1>Adina Product Launcher</h1><span>URL → Hebreeuwse PDP → GemPages → Ads</span></header>
+<div class="layout">
+  <aside>
+    <details id="newbox">
+      <summary><b>+ Nieuw product</b></summary>
+      <form id="newform">
+        <label>Supplier URL</label><input name="url" placeholder="https://…" required>
+        <label>Slug (Engels, kebab-case)</label><input name="slug" placeholder="noa-linen-top" pattern="[a-z0-9][a-z0-9-]*" required>
+        <div class="row">
+          <div><label>Inkoop (€)</label><input name="cost" type="number" step="0.01"></div>
+          <div><label>Verkoop (₪)</label><input name="price" type="number"></div>
+        </div>
+        <div class="row">
+          <div><label>Compare-at (₪)</label><input name="compare" type="number"></div>
+          <div><label>Categorie</label><input name="category" placeholder="blouse"></div>
+        </div>
+        <label>Doelgroep</label><input name="target" value="women 45-65">
+        <label>Notes</label><textarea name="notes" rows="3" placeholder="Focus op ademende stof en flatterende pasvorm"></textarea>
+        <p><button class="primary" type="submit">Aanmaken</button></p>
+      </form>
+    </details>
+    <ul class="plist" id="plist"></ul>
+  </aside>
+  <main id="main"><div class="empty">Kies een product of maak een nieuw product aan.</div></main>
+</div>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const api = async (path, opts = {}) => {
+  const r = await fetch('/api' + path, { headers: { 'Content-Type': 'application/json' }, ...opts, body: opts.body ? JSON.stringify(opts.body) : undefined });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || r.statusText);
+  return data;
+};
+const TABS = ['overview', 'page', 'hebrew', 'ads', 'creatives', 'qa', 'export'];
+const state = { slug: null, tab: 'overview', data: null, lang: 'he', adLang: 'he', poll: null };
+try { Object.assign(state, JSON.parse(localStorage.getItem('adina-ui') || '{}'), { data: null, poll: null }); } catch {}
+const save = () => { try { localStorage.setItem('adina-ui', JSON.stringify({ slug: state.slug, tab: state.tab, lang: state.lang, adLang: state.adLang })); } catch {} };
+
+async function loadList() {
+  const list = await api('/products');
+  $('#plist').innerHTML = list.map((p) => {
+    const done = p.steps.filter((s) => s.done).length;
+    return `<li data-slug="${esc(p.slug)}" class="${p.slug === state.slug ? 'active' : ''}">
+      <div class="t" dir="auto">${esc(p.title)}</div><div class="muted">${esc(p.slug)} ${p.running ? '· ⏳ bezig' : ''}</div>
+      <div class="bar"><i style="width:${(done / p.steps.length) * 100}%"></i></div></li>`;
+  }).join('') || '<li class="muted">Nog geen producten.</li>';
+  if (state.slug && !list.some((p) => p.slug === state.slug)) state.slug = null;
+}
+
+async function select(slug) {
+  state.slug = slug; save();
+  await refresh();
+  loadList();
+}
+
+async function refresh() {
+  if (!state.slug) return;
+  state.data = await api('/products/' + encodeURIComponent(state.slug));
+  render();
+  clearTimeout(state.poll);
+  if (state.data.job?.running) state.poll = setTimeout(() => { refresh(); loadList(); }, 2000);
+}
+
+function render() {
+  const d = state.data;
+  const title = d.product?.full_title_he ?? d.slug;
+  $('#main').innerHTML = `
+    <div class="toolbar"><h2 style="margin:0" dir="auto">${esc(title)}</h2><span class="pill">${esc(d.slug)}</span></div>
+    <nav class="tabs">${TABS.map((t) => `<button data-tab="${t}" class="${t === state.tab ? 'on' : ''}">${t.toUpperCase()}</button>`).join('')}</nav>
+    <div id="tab"></div>`;
+  ({ overview, page, hebrew, ads, creatives, qa, export: exportTab })[state.tab]($('#tab'), d);
+}
+
+function jobLog(d) {
+  if (!d.job) return '';
+  return `<div class="card"><b>Laatste run</b> <span class="muted">${esc(d.job.started)}</span> ${d.job.running ? '⏳' : d.job.code === 0 ? '<span class="ok">✓</span>' : '<span class="err">✗</span>'}
+    <div class="log" id="log">${esc(d.job.log.join('\n'))}</div></div>`;
+}
+
+function overview(el, d) {
+  const p = d.product;
+  const running = d.job?.running;
+  el.innerHTML = `
+    <div class="grid2">
+      <div class="card">
+        <button class="primary big" id="gen" ${running ? 'disabled' : ''}>${running ? '⏳ Bezig…' : '🚀 GENERATE COMPLETE LAUNCH'}</button>
+        <p class="muted">Draait <code>/launch-product ${esc(d.slug)}</code> in Claude Code. Bestaande stappen worden overgeslagen.</p>
+        <div class="row">
+          <div><label>Of voer één ding uit</label>
+            <select id="mode">
+              <option value="launch">Volledige launch (opnieuw, --force)</option>
+              <option value="step">Eén stap opnieuw…</option>
+              <option value="hebrew">Hebreeuws opnieuw lokaliseren</option>
+              <option value="ads">Ad pack (angles/copy/creatives)</option>
+            </select></div>
+          <div><label>Stap / extra instructies</label><input id="extra" placeholder="bv. positioning, of 'korter en feestelijker'"></div>
+        </div>
+        <p><button id="run" ${running ? 'disabled' : ''}>Uitvoeren</button></p>
+      </div>
+      <div class="card"><b>Pipeline</b><ul class="steps">${d.steps.map((s) => `<li class="${s.done ? 'done' : ''}">${esc(s.label)}</li>`).join('')}</ul></div>
+    </div>
+    ${jobLog(d)}
+    ${p ? `<div class="card"><b>Positionering</b><table>
+      <tr><th>Naam</th><td dir="auto">${esc(p.full_title_he)} · ${esc(p.full_title_en)}</td></tr>
+      <tr><th>Belofte</th><td>${esc(p.positioning?.core_promise)}</td></tr>
+      <tr><th>Pijn</th><td>${esc(p.positioning?.primary_pain)}</td></tr>
+      <tr><th>Verlangen</th><td>${esc(p.positioning?.primary_desire)}</td></tr>
+      <tr><th>Anders dan</th><td>${esc(p.positioning?.differentiator)}</td></tr>
+      <tr><th>Prijs</th><td>₪${esc(p.pricing?.price)} <s class="muted">₪${esc(p.pricing?.compare_at)}</s> · ${esc(p.pricing?.offer)}</td></tr>
+    </table></div>` : ''}
+    ${d.research ? `<div class="card md">${md(d.research)}</div>` : ''}`;
+  const log = $('#log'); if (log) log.scrollTop = log.scrollHeight;
+  const go = async (mode, extra) => {
+    try { await api(`/products/${d.slug}/generate`, { method: 'POST', body: { mode, extra } }); await refresh(); loadList(); }
+    catch (e) { alert(e.message); }
+  };
+  $('#gen').onclick = () => go('launch', '');
+  $('#run').onclick = () => {
+    const mode = $('#mode').value, extra = $('#extra').value.trim();
+    go(mode, mode === 'launch' ? ('--force ' + extra).trim() : extra);
+  };
+}
+
+function page(el, d) {
+  el.innerHTML = `<div class="toolbar">
+      <button data-lang="he" class="${state.lang === 'he' ? 'primary' : ''}">עברית</button>
+      <button data-lang="en" class="${state.lang === 'en' ? 'primary' : ''}">English</button>
+      <a class="btn" target="_blank" href="/api/products/${d.slug}/preview?lang=${state.lang}">Open in nieuw tabblad ↗</a>
+    </div>
+    <iframe src="/api/products/${d.slug}/preview?lang=${state.lang}"></iframe>`;
+  el.querySelectorAll('[data-lang]').forEach((b) => (b.onclick = () => { state.lang = b.dataset.lang; save(); render(); }));
+}
+
+function hebrew(el, d) {
+  const en = d.page.en, he = d.page.he;
+  if (!en || !he) { el.innerHTML = '<div class="empty">page.en.json en page.he.json zijn allebei nodig.</div>'; return; }
+  const pair = (a, b, label) => `<tr><th class="muted">${esc(label)}</th><td>${esc(a)}</td><td dir="rtl">${esc(b)}</td></tr>`;
+  const rows = [pair(en.title, he.title, 'title'), pair(en.subtitle, he.subtitle, 'subtitle'), pair(en.badge, he.badge, 'badge')];
+  en.bullets.forEach((b, i) => rows.push(pair(b, he.bullets[i], `bullet ${i + 1}`)));
+  rows.push(pair(en.cta, he.cta, 'cta'), pair(en.trust_line, he.trust_line, 'trust line'));
+  en.sections.forEach((s, i) => {
+    const h = he.sections[i] ?? {};
+    for (const k of ['headline', 'subheadline', 'title', 'text', 'note', 'button', 'subtext']) if (s[k]) rows.push(pair(s[k], h[k], `${s.type}.${k}`));
+    (s.items ?? []).forEach((it, j) => {
+      const hi = (h.items ?? [])[j] ?? {};
+      if (typeof it === 'string') rows.push(pair(it, hi, `${s.type}[${j}]`));
+      else if (it.q) rows.push(pair(`${it.q}\n${it.a}`, `${hi.q}\n${hi.a}`, `faq ${j + 1}`));
+      else if (it.title) rows.push(pair(`${it.title} — ${it.text}`, `${hi.title} — ${hi.text}`, `${s.type}[${j}]`));
+    });
+  });
+  el.innerHTML = `<div class="card"><p class="muted">Engels (basis) naast Hebreeuws (verkooptaal). Aanpassen? Gebruik OVERVIEW → "Hebreeuws opnieuw lokaliseren" met instructies, of bewerk <code>page.he.json</code>.</p>
+    <table><thead><tr><th></th><th>EN</th><th dir="rtl">HE</th></tr></thead><tbody style="white-space:pre-wrap">${rows.join('')}</tbody></table></div>`;
+}
+
+function ads(el, d) {
+  const a = d.ads;
+  if (!a) { el.innerHTML = '<div class="empty">Nog geen ads.json.</div>'; return; }
+  const sets = a.copy?.[state.adLang] ?? [];
+  const n = (k) => sets.reduce((t, s) => t + (s[k]?.length ?? 0), 0);
+  const counter = (t, max) => `<div class="copy ${t.length > max ? 'over' : ''}" dir="auto">${esc(t)}<small>${t.length}/${max}</small></div>`;
+  el.innerHTML = `
+    <div class="card"><b>Angle matrix</b><table><thead><tr><th>Angle</th><th>Hook</th><th>Awareness</th><th>Creative</th><th>Format</th></tr></thead><tbody>
+      ${(a.angles ?? []).map((x) => `<tr><td><b>${esc(x.name)}</b><br><span class="muted">${esc(x.id)}</span></td><td>${esc(x.hook_en)}</td><td><span class="pill">${esc(x.awareness)}</span></td><td>${esc(x.creative_idea)}</td><td>${esc(x.format)}</td></tr>`).join('')}
+    </tbody></table>
+    <p class="muted">${a.angles?.length ?? 0} angles · ${n('primary_texts')} primary texts · ${n('headlines')} headlines → ${sets.reduce((t, s) => t + (s.primary_texts?.length ?? 0) * (s.headlines?.length ?? 0), 0)} combinaties (${state.adLang.toUpperCase()})</p></div>
+    <div class="toolbar"><button data-l="he" class="${state.adLang === 'he' ? 'primary' : ''}">עברית</button><button data-l="en" class="${state.adLang === 'en' ? 'primary' : ''}">English</button>
+      ${d.outputs.includes('meta-ads.csv') ? `<a class="btn" href="/api/products/${d.slug}/output/meta-ads.csv?download">⬇ Meta CSV</a>` : ''}</div>
+    ${sets.map((s) => `<div class="card"><b>${esc(s.angle_id)}</b>
+      <div class="grid2"><div><label>Primary texts (eerste 125 tekens = hook)</label>${s.primary_texts.map((t) => counter(t, 400)).join('')}</div>
+      <div><label>Headlines (max 40)</label>${s.headlines.map((t) => counter(t, 40)).join('')}
+      <label>Descriptions (max 30)</label>${(s.descriptions ?? []).map((t) => counter(t, 30)).join('')}</div></div></div>`).join('')}`;
+  el.querySelectorAll('[data-l]').forEach((b) => (b.onclick = () => { state.adLang = b.dataset.l; save(); render(); }));
+}
+
+function creatives(el, d) {
+  el.innerHTML = d.creatives ? `<div class="card md">${md(d.creatives)}</div>` : '<div class="empty">Nog geen creatives.md.</div>';
+}
+
+async function qa(el, d) {
+  el.innerHTML = `<div class="card" id="vres">Valideren…</div>${d.qa ? `<div class="card md">${md(d.qa)}</div>` : ''}`;
+  try {
+    const v = await api(`/products/${d.slug}/validate`, { method: 'POST' });
+    $('#vres').innerHTML = `<b class="${v.errors.length ? 'err' : 'ok'}">${v.errors.length} errors · ${v.warnings.length} warnings</b>
+      <ul>${v.errors.map((e) => `<li class="err">${esc(e)}</li>`).join('')}${v.warnings.map((w) => `<li class="warn">${esc(w)}</li>`).join('')}</ul>`;
+  } catch (e) { $('#vres').innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+}
+
+function exportTab(el, d) {
+  const labels = { 'gempages.html': 'GemPages HTML (RTL, plakbaar)', 'gempages-copy.md': 'GemPages copy per sectie', 'meta-ads.csv': 'Meta ads CSV', 'ad-pack.md': 'Ad pack', 'shopify-product.json': 'Shopify payload', 'page.he.html': 'Preview HE', 'page.en.html': 'Preview EN', 'shopify-result.json': 'Shopify resultaat' };
+  el.innerHTML = `
+    <div class="card toolbar">
+      <button id="exp">Export opnieuw bouwen</button>
+      <button id="dry">Shopify dry-run</button>
+      <button class="primary" id="push">Push naar Shopify (DRAFT)</button>
+    </div>
+    <div class="card" id="res" hidden></div>
+    <div class="card"><b>Bestanden</b><table>${d.outputs.map((f) => `<tr><td>${esc(labels[f] ?? f)}</td><td><code>${esc(f)}</code></td>
+      <td><a class="btn" target="_blank" href="/api/products/${d.slug}/output/${encodeURIComponent(f)}">Open</a> <a class="btn" href="/api/products/${d.slug}/output/${encodeURIComponent(f)}?download">⬇</a></td></tr>`).join('') || '<tr><td class="muted">Nog niets geëxporteerd.</td></tr>'}</table></div>`;
+  const show = (html) => { const r = $('#res'); r.hidden = false; r.innerHTML = html; };
+  const act = (btn, fn) => async () => { btn.disabled = true; try { await fn(); } catch (e) { show(`<span class="err">${esc(e.message)}</span>`); } btn.disabled = false; };
+  $('#exp').onclick = act($('#exp'), async () => { await api(`/products/${d.slug}/export`, { method: 'POST' }); await refresh(); });
+  $('#dry').onclick = act($('#dry'), async () => { const r = await api(`/products/${d.slug}/shopify`, { method: 'POST', body: {} }); show(`<b>Dry run</b><pre dir="auto">${esc(JSON.stringify(r, null, 2))}</pre>`); });
+  $('#push').onclick = act($('#push'), async () => {
+    if (!confirm('Product als DRAFT aanmaken in Shopify?')) return;
+    const r = await api(`/products/${d.slug}/shopify`, { method: 'POST', body: { push: true } });
+    show(`<b class="ok">✓ Aangemaakt als DRAFT</b> — <a target="_blank" href="${esc(r.admin_url)}">${esc(r.admin_url)}</a>`);
+  });
+}
+
+// Tiny markdown renderer (headings, lists, bold, code, quotes, tables, paragraphs).
+function md(src) {
+  const inline = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code>$1</code>');
+  const out = []; let list = null, table = null;
+  const flush = () => { if (list) { out.push(`</${list}>`); list = null; } if (table) { out.push('</table>'); table = null; } };
+  for (const raw of src.split('\n')) {
+    const line = raw.trimEnd();
+    let m;
+    if (/^```/.test(line)) continue;
+    if ((m = line.match(/^(#{1,4})\s+(.*)/))) { flush(); out.push(`<h${m[1].length + 1} dir="auto">${inline(m[2])}</h${m[1].length + 1}>`); }
+    else if (/^\|/.test(line)) { if (/^\|[\s|:-]+\|$/.test(line)) continue; if (!table) { flush(); table = 1; out.push('<table>'); } out.push('<tr>' + line.slice(1, -1).split('|').map((c) => `<td dir="auto">${inline(c.trim())}</td>`).join('') + '</tr>'); }
+    else if ((m = line.match(/^\s*(?:[-*]|\d+\.)\s+(.*)/))) { if (table) flush(); if (!list) { list = 'ul'; out.push('<ul>'); } out.push(`<li dir="auto">${inline(m[1].replace(/^\[( |x)\]\s*/, (x, c) => (c === 'x' ? '☑ ' : '☐ ')))}</li>`); }
+    else if ((m = line.match(/^>\s?(.*)/))) { flush(); out.push(`<p class="muted">${inline(m[1])}</p>`); }
+    else if (!line.trim()) flush();
+    else { flush(); out.push(`<p dir="auto">${inline(line)}</p>`); }
+  }
+  flush();
+  return out.join('\n');
+}
+
+$('#plist').onclick = (e) => { const li = e.target.closest('li[data-slug]'); if (li) select(li.dataset.slug); };
+$('#main').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) { state.tab = b.dataset.tab; save(); render(); } });
+$('#newform').onsubmit = async (e) => {
+  e.preventDefault();
+  const body = Object.fromEntries(new FormData(e.target));
+  try { await api('/products', { method: 'POST', body }); e.target.reset(); $('#newbox').open = false; state.tab = 'overview'; await select(body.slug); }
+  catch (err) { alert(err.message); }
+};
+$('#newform [name=url]').addEventListener('change', (e) => {
+  const slugEl = $('#newform [name=slug]');
+  if (slugEl.value) return;
+  try { const last = new URL(e.target.value).pathname.split('/').filter(Boolean).pop() || ''; slugEl.value = last.toLowerCase().replace(/\.html?$/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40); } catch {}
+});
+
+loadList().then(() => state.slug && select(state.slug));
+</script>
+</body>
+</html>

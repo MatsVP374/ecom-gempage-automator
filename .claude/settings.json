@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "Write(products/**)",
+      "Edit(products/**)",
+      "Bash(node scripts/new-product.js:*)",
+      "Bash(node scripts/validate.js:*)",
+      "Bash(node scripts/export.js:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir -p products/:*)"
+    ],
+    "deny": [
+      "Read(.env)"
+    ]
+  }
+}

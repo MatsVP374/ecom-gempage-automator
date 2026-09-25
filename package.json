@@ -1,0 +1,16 @@
+{
+  "name": "ecom-gempage-automator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Adina Launch Engine: product URL -> Hebrew product page -> GemPages/Shopify -> Meta ads, driven by Claude Code.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node app/server.js",
+    "new": "node scripts/new-product.js",
+    "validate": "node scripts/validate.js",
+    "export": "node scripts/export.js",
+    "shopify": "node scripts/shopify-push.js",
+    "test": "node scripts/validate.js --all && node scripts/export.js --all"
+  }
+}

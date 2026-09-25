@@ -1,0 +1,160 @@
+{
+  "angles": [
+    {
+      "id": "heat",
+      "name": "Israeli heat",
+      "hook_en": "35 degrees, 80% humidity — and your blouse is sticking to your back again.",
+      "awareness": "problem_aware",
+      "audience": "Women who dress up for work or outings during the hot months",
+      "emotion": "Relief",
+      "creative_idea": "Split screen: sticky synthetic top vs. airy linen Noa moving in a breeze on a balcony.",
+      "format": "video"
+    },
+    {
+      "id": "flattering-fit",
+      "name": "Skims, never clings",
+      "hook_en": "The blouse that falls softly instead of hugging every spot.",
+      "awareness": "solution_aware",
+      "audience": "Women who avoid fitted tops and want to feel put-together",
+      "emotion": "Confidence",
+      "creative_idea": "Mirror moment: she turns, the A-line moves softly; text overlay about the cut.",
+      "format": "image"
+    },
+    {
+      "id": "shabbat-dinner",
+      "name": "From work to Friday dinner",
+      "hook_en": "One blouse: morning coffee, work, and Friday-night dinner with the family.",
+      "awareness": "unaware",
+      "audience": "Women who host or attend family dinners and gatherings",
+      "emotion": "Belonging, pride",
+      "creative_idea": "Day-in-the-life reel: coffee, office, Shabbat table — same blouse, three moments.",
+      "format": "video"
+    },
+    {
+      "id": "adinas-pick",
+      "name": "Adina's personal pick",
+      "hook_en": "I tried dozens of summer blouses. This is the one I kept wearing myself.",
+      "awareness": "solution_aware",
+      "audience": "Women who prefer a personal boutique over big chains",
+      "emotion": "Trust",
+      "creative_idea": "Boutique-style flat-lay of three colors with a handwritten note from Adina.",
+      "format": "image"
+    },
+    {
+      "id": "second-item-offer",
+      "name": "Two colors, one summer",
+      "hook_en": "White for Shabbat, olive for everyday — and 20% off the second one.",
+      "awareness": "product_aware",
+      "audience": "Visitors and engagers who already know Noa",
+      "emotion": "Smart choice",
+      "creative_idea": "Carousel: white, sand, olive — each styled for a different moment, last card shows the offer.",
+      "format": "carousel"
+    }
+  ],
+  "copy": {
+    "he": [
+      {
+        "angle_id": "heat",
+        "primary_texts": [
+          "35 מעלות, לחות של 80% – והחולצה שוב נדבקת לגב? 🌿 נועה עשויה מתערובת פשתן נושמת שנשארת קרירה כל היום.",
+          "35 מעלות, לחות של 80% – והחולצה שוב נדבקת לגב?\n\nנועה עשויה מתערובת פשתן נושמת, בגזרה משוחררת שלא נצמדת לגוף. את נשארת רעננה ומטופחת מהבוקר ועד הערב.\n\n✓ מידות S עד XXL\n✓ לבן, חול, זית\n✓ החזרה עד 30 יום",
+          "כל קיץ אותו סיפור: יוצאת מהבית מסודרת, ואחרי עשר דקות בחוץ הכל נדבק.\n\nבגלל זה בחרנו בנועה. תערובת פשתן שנושמת, גזרת A רכה שזורמת עם התנועה, ושרוול ¾ שנותן תחושה מכוסה בלי להתחמם.\n\nלובשים עם ג׳ינס לעבודה, עם חצאית לערב – והיא נשארת קרירה.\n\n20% הנחה על הפריט השני. החזרה עד 30 יום 🌿"
+        ],
+        "headlines": ["קיץ ישראלי, בלי להידבק", "חולצת פשתן שנשארת קרירה", "נועה – נושמת גם ב־35 מעלות"],
+        "descriptions": ["החזרה עד 30 יום", "מידות S עד XXL"]
+      },
+      {
+        "angle_id": "flattering-fit",
+        "primary_texts": [
+          "החולצה שזורמת בעדינות ולא נצמדת לשום מקום ✨ גזרת A רכה, צווארון V ושרוול ¾ מחמיא.",
+          "יש חולצות שמרגישים בהן מסודרת ברגע שלובשים אותן.\n\nנועה בגזרת A רכה שיורדת בעדינות מעל הירכיים, עם צווארון V שמאריך ושרוול ¾ שמחמיא לזרועות.\n\nנוחה כמו חולצה ביתית, נראית כמו בוטיק ✨",
+          "מכירה את הרגע מול המראה, כשכל חולצה נראית או צמודה מדי או רחבה מדי?\n\nנועה נמצאת בדיוק באמצע. גזרת A שזורמת עם הגוף, צווארון V שנותן קו ארוך ושרוול ¾ שמכסה בדיוק איפה שצריך.\n\nבד פשתן נושם, שלושה צבעים שהולכים עם הכל, ומידות S עד XXL.\n\nהזמיני, נסי בבית – ויש לך 30 יום להחליט."
+        ],
+        "headlines": ["זורמת, לא נצמדת", "הגזרה שמחמיאה לך", "נועה – מסודרת בלי מאמץ"],
+        "descriptions": ["גזרת A מחמיאה", "החזרה עד 30 יום"]
+      },
+      {
+        "angle_id": "shabbat-dinner",
+        "primary_texts": [
+          "קפה בבוקר, עבודה בצהריים, ארוחת שישי בערב – חולצה אחת לכל היום 🤍",
+          "חולצה אחת, שלושה רגעים:\n☕ קפה עם חברות בבוקר\n💼 יום עבודה\n🕯️ ארוחת שישי עם המשפחה\n\nנועה, חולצת פשתן נושמת שנראית נכון בכל אחד מהם.",
+          "את מכירה את הרגע ביום שישי אחר הצהריים, כשצריך להחליט מה ללבוש לארוחה?\n\nנועה פותרת את זה. אלגנטית מספיק לשולחן שבת, קלילה מספיק ליום שלם בחוץ. בלבן היא חגיגית, בזית ובחול היא יומיומית ושיקית.\n\nבד פשתן נושם, גזרה מחמיאה, ו־20% הנחה על הפריט השני – אז אפשר לקחת שתיים 🤍"
+        ],
+        "headlines": ["מהבוקר ועד ארוחת שישי", "חולצה אחת, כל היום", "נועה – מוכנה לכל רגע"],
+        "descriptions": ["לבן, חול, זית", "20% על הפריט השני"]
+      },
+      {
+        "angle_id": "adinas-pick",
+        "primary_texts": [
+          "ניסיתי עשרות חולצות קיץ. זאת היחידה שלא הפסקתי ללבוש בעצמי. – עדינה 🤍",
+          "ניסיתי עשרות חולצות קיץ לחנות. רובן היו צמודות מדי, סינתטיות מדי או פשוט לא החמיאו.\n\nנועה היא זאת שלקחתי הביתה ולא הפסקתי ללבוש: פשתן נושם, גזרה שזורמת, ושלושה צבעים שהולכים עם הכל.\n\n– עדינה",
+          "אני בוחרת כל פריט בחנות בעצמי, ואני לא מכניסה משהו שלא הייתי לובשת.\n\nנועה עברה את המבחן הכי קשה: קיץ שלם אצלי בארון. לעבודה עם ג׳ינס, לטיילת עם חצאית, לארוחת שישי בלבן.\n\nהיא קרירה, היא מחמיאה, והיא פשוט עובדת. מקווה שתאהבי אותה כמוני. – עדינה 🤍\n\nהחזרה עד 30 יום, בלי שאלות מיותרות."
+        ],
+        "headlines": ["הבחירה האישית של עדינה", "החולצה שלא הפסקתי ללבוש", "נועה – נבחרה בקפידה"],
+        "descriptions": ["בוטיק עדינה", "החזרה עד 30 יום"]
+      },
+      {
+        "angle_id": "second-item-offer",
+        "primary_texts": [
+          "לבן לשבת, זית ליומיום – ו־20% הנחה על הפריט השני 🤍 נועה, חולצת פשתן נושמת.",
+          "כבר הכרת את נועה? עכשיו זה הזמן לבחור שני צבעים.\n\n🤍 לבן – לשבת ולאירועים\n🤎 חול – לעבודה ולקפה\n💚 זית – ליומיום ולטיולים\n\n20% הנחה על הפריט השני. מידות S עד XXL.",
+          "השאלות שכולן שואלות לפני שמזמינות את נועה:\n\nאיזו מידה? הגזרה משוחררת – המידה הרגילה שלך. בין מידות? הגדולה.\nהלבן שקוף? קצת באור חזק, ממליצות על חזייה בגוון עור.\nמה אם לא מתאים? החזרה עד 30 יום.\n\nועכשיו גם 20% הנחה על הפריט השני – אפשר לשלב צבעים 🤍"
+        ],
+        "headlines": ["20% הנחה על הפריט השני", "שני צבעים, קיץ אחד", "נועה – בחרי את הצבע שלך"],
+        "descriptions": ["אפשר לשלב צבעים", "החזרה עד 30 יום"]
+      }
+    ],
+    "en": [
+      {
+        "angle_id": "heat",
+        "primary_texts": [
+          "35 degrees, 80% humidity — and your blouse is sticking to your back again? 🌿 Noa's breathable linen blend stays cool all day.",
+          "35 degrees, 80% humidity — and your blouse is sticking to your back again?\n\nNoa is made from a breathable linen blend in a relaxed cut that never clings. You stay fresh and put-together from morning to evening.\n\n✓ Sizes S–XXL\n✓ White, sand, olive\n✓ 30-day returns",
+          "Every summer, the same story: you leave the house looking neat, and ten minutes outside everything sticks.\n\nThat's why we chose Noa. A linen blend that breathes, a soft A-line that moves with you, and 3/4 sleeves that feel covered without the heat.\n\nWith jeans for work, with a skirt for the evening — and she stays cool.\n\n20% off your second item. 30-day returns 🌿"
+        ],
+        "headlines": ["Israeli summer, minus the stickiness", "The linen blouse that stays cool", "Noa — breathes even at 35°"],
+        "descriptions": ["30-day returns", "Sizes S–XXL"]
+      },
+      {
+        "angle_id": "flattering-fit",
+        "primary_texts": [
+          "The blouse that falls softly and never clings ✨ Soft A-line, V-neck and flattering 3/4 sleeves.",
+          "Some blouses make you feel put-together the moment you put them on.\n\nNoa has a soft A-line that falls gently over the hips, a lengthening V-neck and 3/4 sleeves that flatter the arms.\n\nComfortable like loungewear, looks like a boutique ✨",
+          "You know that moment in front of the mirror when every top is either too tight or too wide?\n\nNoa sits right in between. An A-line that moves with you, a V-neck for a long line, and 3/4 sleeves that cover exactly where you want.\n\nBreathable linen, three colors that go with everything, sizes S–XXL.\n\nOrder, try it at home — you have 30 days to decide."
+        ],
+        "headlines": ["Skims, never clings", "The cut that flatters you", "Noa — put-together, no effort"],
+        "descriptions": ["Flattering A-line", "30-day returns"]
+      },
+      {
+        "angle_id": "shabbat-dinner",
+        "primary_texts": [
+          "Morning coffee, work at noon, Friday dinner at night — one blouse for the whole day 🤍",
+          "One blouse, three moments:\n☕ Coffee with friends\n💼 A work day\n🕯️ Friday dinner with family\n\nNoa, the breathable linen blouse that looks right in all of them.",
+          "You know that Friday afternoon moment when you need to decide what to wear to dinner?\n\nNoa solves it. Elegant enough for the Shabbat table, easy enough for a full day out. In white she's festive; in olive and sand she's everyday chic.\n\nBreathable linen, a flattering cut, and 20% off your second item — so you can take two 🤍"
+        ],
+        "headlines": ["From morning to Friday dinner", "One blouse, all day", "Noa — ready for every moment"],
+        "descriptions": ["White, sand, olive", "20% off 2nd item"]
+      },
+      {
+        "angle_id": "adinas-pick",
+        "primary_texts": [
+          "I tried dozens of summer blouses. This is the one I kept wearing myself. — Adina 🤍",
+          "I tried dozens of summer blouses for the shop. Most were too tight, too synthetic, or just not flattering.\n\nNoa is the one I took home and kept wearing: breathable linen, a cut that flows, and three colors that go with everything.\n\n— Adina",
+          "I pick every item in the shop myself, and I don't add anything I wouldn't wear.\n\nNoa passed the hardest test: a whole summer in my own closet. To work with jeans, to the promenade with a skirt, to Friday dinner in white.\n\nShe's cool, she's flattering, and she simply works. I hope you'll love her as much as I do. — Adina 🤍\n\n30-day returns, no hassle."
+        ],
+        "headlines": ["Adina's personal pick", "The blouse I kept wearing", "Noa — carefully chosen"],
+        "descriptions": ["Adina boutique", "30-day returns"]
+      },
+      {
+        "angle_id": "second-item-offer",
+        "primary_texts": [
+          "White for Shabbat, olive for everyday — and 20% off the second one 🤍 Noa, the breathable linen blouse.",
+          "Already met Noa? Now's the time to pick two colors.\n\n🤍 White — for Shabbat and events\n🤎 Sand — for work and coffee\n💚 Olive — for every day and trips\n\n20% off your second item. Sizes S–XXL.",
+          "The questions everyone asks before ordering Noa:\n\nWhich size? Relaxed cut — your usual size. Between sizes? Go larger.\nIs the white see-through? Slightly in strong light; we suggest a nude bra.\nWhat if it doesn't fit? 30-day returns.\n\nAnd now 20% off your second item — mix colors 🤍"
+        ],
+        "headlines": ["20% off your second item", "Two colors, one summer", "Noa — pick your color"],
+        "descriptions": ["Mix any colors", "30-day returns"]
+      }
+    ]
+  }
+}

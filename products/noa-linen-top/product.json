@@ -1,0 +1,44 @@
+{
+  "name_he": "נועה",
+  "name_en": "Noa",
+  "product_type_he": "חולצת פשתן נושמת",
+  "product_type_en": "Breathable Linen Blouse",
+  "full_title_he": "נועה | חולצת פשתן נושמת",
+  "full_title_en": "Noa | Breathable Linen Blouse",
+  "one_liner_en": "The linen blouse that keeps you cool and put-together on the hottest Israeli days.",
+  "positioning": {
+    "core_promise": "Stay cool and look effortlessly put-together, even at 35 degrees.",
+    "primary_pain": "Synthetic tops stick and cling in the heat, and fitted cuts show every spot you'd rather not.",
+    "primary_desire": "Feeling elegant and like herself without thinking about it.",
+    "differentiator": "A breathable linen blend in a soft A-line that skims instead of clings — relaxed, but never sloppy.",
+    "objections": [
+      { "objection": "Linen wrinkles a lot.", "answer": "The linen blend wrinkles less than pure linen, and the light texture is part of the relaxed-chic look." },
+      { "objection": "Is the white see-through?", "answer": "The white is lightly sheer in bright sunlight; we recommend a nude bra." },
+      { "objection": "Which size should I pick?", "answer": "The cut is relaxed. Order your usual size; between sizes, choose the larger one." },
+      { "objection": "What if it doesn't fit?", "answer": "You have 30 days to return it." }
+    ]
+  },
+  "pricing": {
+    "price": 179,
+    "compare_at": 359,
+    "currency": "ILS",
+    "offer": "20% off your second item",
+    "bundle": "Buy 2 colors, save 20% on the second"
+  },
+  "specs": {
+    "material": "Linen blend",
+    "sizes": ["S", "M", "L", "XL", "XXL"],
+    "colors": [
+      { "en": "White", "he": "לבן" },
+      { "en": "Sand", "he": "חול" },
+      { "en": "Olive", "he": "זית" }
+    ],
+    "care": "Machine wash 30°C, do not tumble dry"
+  },
+  "shopify": {
+    "product_type": "Blouses",
+    "tags": ["linen", "summer", "blouse", "breathable", "a-line", "v-neck"],
+    "vendor": "Adina",
+    "handle": "noa-linen-blouse"
+  }
+}
