@@ -9,6 +9,11 @@ al **15+ jaar** in de mode / met haar boetiek.
 
 Brand line: **"מתל אביב, באהבה!"**
 
+**Familie (bevestigd):** Adina runt de boetiek samen met haar man **Daniel (דניאל)** en hun dochter
+**Yael (יעל)**. Mag in het founder-verhaal en vooral in `about` ("אודות הכותבת") gebruikt worden, bv.
+"בוטיק משפחתי בתל אביב שעדינה, בעלה דניאל ובתם יעל מנהלים יחד כבר למעלה מ-15 שנה". Staat in
+`config/adina.json` → `founder.family`.
+
 Het merk moet voelen als: persoonlijk · warm · betrouwbaar · volwassen · boetiek · familiebedrijf.
 Niet: corporate, een anonieme webshop, een generieke dropshipping-store.
 

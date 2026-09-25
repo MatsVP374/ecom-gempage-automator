@@ -103,7 +103,8 @@ Hoofd-CTA: `בדקי אם המידה והצבע שלך עדיין במלאי`. I
 `בדקי אם המידה שלך עדיין במלאי`.
 
 ### 16. `about`
-`אודות הכותבת`. Kort: Adina → oprichter → 15+ jaar → familieboetiek in Tel Aviv → korte persoonlijke
+`אודות הכותבת`. Kort: Adina → oprichter → 15+ jaar → familieboetiek in Tel Aviv, samen met Daniel en Yael
+(`config.founder.family`) → korte persoonlijke
 gedachte over dit product → `מתל אביב, באהבה!`
 
 ### 17. `sticky_cta`

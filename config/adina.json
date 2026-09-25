@@ -12,7 +12,23 @@
     "business": "small family women's fashion boutique",
     "city": "Tel Aviv",
     "city_he": "תל אביב",
-    "brand_line_he": "מתל אביב, באהבה!"
+    "brand_line_he": "מתל אביב, באהבה!",
+    "family": {
+      "summary": "Adina runs the boutique together with her husband Daniel and their daughter Yael",
+      "members": [
+        {
+          "name": "Daniel",
+          "name_he": "דניאל",
+          "role": "Adina's husband"
+        },
+        {
+          "name": "Yael",
+          "name_he": "יעל",
+          "role": "Adina and Daniel's daughter"
+        }
+      ],
+      "confirmed": "2026-09-25 by the owner"
+    }
   },
   "target_customer": {
     "age_range": "45-65+",
@@ -30,10 +46,27 @@
     "returns_he": "30 יום להחזרה"
   },
   "bundle_discount": [
-    { "items": 2, "extra_discount_pct": 10, "label_he": "2 פריטים — 10% הנחה נוספת" },
-    { "items": 3, "extra_discount_pct": 15, "label_he": "3 פריטים — 15% הנחה נוספת" },
-    { "items": 4, "extra_discount_pct": 20, "label_he": "4 פריטים — 20% הנחה נוספת" },
-    { "items": 5, "or_more": true, "extra_discount_pct": 25, "label_he": "5 פריטים ומעלה — 25% הנחה נוספת" }
+    {
+      "items": 2,
+      "extra_discount_pct": 10,
+      "label_he": "2 פריטים — 10% הנחה נוספת"
+    },
+    {
+      "items": 3,
+      "extra_discount_pct": 15,
+      "label_he": "3 פריטים — 15% הנחה נוספת"
+    },
+    {
+      "items": 4,
+      "extra_discount_pct": 20,
+      "label_he": "4 פריטים — 20% הנחה נוספת"
+    },
+    {
+      "items": 5,
+      "or_more": true,
+      "extra_discount_pct": 25,
+      "label_he": "5 פריטים ומעלה — 25% הנחה נוספת"
+    }
   ],
   "landing_page": {
     "type": "founder-letter advertorial",
@@ -51,7 +84,15 @@
     "format": "long-form",
     "perspective": "real customer testimonial, first person",
     "destination": "founder-letter GemPage",
-    "types": ["discovery", "routine"]
+    "types": [
+      "discovery",
+      "routine"
+    ]
   },
-  "static_creatives": ["customer_discovery", "raw_boutique_offer", "everyday_use", "designed_hook"]
+  "static_creatives": [
+    "customer_discovery",
+    "raw_boutique_offer",
+    "everyday_use",
+    "designed_hook"
+  ]
 }
