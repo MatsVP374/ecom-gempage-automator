@@ -114,9 +114,9 @@ export function demoProduct() {
             { items: 5, extra_discount_pct: 25, label: H ? '5 פריטים ומעלה — 25% הנחה נוספת' : '5+ items' },
           ],
         },
-        { id: 'cta', type: 'cta', button: H ? 'בדקי אם המידה והצבע שלך עדיין במלאי' : 'Check', subtext: '' },
+        { id: 'cta', type: 'cta', button: H ? 'לבחירת מידה וצבע של דמו ←' : 'Choose', subtext: '' },
         { id: 'about', type: 'about', title: H ? 'אודות הכותבת' : 'About', text: H ? 'אני עדינה, 15+ שנים באופנה.' : 'About 15+', signoff: H ? 'מתל אביב, באהבה!' : 'Love' },
-        { id: 'sticky_cta', type: 'sticky_cta', text: H ? 'דמו עכשיו ב־₪150 — בדקי אם המידה שלך עדיין במלאי' : 'Demo now ₪150' },
+        { id: 'sticky_cta', type: 'sticky_cta', text: H ? 'דמו עכשיו ב־₪150 — לבחירת מידה וצבע' : 'Demo now ₪150' },
       ],
     };
   };

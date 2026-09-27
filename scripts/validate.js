@@ -7,6 +7,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { loadProduct, loadConfig, listSlugs, parseArgs, missingInput, isFilled, FILES } from './lib.js';
 import { spellcheckProduct } from './spellcheck.js';
+import { productRoutes, renderGpHtml, LTR_RUN } from './gempages.js';
 
 export const BLOCK_ORDER = [
   'founder_header', 'headline', 'hero', 'founder_story', 'benefits', 'comparison', 'founder_quote', 'sale',
@@ -25,7 +26,7 @@ const REQUIRED_FIELDS = {
   packing: ['image', 'caption'],
   founder_observation: ['text'],
   social_proof: ['rating', 'reviews_label', 'text'],
-  offer_box: ['product_name', 'rating_line', 'regular_price', 'sale_price', 'bullets'],
+  offer_box: ['product_name', 'rating_line', 'regular_price', 'sale_price'],
   bundle: ['title', 'tiers'],
   cta: ['button'],
   about: ['title', 'text', 'signoff'],
@@ -220,8 +221,30 @@ export function validateProduct(slug, { stage } = {}) {
     }
     if (by.offer_box?.rating_line && !(by.offer_box.rating_line.includes(String(cfg.trust.rating)) && by.offer_box.rating_line.includes(cfg.trust.reviews_label)))
       err(`${f}: offer_box.rating_line must contain ${cfg.trust.rating} and ${cfg.trust.reviews_label}`);
-    const ob = (by.offer_box?.bullets ?? []).length;
-    if (by.offer_box && (ob < 4 || ob > 6)) warn(`${f}: offer_box has ${ob} bullets (blueprint: 4–6)`);
+    // Product routes: mid-CTA after benefit 3, the product-box button, the sticky bar — all to the real product page.
+    if (input) {
+      const r = productRoutes(g, input, cfg);
+      if (!r.url) err(`${f}: no product URL (input.existing_product_page.url) — the page needs a route to the real product page`);
+      if (lang === 'he') {
+        eq2(by.cta?.button, r.box, 'cta.button');
+        eq2(by.sticky_cta?.text, r.sticky, 'sticky_cta.text');
+      }
+      if (r.url) {
+        const html = renderGpHtml(g, { plan: p.plan, input }).html;
+        const links = html.split(`href="${r.url.replace(/&/g, '&amp;')}"`).length - 1;
+        if (links < 3) err(`${f}: only ${links} link(s) to the product page — need the mid-CTA, the product-box button and the sticky CTA`);
+        // RTL QA: every left-to-right run must sit in an isolated span in the rendered page.
+        if (lang === 'he') {
+          const bare = html.replace(/<span class="gp-(?:ltr|brand)">[^<]*<\/span>/g, ' ').replace(/<[^>]+>/g, ' ');
+          const loose = [...new Set([...bare.matchAll(LTR_RUN)].map((m) => m[1]).concat(bare.includes('Adina Fashion') ? ['Adina Fashion'] : []))];
+          if (loose.length) err(`${f}: RTL — not isolated in the rendered page: ${loose.join(' · ')}`);
+        }
+      }
+    }
+    function eq2(val, want, what) {
+      const n = (x) => String(x).replace(/\u00a0/g, ' ');
+      if (val !== undefined && n(val) !== n(want)) err(`${f}: ${what} must be exactly "${want}"`);
+    }
     // fixed Hebrew strings
     if (lang === 'he') {
       const L = cfg.landing_page;
@@ -232,7 +255,6 @@ export function validateProduct(slug, { stage } = {}) {
       eq(by.founder_story?.greeting, L.greeting_he, 'founder_story.greeting');
       eq(by.about?.title, L.about_title_he, 'about.title');
       eq(by.about?.signoff, cfg.founder.brand_line_he, 'about.signoff');
-      eq(by.cta?.button, colors.length > 1 ? L.cta_he : L.cta_no_color_he, 'cta.button');
       if (input) eq(by.offer_box?.product_name, input.hebrew_product_name, 'offer_box.product_name');
       if (by.about?.text && !by.about.text.includes('15')) warn(`${f}: about.text should mention 15+ years`);
       checkHebrew(g, f, latinOk, err, warn);

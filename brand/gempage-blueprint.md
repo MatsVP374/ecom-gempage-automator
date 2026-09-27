@@ -87,11 +87,19 @@ Nog een korte persoonlijke observatie van Adina over het product of haar klanten
 `input.testimonials` (letterlijk of trouw vertaald), anders leeg laten. Nooit reviews verzinnen.
 In GemPages kan hier het echte review-widget (Judge.me/Loox) staan.
 
-### 13. `offer_box`
-Nu mag het een echte productpagina worden. `product_name` = `hebrew_product_name`,
-`rating_line`: `★★★★★ 4.7/5 מתוך 2,550+ ביקורות`, reguliere prijs → saleprijs, 4–6 bullets:
-✓ sterkste voordeel · ✓ tweede voordeel · ✓ belangrijke functionaliteit · ✓ verzending/retour · ✓ kleuren/maten.
-Niet opnieuw het hele verhaal vertellen.
+### 13. `offer_box`: de productbox, hier bestelt ze
+Geen verhaal meer, alleen: dit is het, zo kies je. De GemPage bouwt de box **vast** op (niet per product schrijven):
+```
+פאיו | טופ יום נעים                  ← offer_box.product_name = input.hebrew_product_name
+★★★★★ 4.7/5
+~~₪359~~ ₪179
+✓ כחול, ירוק, אפור וסגול              ← input.colors
+✓ מידות S–3XL                         ← input.sizes (eerste–laatste)
+✓ משלוח חינם
+✓ 30 יום להחזרה
+[ לבחירת מידה וצבע של פאיו ← ]        ← grote contrasterende knop naar de productpagina
+```
+`rating_line` blijft in de data (`★★★★★ 4.7/5 מתוך 2,550+ ביקורות`) voor de copy-export.
 
 ### 14. `bundle`
 Vast (uit config), nooit anders:
@@ -103,8 +111,8 @@ Vast (uit config), nooit anders:
 ```
 
 ### 15. `cta`
-Hoofd-CTA: `בדקי אם המידה והצבע שלך עדיין במלאי`. Is kleur niet relevant (maar 1 kleur):
-`בדקי אם המידה שלך עדיין במלאי`.
+`cta.button` = de knop in de productbox: `לבחירת מידה וצבע של <korte naam> ←` (1 kleur: `לבחירת מידה של <korte naam> ←`),
+uit `config.landing_page.cta_he`. `subtext`: verzending/retour.
 
 ### 16. `about`
 `אודות הכותבת`. Kort: Adina → oprichter → 15+ jaar → familieboetiek in Tel Aviv, samen met Daniel en Yael
@@ -112,7 +120,17 @@ Hoofd-CTA: `בדקי אם המידה והצבע שלך עדיין במלאי`. I
 gedachte over dit product → `מתל אביב, באהבה!`
 
 ### 17. `sticky_cta`
-`<product> עכשיו ב־₪<sale> — בדקי אם המידה שלך עדיין במלאי`
+`<korte naam> עכשיו ב־₪<sale> — לבחירת מידה וצבע` (1 kleur: `— לבחירת מידה`), uit `config.landing_page.sticky_cta_he`.
+Altijd zichtbaar onderaan, linkt **rechtstreeks naar de productpagina** (niet naar een anker).
+
+## Productroutes: nooit laten zoeken waar ze kan kopen
+De brief verkoopt met het verhaal, maar zodra ze overtuigd is moet de weg naar maat/kleur meteen zichtbaar zijn.
+Elke GemPage heeft **minimaal drie routes** naar `input.existing_product_page.url` (de validator telt ze):
+1. **Tussen-CTA na voordeel 3** (`config.landing_page.mid_cta_after_benefit`): subtiele link
+   `לצפייה ב<korte naam> ובצבעים הזמינים ←`.
+2. **De knop in de productbox** (`cta.button`), groot en contrasterend.
+3. **De sticky CTA** onderaan (`sticky_cta`).
+`<korte naam>` = het deel van `hebrew_product_name` vóór `|` (bv. `פאיו`). Zonder product-URL faalt de validatie.
 
 ---
 

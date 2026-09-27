@@ -21,6 +21,15 @@
   color:#211f1a;
 }
 .{{rootClassName}} img{max-width:100%;display:block;}
+
+/* RTL, explicitly on every text element (a theme or GemPages wrapper may reset direction/alignment). */
+.{{rootClassName}}{direction:rtl;text-align:right;}
+.{{rootClassName}} h1,.{{rootClassName}} h2,.{{rootClassName}} h3,.{{rootClassName}} p,.{{rootClassName}} li,
+.{{rootClassName}} blockquote,.{{rootClassName}} td,.{{rootClassName}} th,.{{rootClassName}} cite,
+.{{rootClassName}} .gp-review-card,.{{rootClassName}} .gp-quote{direction:rtl;text-align:right;}
+.{{rootClassName}} ul,.{{rootClassName}} ol{padding-right:22px;padding-left:0;}
+/* Left-to-right runs (₪179, 4.7/5, 2,550+, S–3XL, 25%, Adina Fashion) are isolated so they never jump. */
+.{{rootClassName}} .gp-ltr,.{{rootClassName}} .gp-brand{direction:ltr;unicode-bidi:isolate;}
 .{{rootClassName}} .gp-hero-photo img,.{{rootClassName}} .gp-feature img,.{{rootClassName}} .gp-fold-photo img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;}
 .{{rootClassName}} .gp-img-missing{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;}
 .{{rootClassName}} a{color:inherit;}
@@ -197,3 +206,21 @@
 .{{rootClassName}} .gp-img-missing{border:2px dashed #ddd4bc;border-radius:6px;padding:28px 14px;margin:18px 0;text-align:center;color:#7a7565;font-size:.85rem;background:#faf7ef;}
 .{{rootClassName}} .gp-measure > p + p{margin-top:14px;}
 .{{rootClassName}} .gp-ltr{direction:ltr;unicode-bidi:isolate;display:inline-block;}
+
+/* ---- Productroutes: route 1 (after benefit 3), route 2 (product box button), route 3 (sticky). */
+.{{rootClassName}} .gp-mid-cta-wrap{text-align:center;margin:6px auto 30px;}
+.{{rootClassName}} a.gp-mid-cta{display:inline-block;color:#38452f;font-weight:700;font-size:1rem;text-decoration:none;
+  border-bottom:2px solid #38452f;padding:2px 2px 3px;}
+.{{rootClassName}} .gp-product-box{border:2px solid #38452f;}
+.{{rootClassName}} .gp-product-box h3{text-align:center;text-transform:none;}
+.{{rootClassName}} .gp-product-box .gp-rating{text-align:center;}
+.{{rootClassName}} .gp-old,.{{rootClassName}} .gp-old .gp-ltr{text-decoration:line-through;text-decoration-thickness:2px;}
+.{{rootClassName}} .gp-product-box ul.gp-facts{padding-right:0;}
+.{{rootClassName}} .gp-product-box ul.gp-facts li{font-size:1rem;}
+.{{rootClassName}} a.gp-buy:link,.{{rootClassName}} a.gp-buy:visited{
+  display:block;background:#38452f;color:#fff;text-align:center;text-transform:none;letter-spacing:0;
+  font-size:1.08rem;font-weight:700;padding:17px 14px;border-radius:8px;margin:4px 0 26px;
+  box-shadow:0 6px 16px rgba(56,69,47,.28);
+}
+.{{rootClassName}} .gp-sticky-bar a{display:block;}
+.{{rootClassName}} .gp-cta-sub{text-align:center;}

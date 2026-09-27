@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { loadProduct, loadConfig, listSlugs, parseArgs, writeJSON, shekel } from './lib.js';
-import { renderGpDocument, buildGempages } from './gempages.js';
+import { renderGpDocument, buildGempages, productRoutes } from './gempages.js';
 import { validateProduct } from './validate.js';
 import { buildShopifyPayload } from './shopify-push.js';
 
@@ -30,7 +30,7 @@ const ELEMENTS = {
   sticky_cta: '26 · sticky CTA',
 };
 
-function blockCopy(b) {
+function blockCopy(b, routes = null) {
   const L = [];
   const f = (label, v) => v != null && v !== '' && L.push(`**${label}:** ${v}`);
   switch (b.type) {
@@ -48,6 +48,7 @@ function blockCopy(b) {
       (b.parts ?? []).forEach((p) => L.push(`_${p.role}_\n\n${p.text}`));
       break;
     case 'benefits':
+      if (routes) L.push(`_Na voordeel ${routes.afterBenefit}: tussen-CTA → productpagina: ${routes.mid}_`);
       f('Titel', b.title);
       (b.items ?? []).forEach((i) => L.push(`### ${i.n}. ${i.headline}\n\n${i.text}\n\n📷 ${i.image ?? '—'}`));
       break;
@@ -79,7 +80,7 @@ function blockCopy(b) {
       break;
     case 'offer_box':
       f('Productnaam', b.product_name); f('Rating', b.rating_line); f('Prijs', `~~${shekel(b.regular_price)}~~ → ${shekel(b.sale_price)}`);
-      L.push((b.bullets ?? []).map((x) => `- ✓ ${x}`).join('\n'));
+      if (routes) L.push(routes.facts.map((x) => `- ✓ ${x}`).join('\n'), `**Knop → productpagina:** ${routes.box}`);
       break;
     case 'bundle':
       f('Titel', b.title);
@@ -107,7 +108,7 @@ function gempageCopyMd(p) {
     'Beelden: zie `image-prompts.md` (📷 = ID uit het beeldplan).',
     '',
   ];
-  for (const b of g.blocks ?? []) out.push(`## ${b.type}  \n<sub>GemPage-element ${ELEMENTS[b.type] ?? ''}</sub>`, '', `<div dir="rtl">\n\n${blockCopy(b)}\n\n</div>`, '');
+  for (const b of g.blocks ?? []) out.push(`## ${b.type}  \n<sub>GemPage-element ${ELEMENTS[b.type] ?? ''}</sub>`, '', `<div dir="rtl">\n\n${blockCopy(b, p.input ? productRoutes(g, p.input) : null)}\n\n</div>`, '');
   return out.join('\n');
 }
 

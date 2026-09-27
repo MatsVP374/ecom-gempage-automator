@@ -17,9 +17,18 @@ import { ROOT, loadProduct, loadConfig, parseArgs, esc } from './lib.js';
 const TEMPLATE_DIR = path.join(ROOT, 'templates', 'gempage');
 export const LETTER_CSS_TEMPLATE = () => fs.readFileSync(path.join(TEMPLATE_DIR, 'letter.css'), 'utf8');
 
-// Escape, and keep "15+", "2,550+", "4.7/5" left-to-right inside RTL text.
-const t = (s) => esc(s).replace(/(\d[\d.,/]*\+|\d+(?:\.\d+)?\s?\/\s?\d+)/g, '<span class="gp-ltr">$1</span>');
-const brand = (s) => t(s).replace(/Adina Fashion/g, '<span class="gp-brand">Adina Fashion</span>');
+// Escape, and isolate every left-to-right run inside RTL text so it cannot jump around:
+// ₪179 · 179₪ · 15+ · 2,550+ · 4.7/5 · 25% · S–3XL · Adina Fashion (brand/hebrew-style.md → RTL).
+const SIZE = '(?:XXXL|XXL|XL|XS|[2-6]XL|S|M|L)';
+export const LTR_RUN = new RegExp(
+  `(₪\\s?\\d[\\d,.]*|\\d[\\d,.]*\\s?₪|\\d[\\d.,/]*\\+|\\d+(?:\\.\\d+)?\\s?\\/\\s?\\d+|\\d+(?:\\.\\d+)?%|\\b${SIZE}\\s?[–-]\\s?${SIZE}\\b)`,
+  'g',
+);
+const t = (s) =>
+  esc(s)
+    .replace(LTR_RUN, '<span class="gp-ltr">$1</span>')
+    .replace(/Adina Fashion/g, '<span class="gp-brand">Adina Fashion</span>');
+const brand = t;
 const shekel = (n) => (n == null ? '' : `₪${n}`);
 
 // Every GemPage photo is 4:5 portrait (brand/image-rules.md), so the page keeps one rhythm on mobile.
@@ -44,12 +53,41 @@ function reviewCard(r, ctx, lang) {
   return `<div class="gp-review-card gp-photo-review">${stars}<span class="gp-quote">”${t(r.text)}“</span><cite>— ${brand(who)}</cite></div>`;
 }
 
+// The three routes to the real product page (brand/gempage-blueprint.md → Productroutes).
+// Texts are fixed in config/adina.json; {name} = short product name (before "|"), {price} = sale price.
+export function productRoutes(page, input, cfg = loadConfig()) {
+  const L = cfg.landing_page;
+  const he = page.lang === 'he';
+  const name = he ? String(input?.hebrew_product_name ?? '').split('|')[0].trim() : String(input?.product_name ?? '').trim();
+  const colors = input?.colors ?? [];
+  const many = colors.length > 1;
+  // A no-break space keeps the arrow on the same line as the last word.
+  const fill = (s) => s.replaceAll('{name}', name).replaceAll('{price}', String(input?.sale_price ?? '')).replace(/ ([←→])$/, '\u00a0$1');
+  const list = (a) => (a.length > 1 ? `${a.slice(0, -1).join(', ')} ${he ? 'ו' : 'and '}${a.at(-1)}` : a.join(''));
+  const sz = input?.sizes ?? [];
+  const sizes = sz.length > 2 ? `${sz[0]}–${sz.at(-1)}` : sz.join(', ');
+  return {
+    url: /^https?:\/\//.test(input?.existing_product_page?.url ?? '') ? input.existing_product_page.url : null,
+    mid: fill(he ? (many ? L.mid_cta_he : L.mid_cta_no_color_he) : many ? 'See {name} and the available colours →' : 'See {name} →'),
+    box: fill(he ? (many ? L.cta_he : L.cta_no_color_he) : many ? 'Choose size and colour of {name} →' : 'Choose the size of {name} →'),
+    sticky: fill(he ? (many ? L.sticky_cta_he : L.sticky_cta_no_color_he) : many ? '{name} now ₪{price} — choose size and colour' : '{name} now ₪{price} — choose your size'),
+    afterBenefit: L.mid_cta_after_benefit ?? 3,
+    facts: [
+      colors.length ? list(colors) : null,
+      sizes ? (he ? `מידות ${sizes}` : `Sizes ${sizes}`) : null,
+      he ? 'משלוח חינם' : 'Free shipping',
+      he ? `${cfg.trust.returns_days} יום להחזרה` : `${cfg.trust.returns_days} days to return`,
+    ].filter(Boolean),
+  };
+}
+
 // Renders the founder letter in the Adina GemPages markup (gp-* classes).
 export function renderGpHtml(page, { plan = null, input = null } = {}) {
   const cfg = loadConfig();
   const ctx = { planById: Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i])), missingImages: [], testimonials: Object.fromEntries((input?.testimonials ?? []).map((x) => [x.id, x])) };
   const by = Object.fromEntries((page.blocks ?? []).map((b) => [b.type, b]));
-  const productUrl = input?.existing_product_page?.url || '#product';
+  const routes = productRoutes(page, input, cfg);
+  const productUrl = routes.url || '#product';
   const out = [`<div aria-label="${esc(input?.product_name ?? 'Adina')} Founder Letter" dir="${esc(page.dir ?? 'rtl')}">`, '<div class="gp-card"><div class="gp-card-pad">'];
   const h = by.founder_header;
   if (h)
@@ -79,8 +117,11 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
   if (by.benefits) {
     out.push('<div class="gp-features-wrap">');
     if (by.benefits.title) out.push(`<div class="gp-measure"><h2 class="gp-section-title">${t(by.benefits.title)}</h2></div>`);
-    for (const i of by.benefits.items ?? [])
+    for (const i of by.benefits.items ?? []) {
       out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: i.headline })}${reviewCard(i.review, ctx, page.lang)}</div>`);
+      // Route 1: a quiet in-between link once the reader is warming up.
+      if (i.n === routes.afterBenefit) out.push(`<div class="gp-measure gp-mid-cta-wrap"><a class="gp-mid-cta" href="${esc(productUrl)}">${t(routes.mid)}</a></div>`);
+    }
     out.push('</div>');
   }
   const c = by.comparison;
@@ -105,7 +146,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     out.push('<div class="gp-measure">');
     if (s) {
       out.push(`<h2 class="gp-section-title">${t(s.title)}</h2>`, ...(s.paragraphs ?? []).map((p) => `<p>${t(p)}</p>`));
-      out.push(`<div class="gp-sale-prices"><span class="gp-old">${shekel(s.regular_price)}</span><span class="gp-new">${shekel(s.sale_price)}</span></div>`);
+      out.push(`<div class="gp-sale-prices"><del class="gp-old">${t(shekel(s.regular_price))}</del><span class="gp-new">${t(shekel(s.sale_price))}</span></div>`);
       if (s.availability_note) out.push(`<p>${t(s.availability_note)}</p>`);
     }
     if (tb) out.push(`<div class="gp-stats-row">${(tb.items ?? []).map((i) => `<div><div class="gp-stat-num">${t(i.value)}</div><div class="gp-stat-label">${t(i.label)}</div></div>`).join('')}</div>`);
@@ -133,17 +174,21 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     if (ob)
       out.push(
         `<h3>${t(ob.product_name)}</h3>`,
-        `<div class="gp-rating">${t(ob.rating_line)}</div>`,
-        `<div class="gp-prices"><span class="gp-old">${shekel(ob.regular_price)}</span><span class="gp-new">${shekel(ob.sale_price)}</span></div>`,
-        `<ul>${(ob.bullets ?? []).map((b) => `<li>${t(b)}</li>`).join('')}</ul>`,
+        `<div class="gp-rating"><span class="gp-stars">★★★★★</span> ${t(`${cfg.trust.rating}/${cfg.trust.rating_scale}`)}</div>`,
+        `<div class="gp-prices"><del class="gp-old">${t(shekel(ob.regular_price))}</del><span class="gp-new">${t(shekel(ob.sale_price))}</span></div>`,
+        `<ul class="gp-facts">${routes.facts.map((b) => `<li>${t(b)}</li>`).join('')}</ul>`,
+        // Route 2: the big button. This is where she orders.
+        `<a class="gp-cta-btn gp-buy" href="${esc(productUrl)}">${t(routes.box)}</a>`,
       );
     if (bu) out.push(`<div class="gp-stack"><div class="gp-bundle-title">${t(bu.title)}</div><ul class="gp-bundle">${(bu.tiers ?? []).map((x) => `<li>${t(x.label)}</li>`).join('')}</ul></div>`);
-    if (cta) out.push(`<a class="gp-cta-btn" href="${esc(productUrl)}">${t(cta.button)}</a>`, cta.subtext ? `<p class="gp-cta-sub">${t(cta.subtext)}</p>` : '');
+    if (cta && !ob) out.push(`<a class="gp-cta-btn gp-buy" href="${esc(productUrl)}">${t(cta.button)}</a>`);
+    if (cta?.subtext) out.push(`<p class="gp-cta-sub">${t(cta.subtext)}</p>`);
     out.push('</div>');
   }
   if (ab) out.push(`<div class="gp-about-box"><strong>${t(ab.title)}</strong><p>${t(ab.text)}</p><p class="gp-signature">${t(ab.signoff)}</p></div>`);
   out.push('</div>', '</div></div>');
-  if (by.sticky_cta) out.push(`<div class="gp-sticky-bar"><a href="#product">${t(by.sticky_cta.text)}</a></div>`);
+  // Route 3: always visible, straight to the product page.
+  if (by.sticky_cta) out.push(`<div class="gp-sticky-bar"><a href="${esc(productUrl)}">${t(by.sticky_cta.text)}</a></div>`);
   out.push('</div>');
   return { html: out.filter(Boolean).join('\n'), missingImages: [...new Set(ctx.missingImages)] };
 }

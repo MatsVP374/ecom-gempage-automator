@@ -256,14 +256,7 @@
       "product_name": "Payo | Pleasant Day Top",
       "rating_line": "★★★★★ 4.7/5 from 2,550+ reviews",
       "regular_price": 359,
-      "sale_price": 179,
-      "bullets": [
-        "Light and breathable, for hot days and cool evenings",
-        "A cut that glides gently over the body",
-        "Goes with jeans, a skirt or shorts",
-        "Blue, green, gray, purple · sizes S to 3XL",
-        "Free shipping with Israel Post · 30-day returns"
-      ]
+      "sale_price": 179
     },
     {
       "id": "bundle",
@@ -295,7 +288,7 @@
     {
       "id": "cta",
       "type": "cta",
-      "button": "Check if your size and color are still in stock",
+      "button": "Choose size and colour of Payo →",
       "subtext": "Free shipping with Israel Post · 30-day returns"
     },
     {
@@ -308,7 +301,7 @@
     {
       "id": "sticky_cta",
       "type": "sticky_cta",
-      "text": "Payo now ₪179 — check if your size is still in stock"
+      "text": "Payo now ₪179 — choose size and colour"
     }
   ]
 }

@@ -183,11 +183,11 @@ Vaste blokvolgorde (zie `brand/gempage-blueprint.md`), `id` = `type`:
 | `packing` | `image`, `caption` |
 | `founder_observation` | `text` |
 | `social_proof` | `rating`, `reviews_label`, `text`, `quotes: [{ testimonial_id, text }]` (alleen echte, aangeleverde testimonials) |
-| `offer_box` | `product_name`, `rating_line`, `regular_price`, `sale_price`, `bullets: []` (4–6) |
+| `offer_box` | `product_name`, `rating_line`, `regular_price`, `sale_price` (de box met kleuren/maten/verzending/retour + knop bouwt de GemPage zelf) |
 | `bundle` | `title`, `tiers: [{ items, extra_discount_pct, label }]` — exact `config.bundle_discount` |
-| `cta` | `button`, `subtext` |
+| `cta` | `button` (= `config.landing_page.cta_he` met korte naam), `subtext` |
 | `about` | `title`, `text`, `signoff` |
-| `sticky_cta` | `text` |
+| `sticky_cta` | `text` (= `config.landing_page.sticky_cta_he`); linkt naar de productpagina |
 
 `image`-velden bevatten een ID uit `04-gempage-image-plan.json` (`IMG-01` …).
 
@@ -266,6 +266,8 @@ Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle 
 - Aanbod komt **alleen** uit input (prijzen, promotie, sale reason) + `config/adina.json`
   (bundel 10/15/20/25%, gratis verzending met Israel Post, 30 dagen retour, 4.7/5, 2,550+ reviews, 15+ jaar).
 - De GemPage begint **nooit** met het product of de korting; het product is de conclusie van Adina's verhaal.
+- Maar zodra ze overtuigd is, hoeft ze **niet te zoeken**: minimaal 3 routes naar de productpagina (blueprint → Productroutes).
+- **RTL-QA** bij elke pagina: expliciete RTL per tekstelement, geïsoleerde ₪/4.7/5/S–3XL/Adina Fashion (validator + mobiele preview).
 - Productnamen exact zoals aangeleverd.
 - Geen medische claims.
 
