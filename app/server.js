@@ -30,13 +30,13 @@ const COMMANDS = {
 };
 
 // Images (OpenAI → Shopify) run in-process as a job with the same live log as Claude runs.
-function runImagesJob(slug, mode = 'all', { force = false, only = null } = {}) {
+function runImagesJob(slug, mode = 'all', { force = false, only = null, provider = null } = {}) {
   if (jobs.get(slug)?.running) throw new Error('A job is already running for this product');
   const job = { running: true, log: [`$ node scripts/images.js ${slug} ${mode}${force ? ' --force' : ''}`], started: new Date().toISOString(), finished: null, code: null };
   jobs.set(slug, job);
-  runImages(slug, { mode, force, only, log: (l) => job.log.push(l) })
+  runImages(slug, { mode, force, only, provider, log: (l) => job.log.push(l) })
     .then((s) => {
-      job.log.push(`✓ generated: ${s.generated.join(', ') || '—'} · uploaded: ${s.uploaded.join(', ') || '—'}`, ...s.skipped.map((x) => `  skipped ${x}`), ...s.errors.map((e) => `✗ ${e}`));
+      job.log.push(mode === 'compare' ? `✓ compare: ${s.compared.join(', ') || '—'}` : `✓ generated: ${s.generated.join(', ') || '—'} · uploaded: ${s.uploaded.join(', ') || '—'}`, ...s.skipped.map((x) => `  skipped ${x}`), ...s.errors.map((e) => `✗ ${e}`));
       job.code = s.errors.length ? 1 : 0;
     })
     .catch((e) => {
@@ -173,7 +173,9 @@ async function route(req, res) {
       const job = jobs.get(slug);
       const outDir = path.join(p.dir, 'output');
       const outputs = fs.existsSync(outDir) ? fs.readdirSync(outDir).sort() : [];
-      return send(res, 200, { ...p, dir: undefined, outputs, missing: missingInput(p.input), config: loadConfig(), job: job ? { ...job, log: job.log.slice(-400) } : null });
+      const cmpDir = path.join(p.dir, 'images', 'compare');
+      const compare = fs.existsSync(cmpDir) ? fs.readdirSync(cmpDir).sort() : [];
+      return send(res, 200, { ...p, dir: undefined, outputs, compare, missing: missingInput(p.input), config: loadConfig(), job: job ? { ...job, log: job.log.slice(-400) } : null });
     }
     if (m === 'PUT' && action === 'input') {
       if (jobs.get(slug)?.running) throw new Error('A job is running for this product — wait until it finishes');
@@ -199,13 +201,15 @@ async function route(req, res) {
     }
     if (m === 'POST' && action === 'images') {
       const b = await readBody(req);
-      runImagesJob(slug, ['all', 'generate', 'upload'].includes(b.mode) ? b.mode : 'all', { force: !!b.force, only: b.only ?? null });
+      runImagesJob(slug, ['all', 'generate', 'upload', 'compare'].includes(b.mode) ? b.mode : 'all', { force: !!b.force, only: b.only ?? null, provider: b.provider ?? null });
       return send(res, 202, { ok: true });
     }
     if (m === 'GET' && action === 'image' && parts[4]) {
-      const file = path.join(productDir(slug), 'images', path.basename(parts[4]));
-      if (!/\.png$/.test(file) || !fs.existsSync(file)) return send(res, 404, { error: 'Not found' });
-      res.writeHead(200, { 'Content-Type': 'image/png' });
+      const sub = parts[4] === 'compare' && parts[5] ? ['compare', path.basename(parts[5])] : [path.basename(parts[4])];
+      const file = path.join(productDir(slug), 'images', ...sub);
+      const type = { '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp' }[path.extname(file)];
+      if (!type || !fs.existsSync(file)) return send(res, 404, { error: 'Not found' });
+      res.writeHead(200, { 'Content-Type': type });
       return fs.createReadStream(file).pipe(res);
     }
     if (m === 'POST' && action === 'generate') {

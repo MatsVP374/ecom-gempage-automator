@@ -65,15 +65,17 @@ claude
 
 - **Tekst** (fact sheet, angle, brief, ads, creatives) schrijft Claude Code volgens de blueprints.
 - **Beelden**: `npm run images -- <slug>` stuurt elke beeldprompt, met de bestaande productfoto's als referentie,
-  naar de OpenAI Images API (`gpt-image-1`, instelbaar met `OPENAI_IMAGE_MODEL`). Het resultaat gaat naar
+  naar **Gemini** (`gemini-2.5-flash-image`, instelbaar met `GEMINI_IMAGE_MODEL`) of **OpenAI**
+  (`OPENAI_IMAGE_MODEL`). Kiezen met `IMAGE_PROVIDER=gemini|openai`; zonder keuze wordt Gemini gebruikt als
+  `GEMINI_API_KEY` er is. `npm run images -- <slug> compare` maakt de hero met beide, om te vergelijken. Het resultaat gaat naar
   Shopify Files en de CDN-URL komt in het beeldplan. Bestaande productfoto's worden nooit opnieuw gegenereerd.
   In de UI: tab IMAGES → **🎨 Genereer + upload**.
 - **GemPage**: `output/<slug>-founder-letter.gempages` is een echt GemPages-exportbestand (zelfde formaat als
   een export uit GemPages), met de brief in het Adina-design. In GemPages: **Pages → Import → upload**.
 
-Nodig in `.env` (zie `.env.example`): `OPENAI_API_KEY`, `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_ADMIN_TOKEN`
+Nodig in `.env` (zie `.env.example`): `GEMINI_API_KEY` en/of `OPENAI_API_KEY`, `SHOPIFY_STORE_DOMAIN`, `SHOPIFY_ADMIN_TOKEN`
 (custom app met `write_files` en `write_products`). Draai je het in de cloud, laat dan netwerktoegang toe tot
-`api.openai.com`, `<winkel>.myshopify.com`, `cdn.shopify.com` en `storage.googleapis.com` (Shopify-uploads).
+`generativelanguage.googleapis.com` (Gemini), `api.openai.com` (OpenAI), `<winkel>.myshopify.com`, `cdn.shopify.com` en `storage.googleapis.com` (Shopify-uploads).
 
 ## Wat je aanlevert
 

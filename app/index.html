@@ -302,12 +302,15 @@ function images(el, d) {
   if (!plan.length) { el.innerHTML = '<div class="empty">Nog geen beeldplan (stap 4).</div>'; return; }
   const prompts = Object.fromEntries((d.prompts?.prompts ?? []).map((p) => [p.image_id, p]));
   const running = d.job?.running;
-  const thumb = (i) => i.url ? `<img src="${esc(i.url)}" style="width:72px;height:72px;object-fit:cover;border-radius:6px">` : i.file ? `<img src="/api/products/${d.slug}/image/${esc(i.id)}.png" style="width:72px;height:72px;object-fit:cover;border-radius:6px;opacity:.6" title="nog niet op Shopify">` : '<span class="muted">—</span>';
+  const thumb = (i) => i.url ? `<img src="${esc(i.url)}" style="width:72px;height:72px;object-fit:cover;border-radius:6px">` : i.file ? `<img src="/api/products/${d.slug}/image/${esc(i.file.split('/').pop())}" style="width:72px;height:72px;object-fit:cover;border-radius:6px;opacity:.6" title="nog niet op Shopify">` : '<span class="muted">—</span>';
   const done = plan.filter((i) => i.url).length;
   el.innerHTML = `<div class="card"><div class="toolbar" style="justify-content:space-between"><h3 style="margin:0">GemPage image plan · ${done}/${plan.length} op Shopify</h3>
-      <span><button class="primary" id="genimg" ${running || !d.prompts ? 'disabled' : ''}>${running ? '⏳ Bezig…' : '🎨 Genereer (OpenAI) + upload naar Shopify'}</button>
+      <span><button class="primary" id="genimg" ${running || !d.prompts ? 'disabled' : ''}>${running ? '⏳ Bezig…' : '🎨 Genereer + upload naar Shopify'}</button>
+      <select id="provider" style="width:auto"><option value="">auto</option><option value="gemini">Gemini</option><option value="openai">OpenAI</option></select>
+      <button class="small" id="compare" ${running || !d.prompts ? 'disabled' : ''}>Vergelijk hero: Gemini vs OpenAI</button>
       <button class="small" id="regen" ${running ? 'disabled' : ''}>Alles opnieuw</button></span></div>
-    <p class="muted">Bestaande productfoto's worden niet opnieuw gegenereerd. OpenAI krijgt de productfoto's mee als referentie, zodat het product hetzelfde blijft.</p><table>
+    <p class="muted">Bestaande productfoto's worden niet opnieuw gegenereerd. De beeldmaker (Gemini of OpenAI) krijgt de productfoto's mee als referentie, zodat het product hetzelfde blijft.</p>
+    ${d.compare?.length ? `<div class="toolbar">${d.compare.map((f) => `<figure style="margin:0;text-align:center"><img src="/api/products/${d.slug}/image/compare/${esc(f)}" style="height:220px;border-radius:8px"><figcaption class="muted">${esc(f)}</figcaption></figure>`).join('')}</div>` : ''}<table>
     <tr><th></th><th>ID</th><th>Rol</th><th>Blok</th><th>Doel</th><th>Bron</th><th>Kleur</th></tr>
     ${plan.map((i) => `<tr><td>${thumb(i)}</td><td><b>${esc(i.id)}</b></td><td>${esc(i.role)}</td><td>${esc(i.block)}${i.benefit_n ? ` #${i.benefit_n}` : ''}</td><td>${esc(i.purpose)}</td><td>${i.source === 'existing' ? `existing` : 'generate'}</td><td>${esc(i.product_color)}</td></tr>`).join('')}</table></div>
     ${d.job ? `<div class="card"><div class="log">${esc(d.job.log.slice(-30).join('\n'))}</div></div>` : ''}
@@ -316,9 +319,10 @@ function images(el, d) {
       <div class="copy">${esc(p.prompt)}</div>
       <p class="muted">Referenties: ${esc((p.reference_images ?? []).join(', ') || '—')}</p>
       <details><summary>13 velden</summary><table>${Object.entries(p.fields ?? {}).map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join('')}</table></details></div>`; }).join('')}`;
-  const go = async (force) => { try { await api(`/products/${d.slug}/images`, { method: 'POST', body: { mode: 'all', force } }); await refresh(); } catch (e) { alert(e.message); } };
-  $('#genimg').onclick = () => go(false);
-  $('#regen').onclick = () => confirm('Alle beelden opnieuw genereren (kost OpenAI-credits)?') && go(true);
+  const go = async (mode, force) => { try { await api(`/products/${d.slug}/images`, { method: 'POST', body: { mode, force, provider: $('#provider').value || null } }); await refresh(); } catch (e) { alert(e.message); } };
+  $('#genimg').onclick = () => go('all', false);
+  $('#compare').onclick = () => go('compare', false);
+  $('#regen').onclick = () => confirm('Alle beelden opnieuw genereren (kost API-credits)?') && go('all', true);
 }
 
 // ---------- META ADS ----------

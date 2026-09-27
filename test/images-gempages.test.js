@@ -7,7 +7,7 @@ import http from 'node:http';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
 import { setProductsDir, loadProduct } from '../scripts/lib.js';
-import { runImages, sizeFor } from '../scripts/images.js';
+import { runImages, sizeFor, pickProvider } from '../scripts/images.js';
 import { buildGempages, zip } from '../scripts/gempages.js';
 import { writeDemo } from './fixture.js';
 
@@ -27,6 +27,8 @@ before(async () => {
       const json = (o) => { res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify(o)); };
       if (req.url === '/ref.jpg') { res.writeHead(200, { 'content-type': 'image/jpeg' }); return res.end(PNG); }
       if (req.url === '/v1/images/edits' || req.url === '/v1/images/generations') return json({ data: [{ b64_json: PNG.toString('base64') }] });
+      if (req.url.startsWith('/v1beta/models/') && req.url.endsWith(':generateContent'))
+        return json({ candidates: [{ content: { parts: [{ text: 'here you go' }, { inlineData: { mimeType: 'image/jpeg', data: PNG.toString('base64') } }] } }] });
       if (req.url === '/upload') { res.writeHead(204); return res.end(); }
       if (req.url === '/graphql') {
         const q = JSON.parse(text).query;
@@ -42,8 +44,10 @@ before(async () => {
   base = `http://127.0.0.1:${server.address().port}`;
   Object.assign(process.env, {
     OPENAI_API_KEY: 'sk-test', OPENAI_BASE_URL: `${base}/v1`, SHOPIFY_ADMIN_TOKEN: 'shpat_test',
-    SHOPIFY_GRAPHQL_URL: `${base}/graphql`, SHOPIFY_FILE_POLL_MS: '5',
+    SHOPIFY_GRAPHQL_URL: `${base}/graphql`, SHOPIFY_FILE_POLL_MS: '5', GEMINI_BASE_URL: `${base}/v1beta`,
   });
+  delete process.env.GEMINI_API_KEY;
+  delete process.env.IMAGE_PROVIDER;
 });
 after(() => server.close());
 
@@ -69,7 +73,7 @@ test('images: generates with reference photos, uploads to Shopify, writes CDN ur
     d.prompts.prompts = d.prompts.prompts.filter((x) => x.image_id !== 'IMG-07');
     d.prompts.prompts.forEach((x) => (x.reference_images = [`${base}/ref.jpg`]));
   });
-  const s = await runImages(slug, { log: () => {} });
+  const s = await runImages(slug, { provider: 'openai', log: () => {} });
   assert.deepEqual(s.errors, []);
   assert.equal(s.generated.length, 6, 'existing photo must not be regenerated');
   assert.equal(s.uploaded.length, 6);
@@ -89,7 +93,7 @@ test('images: generates with reference photos, uploads to Shopify, writes CDN ur
 
   // second run is idempotent
   calls.length = 0;
-  const again = await runImages(slug, { log: () => {} });
+  const again = await runImages(slug, { provider: 'openai', log: () => {} });
   assert.equal(again.generated.length + again.uploaded.length, 0);
   assert.equal(calls.length, 0);
 });
@@ -101,9 +105,74 @@ test('images: without reference photos it uses images/generations; errors are co
     d.prompts.prompts.forEach((x) => (x.reference_images = []));
     d.prompts.prompts.pop();
   });
-  const s = await runImages(slug, { mode: 'generate', log: () => {} });
+  const s = await runImages(slug, { mode: 'generate', provider: 'openai', log: () => {} });
   assert.equal(calls.filter((c) => c.url === '/v1/images/generations').length, 6);
   assert.ok(s.errors.some((e) => /IMG-07: no prompt/.test(e)));
+});
+
+test('provider selection: explicit > IMAGE_PROVIDER > gemini when its key is set > openai', () => {
+  assert.equal(pickProvider(), 'openai');
+  process.env.GEMINI_API_KEY = 'g-test';
+  assert.equal(pickProvider(), 'gemini');
+  process.env.IMAGE_PROVIDER = 'openai';
+  assert.equal(pickProvider(), 'openai');
+  assert.equal(pickProvider('gemini'), 'gemini');
+  assert.throws(() => pickProvider('midjourney'), /unknown image provider/);
+  delete process.env.IMAGE_PROVIDER;
+  delete process.env.GEMINI_API_KEY;
+});
+
+test('gemini: sends prompt + reference photos + aspect ratio, saves the returned JPEG, uploads it', async () => {
+  process.env.GEMINI_API_KEY = 'g-test';
+  try {
+    const slug = writeDemo(dir, (d) => {
+      d.plan.images.forEach((i) => delete i.url);
+      d.prompts.prompts.forEach((x) => (x.reference_images = [`${base}/ref.jpg`]));
+    });
+    const s = await runImages(slug, { provider: 'gemini', only: ['IMG-01', 'IMG-02'], log: () => {} });
+    assert.deepEqual(s.errors, []);
+    assert.deepEqual(s.generated, ['IMG-01', 'IMG-02']);
+    const reqs = calls.filter((c) => c.url === '/v1beta/models/gemini-2.5-flash-image:generateContent');
+    assert.equal(reqs.length, 2);
+    assert.equal(calls.find((c) => c.url.startsWith('/v1beta')).auth, undefined, 'key goes in x-goog-api-key, not Authorization');
+    const body = JSON.parse(reqs[0].text);
+    assert.deepEqual(body.generationConfig.responseModalities, ['IMAGE']);
+    assert.equal(body.generationConfig.imageConfig.aspectRatio, '4:5');
+    assert.equal(body.contents[0].parts.filter((x) => x.inline_data).length, 1);
+    assert.match(body.contents[0].parts[0].text, /Test prompt/);
+    const plan = loadProduct(slug).plan;
+    assert.equal(plan.images[0].file, 'images/IMG-01.jpg');
+    assert.equal(plan.images[0].generated.provider, 'gemini');
+    assert.equal(plan.images[0].url, 'https://cdn.shopify.com/s/files/test.png');
+    assert.ok(calls.some((c) => c.url === '/graphql' && /IMG-01\.jpg/.test(c.text) && /image\/jpeg/.test(c.text)));
+  } finally {
+    delete process.env.GEMINI_API_KEY;
+  }
+});
+
+test('gemini key missing → clear error before any network call', async () => {
+  const slug = writeDemo(dir, (d) => d.plan.images.forEach((i) => delete i.url));
+  await assert.rejects(runImages(slug, { provider: 'gemini', log: () => {} }), /GEMINI_API_KEY is not set/);
+  assert.equal(calls.length, 0);
+});
+
+test('compare: hero with both providers into images/compare, plan untouched', async () => {
+  process.env.GEMINI_API_KEY = 'g-test';
+  try {
+    const slug = writeDemo(dir, (d) => {
+      d.plan.images.forEach((i) => delete i.url);
+      d.prompts.prompts.forEach((x) => (x.reference_images = [`${base}/ref.jpg`]));
+    });
+    const before = fs.readFileSync(path.join(dir, slug, '04-gempage-image-plan.json'), 'utf8');
+    const s = await runImages(slug, { mode: 'compare', log: () => {} });
+    assert.deepEqual(s.errors, []);
+    assert.ok(fs.existsSync(path.join(dir, slug, 'images/compare/IMG-01.gemini.jpg')));
+    assert.ok(fs.existsSync(path.join(dir, slug, 'images/compare/IMG-01.openai.png')));
+    assert.equal(fs.readFileSync(path.join(dir, slug, '04-gempage-image-plan.json'), 'utf8'), before);
+    assert.equal(calls.filter((c) => c.url === '/upload').length, 0);
+  } finally {
+    delete process.env.GEMINI_API_KEY;
+  }
 });
 
 // ---- .gempages ----

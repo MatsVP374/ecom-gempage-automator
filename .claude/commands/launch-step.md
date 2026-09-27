@@ -7,7 +7,8 @@ Argumenten: `$ARGUMENTS`
 
 Stappen → prompts: `facts` 01 · `angle` 02 · `gempage` 03 · `image-plan` 04 · `image-prompts` 05 ·
 `gempage-he` 06 · `qc` 07 · `meta-ads` 08 · `creatives` 09 · `package` 10 ·
-`images` = `node scripts/images.js <slug> [--force] [--only IMG-02]` (geen prompt, alleen het script).
+`images` = `node scripts/images.js <slug> [--provider gemini|openai] [--force] [--only IMG-02]` (geen prompt, alleen het script) ·
+`images compare` = `node scripts/images.js <slug> compare` (hero met Gemini én OpenAI naast elkaar).
 
 Lees `CLAUDE.md`, `config/adina.json` en `brand/`. Voer alleen de genoemde stap uit met
 `prompts/<nr>-*.md` en neem extra instructies van de gebruiker mee (bv. "Ad 2 met een andere opening",

@@ -47,7 +47,7 @@ Commando: `/launch-product <slug>` (volledig) · `/launch-step <slug> <stap>` (�
 | 3 | GemPage founder-letter copy (Engelse master) | `prompts/03-gempage-copy.md` | `03-gempage-copy.en.json` |
 | 4 | GemPage image plan | `prompts/04-gempage-image-plan.md` | `04-gempage-image-plan.json` |
 | 5 | Image-generation prompts | `prompts/05-image-prompts.md` | `05-image-prompts.json` |
-| 5b | Beelden genereren (OpenAI) + uploaden (Shopify CDN) | `node scripts/images.js <slug>` | `images/IMG-xx.png`, `url` per beeld in `04-…plan.json` |
+| 5b | Beelden genereren (Gemini of OpenAI) + uploaden (Shopify CDN) | `node scripts/images.js <slug>` | `images/IMG-xx.png`, `url` per beeld in `04-…plan.json` |
 | 6 | GemPage build / Hebreeuws | `prompts/06-gempage-build-he.md` | `03-gempage-copy.he.json` |
 | 7 | Quality control (feiten, GemPage, beelden) | `prompts/07-quality-control.md` | `09-qa-report.md` (deel 1) |
 | 8 | 2 Meta-ads | `prompts/08-meta-ads.md` | `06-meta-ads.json` |
@@ -61,8 +61,10 @@ Regels:
   centrale angle; wil je dat, zeg het dan en pas stap 2 aan.
 - Bestaat een outputbestand al, sla de stap dan over, tenzij `--force` of een expliciete opdracht.
 - Stap 5b is een script, geen schrijfwerk: `node scripts/images.js <slug>`. Het stuurt elke prompt met de
-  bestaande productfoto's als referentie naar de OpenAI Images API, uploadt het resultaat naar Shopify Files
-  en zet de CDN-URL in het beeldplan. Faalt het (geen `OPENAI_API_KEY`/Shopify-token, netwerk geblokkeerd),
+  bestaande productfoto's als referentie naar de beeldmaker — **Gemini** (`GEMINI_API_KEY`, standaard als die
+  sleutel er is) of **OpenAI** (`OPENAI_API_KEY`); kiezen met `IMAGE_PROVIDER` of `--provider` — uploadt het
+  resultaat naar Shopify Files en zet de CDN-URL in het beeldplan. `node scripts/images.js <slug> compare` maakt
+  de hero met beide ter vergelijking (geen upload). Faalt het (geen sleutel/Shopify-token, netwerk geblokkeerd),
   meld dan de exacte foutmelding als flag `IMAGES NOT GENERATED — …` en ga door; de `.gempages` krijgt dan
   zichtbare placeholders. Genereer nooit beelden op een andere manier en verzin geen beeld-URL's.
 - Na stap 6, 8 en 9: `node scripts/validate.js <slug>` en fix alle **errors** vóór je verdergaat.
