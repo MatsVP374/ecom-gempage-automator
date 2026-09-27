@@ -20,6 +20,22 @@ Als een bestaand productbeeld een rol al goed dekt (bv. een scherpe detailfoto),
 
 Variatie: niet elke foto hetzelfde model, dezelfde setting of dezelfde kleur. Kleuren alleen uit input.
 
+## Casting (elke foto met mensen: GemPage, statics, UGC)
+- **Israëlische vrouwen van 40–60.** `age` in de prompt ligt altijd tussen 40 en 60; varieer over de foto's (bv. 44, 50, 55, 58).
+- **Ze moeten er echt Israëlisch uitzien**: warme olijf- tot licht-olijfkleurige huid, donkerbruine ogen, donkerbruin tot
+  zwart haar (vaak golvend/krullend; grijze strepen mag). Afwisselen tussen Mizrachi- en Asjkenazisch-Israëlische looks.
+- **Niet**: blond/platinablond, Noord-Europees of Scandinavisch uiterlijk, Amerikaans catalogusmodel, zilvergrijs "oma"-type.
+- Andere mensen in beeld (familie, vriendinnen, man) zijn ook Israëliërs van 40–60 met dezelfde natuurlijke look.
+- Omgeving herkenbaar Israëlisch: Tel Avivse flat of balkon met rolluiken, Jeruzalem-steen, shuk, café-terras.
+- Elke prompt bevat daarom letterlijk de **castingzin** (zie hieronder). De validator controleert leeftijd en castingzin.
+
+Castingzin (Engels, in elke prompt met een persoon):
+```
+Casting: a Jewish Israeli woman aged about [40–60], with a natural Israeli Mediterranean look — warm olive or
+light-olive skin, dark brown eyes, dark brown to black hair. Not Northern European, not blonde, not an American
+catalogue model. Any other people in the frame are also Israelis in their 40s to 60s with the same natural Israeli look.
+```
+
 ## Image-generation prompt (stap 5)
 Elke foto met `source: "generate"` krijgt één losse, production-ready prompt. Minimaal deze velden:
 
@@ -28,7 +44,7 @@ Elke foto met `source: "generate"` krijgt één losse, production-ready prompt. 
 
 Vorm van de volledige `prompt` (Engels):
 ```
-Create a realistic candid lifestyle photograph of an Israeli woman approximately 58–63 years old
+Create a realistic candid lifestyle photograph of an Israeli woman approximately [40–60] years old
 wearing [PRODUCT — exact description from facts] in [EXACT COLOR].
 She is [ACTION].
 Setting: [SETTING].

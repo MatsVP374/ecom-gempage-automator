@@ -283,6 +283,16 @@ export function validateProduct(slug, { stage } = {}) {
     }
   }
 
+  // Casting (brand/image-rules.md): every person is an Israeli woman of 40–60 with an Israeli look.
+  const castingCheck = (w, prompt, age) => {
+    if (!/\b(woman|women|she|her|man|people|hands?)\b/i.test(prompt)) return; // product-only shot
+    if (!/Casting: a Jewish Israeli woman/.test(prompt)) err(`${w}: prompt misses the casting line (brand/image-rules.md → Casting)`);
+    const ages = [...`${age ?? ''} ${prompt}`.matchAll(/\b(?:about|aged|approximately|around)\s+(\d{2})\b/gi)].map((m) => +m[1]);
+    ages.filter((n) => n < 40 || n > 60).forEach((n) => err(`${w}: age ${n} is outside 40–60`));
+    if (/\b(blonde?|platinum|silver hair|scandinavian|nordic)\b/i.test(prompt.replace(/Not Northern European, not blonde/g, '')))
+      err(`${w}: casting describes a non-Israeli look (blonde/silver/Nordic)`);
+  };
+
   // ---------- 05 prompts ----------
   if (p.prompts) {
     const prompts = p.prompts.prompts ?? [];
@@ -300,6 +310,7 @@ export function validateProduct(slug, { stage } = {}) {
       else {
         if (!/no text/i.test(x.prompt)) warn(`${w}: prompt should say "No text in image"`);
         if (!/reference/i.test(x.prompt)) warn(`${w}: prompt should require consistency with the reference images`);
+        castingCheck(w, x.prompt, x.fields?.age);
       }
       if (!x.reference_images?.length) warn(`${w}: no reference_images`);
     });
@@ -384,6 +395,7 @@ export function validateProduct(slug, { stage } = {}) {
       if (!colorOk(c.product_color)) err(`07-creative-plan ${c.id}: product_color "${c.product_color}" is not an input color`);
       if (!['ad1', 'ad2', 'both'].includes(c.matches)) err(`07-creative-plan ${c.id}: matches must be ad1|ad2|both`);
       for (const k of ['concept', 'visual', 'prompt']) if (!isFilled(c[k])) err(`07-creative-plan ${c.id}: ${k} is empty`);
+      if (isFilled(c.prompt)) castingCheck(`07-creative-plan ${c.id}`, c.prompt);
     });
     const d = cr.find((c) => c.type === 'designed_hook');
     if (d && !(d.overlay_text_he && HEBREW.test(d.overlay_text_he))) err('07-creative-plan D: designed_hook needs a Hebrew overlay_text_he');

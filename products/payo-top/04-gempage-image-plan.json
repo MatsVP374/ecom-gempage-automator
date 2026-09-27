@@ -9,7 +9,7 @@
       "source": "generate",
       "existing_image": null,
       "product_color": "כחול",
-      "model": "Israeli woman, about 58, natural shoulder-length dark-blonde hair, warm smile",
+      "model": "Israeli woman, about 52, shoulder-length wavy dark-brown hair, olive skin, warm smile",
       "setting": "Tel Aviv café terrace, late afternoon"
     },
     {
@@ -21,7 +21,7 @@
       "source": "generate",
       "existing_image": null,
       "product_color": "ירוק",
-      "model": "same age group, only shoulder and upper body visible",
+      "model": "Israeli woman, about 50, olive skin; only shoulder and upper body visible",
       "setting": "bright apartment near an open window with a light breeze"
     },
     {
@@ -33,7 +33,7 @@
       "source": "generate",
       "existing_image": null,
       "product_color": "אפור",
-      "model": "Israeli woman, about 60, short silver hair, slim-average build",
+      "model": "Israeli woman, about 58, short dark hair with natural grey streaks, slim-average build",
       "setting": "quiet tree-lined Tel Aviv boulevard"
     },
     {
@@ -45,7 +45,7 @@
       "source": "generate",
       "existing_image": null,
       "product_color": "סגול",
-      "model": "Israeli woman, about 55, curly dark hair tied back",
+      "model": "Israeli woman, about 47, curly black hair tied back, olive skin",
       "setting": "bedroom with a full-length mirror and a simple wooden wardrobe"
     },
     {
@@ -57,7 +57,7 @@
       "source": "generate",
       "existing_image": null,
       "product_color": "כחול",
-      "model": "same woman as IMG-01 (about 58, shoulder-length dark-blonde hair)",
+      "model": "same woman as IMG-01 (about 52, shoulder-length wavy dark-brown hair, olive skin)",
       "setting": "family dinner on a Tel Aviv balcony at dusk, string lights"
     },
     {
@@ -69,7 +69,7 @@
       "source": "generate",
       "existing_image": null,
       "product_color": "ירוק",
-      "model": "Israeli woman, about 52, long dark hair, olive skin",
+      "model": "Israeli woman, about 44, long dark wavy hair, olive skin",
       "setting": "small boutique interior with a wooden rail"
     },
     {
@@ -81,7 +81,7 @@
       "source": "generate",
       "existing_image": null,
       "product_color": "אפור",
-      "model": "only mature hands visible (woman about 60)",
+      "model": "only mature olive-toned hands of an Israeli woman about 55",
       "setting": "wooden packing table in a small Tel Aviv boutique"
     }
   ],

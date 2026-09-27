@@ -5,11 +5,11 @@
       "type": "customer_discovery",
       "matches": "both",
       "concept": "A woman caught in a candid moment on a hot Tel Aviv street, looking fresh and put-together — the 'how does she stay so cool?' moment.",
-      "visual": "Candid street shot, woman about 58 in the blue top, sunglasses pushed up in her hair, crossing a sunny street with a tote bag; natural, not posed.",
+      "visual": "Candid street shot, Israeli woman about 50 with wavy dark-brown hair in the blue top, sunglasses pushed up in her hair, crossing a sunny street with a tote bag; natural, not posed.",
       "overlay_text_he": null,
       "product_color": "כחול",
       "format": "4:5",
-      "prompt": "Candid realistic street photograph in Tel Aviv on a hot sunny afternoon. An Israeli woman about 58 with shoulder-length dark-blonde hair and sunglasses pushed up in her hair, crossing a quiet street with a canvas tote bag, wearing the top shown in the reference images in the blue colorway with light jeans. She looks fresh and relaxed. Natural light, realistic skin texture, normal proportions, not glossy advertising. No text in image. Keep the garment exactly as in the reference images; do not add buttons, pockets, prints or details."
+      "prompt": "Candid realistic street photograph in Tel Aviv on a hot sunny afternoon. An Israeli woman about 50 with shoulder-length wavy dark-brown hair and olive skin and sunglasses pushed up in her hair, crossing a quiet street with a canvas tote bag, wearing the top shown in the reference images in the blue colorway with light jeans. She looks fresh and relaxed. Natural light, realistic skin texture, normal proportions, not glossy advertising. No text in image. Keep the garment exactly as in the reference images; do not add buttons, pockets, prints or details. Casting: a Jewish Israeli woman aged about 50, with a natural Israeli Mediterranean look — warm olive or light-olive skin, dark brown eyes, dark brown to black hair. Not Northern European, not blonde, not an American catalogue model. Any other people in the frame are also Israelis in their 40s to 60s with the same natural Israeli look."
     },
     {
       "id": "B",
@@ -27,11 +27,11 @@
       "type": "everyday_use",
       "matches": "both",
       "concept": "Everyday use in a different situation, model and color than A: the top styled with a skirt at the market / errands.",
-      "visual": "Woman about 62 with short silver hair in the gray top and a midi skirt, choosing fruit at an outdoor market (Carmel-market style), relaxed and put-together.",
+      "visual": "Israeli woman about 57 with short dark hair with grey streaks in the gray top and a midi skirt, choosing fruit at an outdoor market (Carmel-market style), relaxed and put-together.",
       "overlay_text_he": null,
       "product_color": "אפור",
       "format": "4:5",
-      "prompt": "Realistic lifestyle photo at a colorful outdoor market in Tel Aviv. An Israeli woman about 62 with short silver hair, wearing the top from the reference images in the gray colorway with a navy midi skirt, choosing fruit at a stall, relaxed and well put-together. Bright natural daylight, realistic skin texture, normal proportions, candid documentary feel. No text in image. Keep the garment exactly as in the reference images; do not invent extra details."
+      "prompt": "Realistic lifestyle photo at a colorful outdoor market in Tel Aviv. An Israeli woman about 57 with short dark hair with natural grey streaks and olive skin, wearing the top from the reference images in the gray colorway with a navy midi skirt, choosing fruit at a stall, relaxed and well put-together. Bright natural daylight, realistic skin texture, normal proportions, candid documentary feel. No text in image. Keep the garment exactly as in the reference images; do not invent extra details. Casting: a Jewish Israeli woman aged about 57, with a natural Israeli Mediterranean look — warm olive or light-olive skin, dark brown eyes, dark brown to black hair. Not Northern European, not blonde, not an American catalogue model. Any other people in the frame are also Israelis in their 40s to 60s with the same natural Israeli look."
     },
     {
       "id": "D",
