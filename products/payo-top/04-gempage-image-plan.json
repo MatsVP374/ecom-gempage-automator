@@ -10,7 +10,14 @@
       "existing_image": null,
       "product_color": "כחול",
       "model": "Israeli woman, about 58, natural shoulder-length dark-blonde hair, warm smile",
-      "setting": "Tel Aviv café terrace, late afternoon"
+      "setting": "Tel Aviv café terrace, late afternoon",
+      "file": "images/IMG-01.png",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-2.5-flash-image",
+        "size": "4:5",
+        "at": "2026-09-27T14:53:37.368Z"
+      }
     },
     {
       "id": "IMG-02",
@@ -22,7 +29,14 @@
       "existing_image": null,
       "product_color": "ירוק",
       "model": "same age group, only shoulder and upper body visible",
-      "setting": "bright apartment near an open window with a light breeze"
+      "setting": "bright apartment near an open window with a light breeze",
+      "file": "images/IMG-02.png",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-2.5-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T14:53:44.617Z"
+      }
     },
     {
       "id": "IMG-03",
@@ -34,7 +48,14 @@
       "existing_image": null,
       "product_color": "אפור",
       "model": "Israeli woman, about 60, short silver hair, slim-average build",
-      "setting": "quiet tree-lined Tel Aviv boulevard"
+      "setting": "quiet tree-lined Tel Aviv boulevard",
+      "file": "images/IMG-03.png",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-2.5-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T14:53:53.060Z"
+      }
     },
     {
       "id": "IMG-04",
@@ -46,7 +67,14 @@
       "existing_image": null,
       "product_color": "סגול",
       "model": "Israeli woman, about 55, curly dark hair tied back",
-      "setting": "bedroom with a full-length mirror and a simple wooden wardrobe"
+      "setting": "bedroom with a full-length mirror and a simple wooden wardrobe",
+      "file": "images/IMG-04.png",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-2.5-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T14:54:00.794Z"
+      }
     },
     {
       "id": "IMG-05",
@@ -58,7 +86,14 @@
       "existing_image": null,
       "product_color": "כחול",
       "model": "same woman as IMG-01 (about 58, shoulder-length dark-blonde hair)",
-      "setting": "family dinner on a Tel Aviv balcony at dusk, string lights"
+      "setting": "family dinner on a Tel Aviv balcony at dusk, string lights",
+      "file": "images/IMG-05.png",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-2.5-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T14:54:07.278Z"
+      }
     },
     {
       "id": "IMG-06",
@@ -70,7 +105,14 @@
       "existing_image": null,
       "product_color": "ירוק",
       "model": "Israeli woman, about 52, long dark hair, olive skin",
-      "setting": "small boutique interior with a wooden rail"
+      "setting": "small boutique interior with a wooden rail",
+      "file": "images/IMG-06.png",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-2.5-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T14:54:56.738Z"
+      }
     },
     {
       "id": "IMG-07",
@@ -82,7 +124,14 @@
       "existing_image": null,
       "product_color": "אפור",
       "model": "only mature hands visible (woman about 60)",
-      "setting": "wooden packing table in a small Tel Aviv boutique"
+      "setting": "wooden packing table in a small Tel Aviv boutique",
+      "file": "images/IMG-07.png",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-2.5-flash-image",
+        "size": "1:1",
+        "at": "2026-09-27T14:54:24.897Z"
+      }
     }
   ],
   "existing_images_reviewed": [],

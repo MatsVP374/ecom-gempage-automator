@@ -41,7 +41,7 @@ CREATIVES
 ```
 
 ✓ payo-top — 0 errors · 0 warnings · 4 flags
-  ■ 0 Product input  ■ 1 Product facts  ■ 2 Central angle  ■ 3 GemPage copy (EN master)  ■ 4 GemPage image plan  ■ 5 Image prompts  □ 5b Images (OpenAI → Shopify)  ■ 6 GemPage build (HE)  □ 7 Quality control  ■ 8 2 Meta ads  ■ 9 Creative plan + UGC  □ 10 Launch package
+  ■ 0 Product input  ■ 1 Product facts  ■ 2 Central angle  ■ 3 GemPage copy (EN master)  ■ 4 GemPage image plan  ■ 5 Image prompts  ◐ 5b Images (OpenAI → Shopify)  ■ 6 GemPage build (HE)  □ 7 Quality control  ■ 8 2 Meta ads  ■ 9 Creative plan + UGC  □ 10 Launch package
   FLAG   NO TESTIMONIALS SUPPLIED — the 2 Meta ads will be BLOCKED until real testimonials are added to input.json
   FLAG   MISSING: product construction details (material, neckline, sleeves, length) — concrete benefits and precise image prompts; prompts now rely on the reference photos
   FLAG   MISSING: testimonials — the 2 Meta ads (blocked without real customer reviews)
@@ -49,7 +49,7 @@ CREATIVES
 ```
 
 ## Flags
-- IMAGES NOT GENERATED — Gemini 429 (2026-09-27): quota exceeded, free tier limit 0 for gemini-2.5-flash-preview-image; image generation needs a billed Gemini key (or OPENAI_API_KEY). SHOPIFY_STORE_DOMAIN/SHOPIFY_ADMIN_TOKEN are not set, so upload would fail too. The .gempages file contains visible placeholders for IMG-01…IMG-07.
+- IMAGES NOT UPLOADED — IMG-01…IMG-07 generated with Gemini (2026-09-27) in products/payo-top/images/; upload failed: SHOPIFY_STORE_DOMAIN and SHOPIFY_ADMIN_TOKEN must be set. Run `node scripts/images.js payo-top upload` once they are. Until then the .gempages file has placeholders. Review: IMG-03 and IMG-07 (grey) read slightly blue-grey.
 - TESTIMONIAL DATA INSUFFICIENT — no reviews supplied; both Meta ads blocked.
 - MISSING: product construction details (material, neckline, sleeves, length). Benefits stay on feel/cut/styling; image prompts rely on the reference photos.
 - Product photos could not be viewed, so none were reused as GemPage images.
