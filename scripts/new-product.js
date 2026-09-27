@@ -56,6 +56,8 @@ export function normaliseInput(slug, data = {}) {
       age: t.age === '' || t.age == null ? null : Number.isFinite(Number(t.age)) ? Number(t.age) : str(String(t.age)),
       source: str(t.source),
       text: str(t.text),
+      text_he: str(t.text_he) || null,
+      rating: Number(t.rating) >= 1 && Number(t.rating) <= 5 ? Number(t.rating) : null,
       details: str(t.details),
     }))
     .filter((t) => t.text || t.details);

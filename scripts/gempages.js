@@ -33,10 +33,20 @@ function img(id, ctx, { width = 700, height = 467, eager = false, alt = '' } = {
   return `<img src="${esc(url)}" alt="${esc(alt || p?.purpose || '')}" loading="${eager ? 'eager' : 'lazy'}"${eager ? ' fetchpriority="high"' : ''} width="${width}" height="${height}">`;
 }
 
+// A real customer review card. Name/age/stars come from input.testimonials, never from the copy:
+// no name → "customer of Adina Fashion", no rating → no stars.
+function reviewCard(r, ctx, lang) {
+  if (!r?.text) return '';
+  const tm = ctx.testimonials[r.testimonial_id];
+  const who = tm?.name ? `${tm.name}${tm.age ? `, ${tm.age}` : ''}` : lang === 'he' ? 'לקוחה של Adina Fashion' : 'Adina Fashion customer';
+  const stars = tm?.rating ? `<div class="gp-stars" aria-label="${tm.rating}/5">${'★'.repeat(tm.rating)}${'☆'.repeat(5 - tm.rating)}</div>` : '';
+  return `<div class="gp-review-card gp-photo-review">${stars}<span class="gp-quote">”${t(r.text)}“</span><cite>— ${brand(who)}</cite></div>`;
+}
+
 // Renders the founder letter in the Adina GemPages markup (gp-* classes).
 export function renderGpHtml(page, { plan = null, input = null } = {}) {
   const cfg = loadConfig();
-  const ctx = { planById: Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i])), missingImages: [] };
+  const ctx = { planById: Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i])), missingImages: [], testimonials: Object.fromEntries((input?.testimonials ?? []).map((x) => [x.id, x])) };
   const by = Object.fromEntries((page.blocks ?? []).map((b) => [b.type, b]));
   const productUrl = input?.existing_product_page?.url || '#product';
   const out = [`<div aria-label="${esc(input?.product_name ?? 'Adina')} Founder Letter" dir="${esc(page.dir ?? 'rtl')}">`, '<div class="gp-card"><div class="gp-card-pad">'];
@@ -69,7 +79,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     out.push('<div class="gp-features-wrap">');
     if (by.benefits.title) out.push(`<div class="gp-measure"><h2 class="gp-section-title">${t(by.benefits.title)}</h2></div>`);
     for (const i of by.benefits.items ?? [])
-      out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: i.headline })}</div>`);
+      out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: i.headline })}${reviewCard(i.review, ctx, page.lang)}</div>`);
     out.push('</div>');
   }
   const c = by.comparison;
@@ -108,7 +118,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     if (fo) out.push(`<p>${t(fo.text)}</p>`, `<p class="gp-signature">— ${esc(cfg.founder.name_he)}</p>`);
     if (sp) {
       out.push(`<div class="gp-social"><div class="gp-stars">★★★★★</div><div class="gp-rating-line">${t(page.lang === 'he' ? `${sp.rating} / ${cfg.trust.rating_scale} מתוך ${sp.reviews_label} ביקורות` : `${sp.rating} / ${cfg.trust.rating_scale} from ${sp.reviews_label} reviews`)}</div><p>${t(sp.text)}</p></div>`);
-      for (const r of sp.quotes ?? []) out.push(`<div class="gp-review-card"><div class="gp-stars">★★★★★</div><span class="gp-quote">${t(r.text)}</span></div>`);
+      for (const r of sp.quotes ?? []) out.push(reviewCard(r, ctx, page.lang));
     }
     out.push('</div>');
   }

@@ -25,13 +25,16 @@ PRODUCT FEATURES*:
 EXISTING PRODUCT PAGE*:          (URL en/of geplakte tekst)
 EXISTING PRODUCT IMAGES*:        (URL's, of zet de bestanden in products/<slug>/source/)
 
-## Optioneel (maar nodig voor de ads)
-CUSTOMER REVIEWS / TESTIMONIALS: (per testimonial: letterlijke tekst + naam/leeftijd ALLEEN als bekend + bron)
+## Optioneel (maar nodig voor de ads en de reviews in de GemPage)
+CUSTOMER REVIEWS / TESTIMONIALS: (nodig voor de 2 ads én de review onder elke GemPage-foto; per testimonial: letterlijke tekst +
+  naam/leeftijd/sterren ALLEEN als bekend + bron. Tip: 5–6 reviews die elk een ander voordeel noemen = een review per foto)
   Testimonial 1:
     Name:
     Age:
     Source:
+    Stars (1–5):
     Text:
+    Hebrew text (alleen als de review niet in het Hebreeuws is):
     Extra details (wat je zeker weet over haar situatie/gebruik):
   Testimonial 2:
     …

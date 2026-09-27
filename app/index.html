@@ -209,7 +209,7 @@ function inputForm(i, { isNew }) {
       <div><label>Existing product images <b>*</b> (URL's of source/…, één per regel)</label><textarea name="existing_product_images" rows="2">${lines(i.existing_product_images)}</textarea></div>
     </div>
     <label>Existing product page content (geplakte tekst)</label><textarea name="page_content" rows="3">${v(i.existing_product_page?.content)}</textarea>
-    <h3 style="margin-top:16px">Customer reviews / testimonials <span class="muted" style="font-weight:400">(nodig voor de 2 ads — naam/leeftijd alleen als je ze echt weet)</span></h3>
+    <h3 style="margin-top:16px">Customer reviews / testimonials <span class="muted" style="font-weight:400">(nodig voor de 2 ads én voor de review onder elke foto in de GemPage — naam/leeftijd alleen als je ze echt weet)</span></h3>
     <div id="tlist">${t.map(testimonialRow).join('')}</div>
     <button type="button" class="small" id="addt">+ Testimonial</button>
     <h3 style="margin-top:16px">Optioneel</h3>
@@ -232,6 +232,8 @@ function testimonialRow(t = {}) {
     <div><label>Age (alleen als bekend)</label><input data-k="age" value="${esc(t.age ?? '')}"></div>
     <div><label>Source</label><input data-k="source" value="${esc(t.source ?? '')}" placeholder="bv. Judge.me review 2026-08-12"></div></div>
     <label>Testimonial text (letterlijk)</label><textarea data-k="text" rows="3" dir="auto">${esc(t.text ?? '')}</textarea>
+    <div class="row3"><div><label>Sterren 1–5 (alleen als bekend)</label><input data-k="rating" value="${esc(t.rating ?? '')}"></div></div>
+    <label>Hebreeuwse versie (alleen als de review niet in het Hebreeuws is)</label><textarea data-k="text_he" rows="2" dir="rtl">${esc(t.text_he ?? '')}</textarea>
     <label>Extra details (wat je zeker weet over haar situatie/gebruik)</label><textarea data-k="details" rows="2" dir="auto">${esc(t.details ?? '')}</textarea>
     <button type="button" class="small" data-remove>Verwijderen</button></div>`;
 }

@@ -12,6 +12,11 @@ review). Stap 6 schrijft de Hebreeuwse versie. `lang: "en"`, `dir: "ltr"`.
 - `founder_header.note` = het centrale probleem. `headline` = probleem-eerst, geen productnaam, geen korting.
 - `benefits` = de 5–6 benefits uit stap 2 (zelfde volgorde, `n`, `feature_ids`). De headline is het
   menselijke probleem, de tekst gaat feature → effect → leven.
+- **Review per foto:** elk `benefits`-item krijgt `review: { testimonial_id, text }` als er een echte testimonial is
+  die dát voordeel noemt. `text` = een **letterlijk** fragment uit de review (in de HE-versie woord voor woord uit
+  `text` of `text_he`; in de EN-master een vertaling ervan). Geen passende review → `review` weglaten; nooit een
+  review verbuigen naar een voordeel dat de klant niet noemde. Elk fragment maar één keer. Naam, leeftijd en sterren
+  zet je er niet bij: die haalt de GemPage zelf uit `input.testimonials`.
 - `comparison.columns` = `old_alternative_a` / `old_alternative_b` / productnaam; 3–5 rijen, alleen feiten.
 - `founder_quote` = de positionering in één zin (`adina_belief`).
 - `sale`: `input.sale_reason` + prijzen uit input. `availability_note` alleen als de input echte

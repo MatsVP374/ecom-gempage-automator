@@ -50,6 +50,10 @@ dat voordeel bewijst.
 
 Altijd menselijk probleem → feature. Nooit andersom.
 
+**Onder elke foto een echte review** (zoals in de Anzhela-brief): een kort, letterlijk fragment van een klant die
+dát voordeel noemt, met haar naam (en leeftijd/sterren) uit `input.testimonials`, anders "לקוחה של Adina Fashion".
+Geen passende echte review → geen review onder die foto (de validator meldt `REVIEWS PER PHOTO: x/6`).
+
 ### 6. `comparison`
 Titel in de trant van: `<product>, vergeleken met de keuzes die vrouwen normaal maken`.
 Drie kolommen: **OLD OPTION A** vs **OLD OPTION B** vs **PRODUCT** (productkolom wordt gehighlight).

@@ -100,6 +100,8 @@
 .{{rootClassName}} .gp-review-card .gp-stars{color:#c79a3e;font-size:1rem;letter-spacing:2px;margin-bottom:8px;}
 .{{rootClassName}} .gp-review-card .gp-quote{display:block;font-style:italic;color:#3a3729;margin-bottom:8px;quotes:none;}
 .{{rootClassName}} .gp-review-card cite{font-style:normal;font-size:.85rem;color:#7a7565;}
+.{{rootClassName}} .gp-photo-review{margin-top:-6px;margin-bottom:8px;}
+.{{rootClassName}} .gp-social + .gp-review-card,.{{rootClassName}} .gp-review-card + .gp-review-card{margin-top:14px;}
 
 .{{rootClassName}} .gp-section-title{font-size:1.4rem;font-weight:700;text-transform:uppercase;margin:44px 0 16px;}
 .{{rootClassName}} .gp-section-title.gp-first{margin-top:10px;}

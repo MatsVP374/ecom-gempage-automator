@@ -21,6 +21,11 @@ ontdekte** · hoe lang ze het draagt · **situaties waarin ze het gebruikte** ·
 
 Naam en leeftijd alleen als ze in `input.testimonials[]` staan.
 
+## Reviews in de GemPage (onder elke foto en in `social_proof`)
+Strenger dan in de ads: hier staat de klant **tussen aanhalingstekens**, dus alleen een **letterlijk fragment**
+(inkorten mag, herschrijven niet). In het Hebreeuws woord voor woord uit `text` of `text_he`; de validator controleert
+dat. Naam/leeftijd/sterren komen automatisch uit `input.testimonials` en worden nooit in de copy getypt.
+
 ## Traceerbaarheid
 Elke eerste-persoonservaring in een ad staat in `06-meta-ads.json` → `trace` met
 `source: "testimonial:<id>"`. Kun je een zin niet traceren → schrap hem.

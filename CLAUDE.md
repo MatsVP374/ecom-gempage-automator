@@ -101,7 +101,8 @@ ziet — `03-gempage-copy.he.json`, `06-meta-ads.json` (primary text/headline/de
   "existing_product_images": ["source/1.jpg", "https://…/2.jpg"],
   "testimonials": [
     { "id": "t1", "name": null, "age": null, "source": "Judge.me review 2026-08-12",
-      "text": "letterlijke review", "details": "extra door de gebruiker aangeleverde context" }
+      "text": "letterlijke review", "text_he": null, "rating": 5,
+      "details": "extra door de gebruiker aangeleverde context" }
   ],
   "known_customer_problems": "",
   "central_problem_hint": "",
@@ -113,7 +114,8 @@ ziet — `03-gempage-copy.he.json`, `06-meta-ads.json` (primary text/headline/de
 ```
 Verplicht: `product_name`, `hebrew_product_name`, `product_type`, `regular_price`, `sale_price`,
 `promotion`, `sale_reason`, `colors`, `sizes`, `features`, `existing_product_page` (url of content),
-`existing_product_images`. Testimonials zijn optioneel voor de GemPage, maar **nodig voor de ads**.
+`existing_product_images`. Testimonials zijn **nodig voor de ads** en voor de **review onder elke GemPage-foto**
+(zonder testimonials blijven die reviews weg). `text_he` alleen als de review niet in het Hebreeuws is; `rating` alleen als bekend.
 Shipping/returns komen uit `config/adina.json` (niet per product).
 
 ### `01-product-facts.json`
@@ -173,7 +175,7 @@ Vaste blokvolgorde (zie `brand/gempage-blueprint.md`), `id` = `type`:
 | `headline` | `headline`, `subtitle` |
 | `hero` | `image`, `alt` |
 | `founder_story` | `greeting`, `parts: [{ role, text }]` — roles in volgorde `intro`, `observation`, `problem`, `alternatives`, `search`, `discovery` |
-| `benefits` | `title`, `items: [{ n, headline, text, feature_ids, image }]` (5–6) |
+| `benefits` | `title`, `items: [{ n, headline, text, feature_ids, image, review? }]` (5–6) · `review = { testimonial_id, text }`: letterlijk fragment van een echte review onder de foto |
 | `comparison` | `title`, `columns: { a, b, product }`, `rows: [{ label, a, b, product }]` (3–5) |
 | `founder_quote` | `quote`, `author` |
 | `sale` | `title`, `paragraphs: []`, `regular_price`, `sale_price`, `availability_note` (optioneel, alleen echte info) |

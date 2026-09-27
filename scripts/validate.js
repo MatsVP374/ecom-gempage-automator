@@ -187,7 +187,14 @@ export function validateProduct(slug, { stage } = {}) {
       if (!i.feature_ids?.length) err(`${f}: benefit ${i.n} has no feature_ids`);
       if (facts) (i.feature_ids ?? []).forEach((id) => !featureIds.has(id) && err(`${f}: benefit ${i.n} → unknown feature "${id}"`));
       if (!i.headline || !i.text) err(`${f}: benefit ${i.n} needs headline + text`);
+      if (i.review) checkReview(f, `benefit ${i.n} review`, i.review, lang);
     });
+    const withReview = items.filter((i) => i.review?.text).length;
+    if (lang === 'he' && items.length && withReview < items.length)
+      flag(`REVIEWS PER PHOTO: ${withReview}/${items.length} benefit photos have a real customer review — add testimonials that mention these benefits (never invented)`);
+    const used = items.filter((i) => i.review?.text).map((i) => i.review.testimonial_id + '|' + i.review.text);
+    if (new Set(used).size !== used.length) warn(`${f}: the same review excerpt is used under more than one photo`);
+    (by.social_proof?.quotes ?? []).forEach((q, k) => checkReview(f, `social_proof quote ${k + 1}`, q, lang));
     const rows = by.comparison?.rows ?? [];
     if (by.comparison && (rows.length < 3 || rows.length > 5)) warn(`${f}: comparison has ${rows.length} rows (blueprint: 3–5)`);
     // prices
@@ -217,7 +224,6 @@ export function validateProduct(slug, { stage } = {}) {
     if (by.social_proof) {
       if (Number(by.social_proof.rating) !== cfg.trust.rating) err(`${f}: social_proof.rating must be ${cfg.trust.rating}`);
       if (by.social_proof.reviews_label !== cfg.trust.reviews_label) err(`${f}: social_proof.reviews_label must be "${cfg.trust.reviews_label}"`);
-      (by.social_proof.quotes ?? []).forEach((q) => !tIds.has(q.testimonial_id) && err(`${f}: social_proof quote without a real testimonial_id ("${q.testimonial_id}")`));
     }
     if (by.offer_box?.rating_line && !(by.offer_box.rating_line.includes(String(cfg.trust.rating)) && by.offer_box.rating_line.includes(cfg.trust.reviews_label)))
       err(`${f}: offer_box.rating_line must contain ${cfg.trust.rating} and ${cfg.trust.reviews_label}`);
@@ -293,6 +299,16 @@ export function validateProduct(slug, { stage } = {}) {
     if (/\b(blonde?|platinum|silver hair|scandinavian|nordic)\b/i.test(prompt.replace(/Not Northern European, not blonde/g, '')))
       err(`${w}: casting describes a non-Israeli look (blonde/silver/Nordic)`);
   };
+
+  // A review on the page must be a real testimonial; in Hebrew its text must be a verbatim excerpt of it.
+  function checkReview(f, where, r, lang) {
+    const tm = (input?.testimonials ?? []).find((x) => x.id === r.testimonial_id);
+    if (!tm) return err(`${f}: ${where} → "${r.testimonial_id}" is not a testimonial in input.json`);
+    if (!isFilled(r.text)) return err(`${f}: ${where} has no text`);
+    const norm = (s) => String(s ?? '').replace(/[\s"'״׳“”„.,!?;:—–-]+/g, '');
+    if (lang === 'he' && ![tm.text, tm.text_he].some((src) => src && norm(src).includes(norm(r.text))))
+      err(`${f}: ${where} is not a verbatim excerpt of testimonial ${tm.id} — quote the customer, do not rewrite her`);
+  }
 
   // ---------- 05 prompts ----------
   if (p.prompts) {
