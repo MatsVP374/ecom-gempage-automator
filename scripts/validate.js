@@ -44,11 +44,6 @@ const FORBIDDEN = [
   { re: /only \d+ left|נשאר(?:ו)? רק \d+|last \d+ (?:pieces|units)/i, msg: 'stock/scarcity claim not supplied in input' },
   { re: /\bcures?\b|\bheals?\b|מרפא|ריפוי/i, msg: 'medical claim' },
 ];
-const AD_CLICHES = [
-  /הכירי את|תכירי את|שדרגי את|השילוב המושלם|חייבת את זה|קני עכשיו|מהרי|לפני שייגמר/,
-  /\bmeet (?:our|the)\b|upgrade your|perfect combination|you need this|buy now/i,
-];
-
 function walkStrings(obj, pathStr, out) {
   if (typeof obj === 'string') out.push([pathStr, obj]);
   else if (Array.isArray(obj)) obj.forEach((v, i) => walkStrings(v, `${pathStr}[${i}]`, out));
@@ -83,7 +78,6 @@ export function validateProduct(slug, { stage } = {}) {
   const cfg = loadConfig();
   p.parseErrors.forEach(err);
   const input = p.input;
-  let ads = null;
 
   // ---------- input ----------
   const missing = missingInput(input);
@@ -102,7 +96,7 @@ export function validateProduct(slug, { stage } = {}) {
     const ids = (input.testimonials ?? []).map((t) => t.id);
     if (new Set(ids).size !== ids.length) err('input: duplicate testimonial ids');
     (input.testimonials ?? []).forEach((t) => !isFilled(t.text) && err(`input: testimonial ${t.id} has no text`));
-    if (!ids.length) flag('NO TESTIMONIALS SUPPLIED — the 2 Meta ads will be BLOCKED until real testimonials are added to input.json');
+    if (!ids.length) flag('NO TESTIMONIALS SUPPLIED — the GemPage gets no customer review under its photos until real reviews are added to input.json');
     for (const img of input.existing_product_images ?? [])
       if (!/^https?:\/\//.test(img) && !fs.existsSync(path.join(p.dir, img))) err(`input: existing image "${img}" not found in products/${slug}/`);
   }
@@ -133,10 +127,6 @@ export function validateProduct(slug, { stage } = {}) {
     (facts.testimonials ?? []).forEach((t) => {
       if (!tIds.has(t.id)) err(`01-product-facts: testimonial "${t.id}" does not exist in input`);
     });
-    // Only a problem when fewer than the 2 ads can be carried; short reviews are still fine as quotes.
-    const carrying = (facts.testimonials ?? []).filter((t) => t.sufficient_for_ad !== false).length;
-    if ((facts.testimonials ?? []).length && carrying < cfg.meta_ads.count)
-      (facts.testimonials ?? []).filter((t) => t.sufficient_for_ad === false).forEach((t) => flag(`TESTIMONIAL DATA INSUFFICIENT — ${t.id}: ${(t.gaps ?? []).join('; ') || 'see 01-product-facts.json'}`));
   }
 
   // ---------- 02 angle ----------
@@ -336,75 +326,6 @@ export function validateProduct(slug, { stage } = {}) {
     });
   }
 
-  // ---------- 06 meta ads ----------
-  ads = p.ads;
-  if (ads) {
-    const list = ads.ads ?? [];
-    const expected = { ready: 2, partial: 1, blocked: 0 }[ads.status];
-    if (expected === undefined) err('06-meta-ads: status must be ready|partial|blocked');
-    else if (list.length !== expected) err(`06-meta-ads: status "${ads.status}" requires exactly ${expected} ads (found ${list.length})`);
-    if (ads.status !== 'ready') {
-      if (!(ads.flags ?? []).some((x) => /TESTIMONIAL DATA INSUFFICIENT/.test(x))) err('06-meta-ads: blocked/partial needs a "TESTIMONIAL DATA INSUFFICIENT — …" flag');
-      (ads.flags ?? []).forEach(flag);
-    }
-    if (ads.status === 'ready' && list.map((a) => a.type).sort().join() !== 'discovery,routine') err('06-meta-ads: the 2 ads must be one "discovery" and one "routine"');
-    const byId = Object.fromEntries((input?.testimonials ?? []).map((t) => [t.id, t]));
-    list.forEach((a) => {
-      const w = `06-meta-ads ${a.id ?? '?'}`;
-      const t = byId[a.testimonial_id];
-      if (!t) err(`${w}: testimonial_id "${a.testimonial_id}" is not a supplied testimonial — no fake customer stories`);
-      for (const k of ['primary_text', 'headline', 'description']) if (!isFilled(a[k])) err(`${w}: ${k} is empty`);
-      const text = String(a.primary_text ?? '');
-      if (text && !HEBREW.test(text)) err(`${w}: primary_text is not Hebrew`);
-      if (text.length && text.length < 900) warn(`${w}: primary_text is ${text.length} chars — this should be long-form (±1,200–2,200)`);
-      if (!text.includes('עדינה')) err(`${w}: Adina never enters the story`);
-      if (!text.includes('מכתב')) err(`${w}: no bridge to Adina's letter (מכתב)`);
-      else if (text.lastIndexOf('מכתב') < text.length * 0.7) warn(`${w}: the ending does not lead into Adina's letter`);
-      if (input) {
-        const idx = text.search(/₪/);
-        if (idx >= 0 && idx < text.length * 0.6) warn(`${w}: price appears at ${Math.round((idx / text.length) * 100)}% — the offer belongs in the last 20–30%`);
-        if (!shekels(text).includes(input.sale_price)) warn(`${w}: sale price ₪${input.sale_price} not mentioned`);
-        const allowed = new Set([input.regular_price, input.sale_price]);
-        [...shekels(text), ...shekels(a.description), ...shekels(a.headline)].forEach((n) => !allowed.has(n) && err(`${w}: price ₪${n} is not the regular or sale price`));
-      }
-      if (t) {
-        if (t.age == null && /בת \d{2}|בגיל \d{2}|\bגיל \d{2}/.test(text)) err(`${w}: mentions an age, but testimonial ${t.id} supplies none`);
-        if (!t.name && /\n\s*[—–-]\s*\S+\s*$/.test(text)) warn(`${w}: ends with a name/signature, but testimonial ${t.id} supplies no name`);
-      }
-      const trace = a.trace ?? [];
-      if (!trace.length) err(`${w}: no trace — every claim must point to its source`);
-      else if (!trace.some((x) => String(x.source).startsWith('testimonial:'))) err(`${w}: no claim traces to the testimonial`);
-      trace.forEach((x) => {
-        const [kind, ref = ''] = String(x.source ?? '').split(':');
-        const ok =
-          (kind === 'testimonial' && tIds.has(ref)) ||
-          (kind === 'fact' && featureIds.has(ref)) ||
-          (kind === 'input' && !!input && ref in input) ||
-          (kind === 'angle' && !!angle && ref in angle) ||
-          (kind === 'config' && ref.split('.').reduce((o, k) => (o == null ? o : o[k]), cfg) !== undefined) ||
-          (kind === 'gempage' && !!page && (page.blocks ?? []).some((b) => b.type === ref));
-        if (!ok) err(`${w}: trace source "${x.source}" does not resolve`);
-      });
-      if (String(a.headline ?? '').length > 40) warn(`${w}: headline ${a.headline.length} chars (aim ≤ 40)`);
-      if (String(a.description ?? '').length > 45) warn(`${w}: description ${a.description.length} chars (keep it short)`);
-      const all = `${text}\n${a.headline ?? ''}\n${a.description ?? ''}`;
-      if (emojiCount(all) > 2) warn(`${w}: ${emojiCount(all)} emoji — keep it (almost) emoji-free`);
-      if ((all.match(/!/g) ?? []).length > 3) warn(`${w}: too many exclamation marks`);
-      AD_CLICHES.forEach((re) => re.test(all) && warn(`${w}: generic ad cliché (${all.match(re)[0]})`));
-      const lines = text.split('\n').filter((l) => l.trim());
-      if (lines.length > 12 && lines.filter((l) => l.length < 60).length / lines.length > 0.6) warn(`${w}: mostly one-line paragraphs — write natural paragraphs`);
-      const copy = { primary_text: a.primary_text, headline: a.headline, description: a.description };
-      checkHebrew(copy, w, latinOk, err, warn);
-      checkForbidden(copy, w, err);
-    });
-    if (list.length === 2) {
-      const [a, b] = list;
-      const first = (s) => String(s ?? '').split(/[.?!\n]/)[0];
-      if (jaccard(first(a.primary_text), first(b.primary_text)) > 0.4) warn('06-meta-ads: the two ads open too similarly');
-      if (jaccard(a.primary_text, b.primary_text) > 0.55) warn('06-meta-ads: the two ads are too similar — they must be different stories');
-    }
-  }
-
   // ---------- 07 creatives + 08 ugc ----------
   if (p.creatives) {
     const cr = p.creatives.creatives ?? [];
@@ -413,7 +334,6 @@ export function validateProduct(slug, { stage } = {}) {
       err(`07-creative-plan: must be exactly ${want.map((t, i) => `${'ABCD'[i]} ${t}`).join(', ')}`);
     cr.forEach((c) => {
       if (!colorOk(c.product_color)) err(`07-creative-plan ${c.id}: product_color "${c.product_color}" is not an input color`);
-      if (!['ad1', 'ad2', 'both'].includes(c.matches)) err(`07-creative-plan ${c.id}: matches must be ad1|ad2|both`);
       for (const k of ['concept', 'visual', 'prompt']) if (!isFilled(c[k])) err(`07-creative-plan ${c.id}: ${k} is empty`);
       if (isFilled(c.prompt)) castingCheck(`07-creative-plan ${c.id}`, c.prompt);
     });
@@ -437,14 +357,14 @@ export function validateProduct(slug, { stage } = {}) {
   }
 
   // ---------- Hebrew spelling (scripts/spellcheck.js + Claude's proofread in 03-gempage-spellcheck.json) ----------
-  if (p.gempage.he || p.ads || p.creatives) {
+  if (p.gempage.he || p.creatives) {
     for (const i of spellcheckProduct(p).issues) (i.level === 'error' ? err : warn)(`spelling ${i.file} ${i.at}: ${i.message}`);
     const mtime = (f) => (fs.existsSync(path.join(p.dir, f)) ? fs.statSync(path.join(p.dir, f)).mtimeMs : 0);
     const proofed = mtime(FILES.spellcheck);
     if (p.gempage.he && !p.spellcheck) warn(`${FILES.spellcheck} missing — Claude has not proofread the Hebrew yet (step 6b)`);
     else if (p.spellcheck) {
       if (!['clean', 'fixed'].includes(p.spellcheck.status)) err(`${FILES.spellcheck}: status must be clean|fixed`);
-      const stale = [FILES.gempageHe, FILES.ads, FILES.creatives, FILES.ugc].filter((f) => mtime(f) > proofed + 1000);
+      const stale = [FILES.gempageHe, FILES.creatives, FILES.ugc].filter((f) => mtime(f) > proofed + 1000);
       if (stale.length) warn(`${FILES.spellcheck} is older than ${stale.join(', ')} — proofread again (/launch-step <slug> spellcheck)`);
       (p.spellcheck.doubts ?? []).forEach((d) => flag(`SPELLING DOUBT — ${d.text ?? d}${d.question ? ': ' + d.question : ''}`));
     }
@@ -454,7 +374,7 @@ export function validateProduct(slug, { stage } = {}) {
 
   function summary() {
     const steps = p?.steps ?? [];
-    const ready = !errors.length && ads?.status === 'ready' && steps.every((s) => s.done);
+    const ready = !errors.length && steps.every((s) => s.done);
     return { slug, errors, warnings, flags, missing, steps, ready };
   }
 }

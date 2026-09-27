@@ -1,9 +1,9 @@
 # Stap 6b: Hebreeuwse spellingcheck → `03-gempage-spellcheck.json`
 
-Lees: `03-gempage-copy.he.json`, en als ze bestaan `06-meta-ads.json`, `07-creative-plan.json` (`overlay_text_he`),
+Lees: `03-gempage-copy.he.json`, en als ze bestaan `07-creative-plan.json` (`overlay_text_he`),
 `08-ugc.json` (`voice_he`). Plus `brand/hebrew-style.md` en `brand/hebrew-spelling.json`.
 
-Draai deze stap na stap 6 én opnieuw na stap 8/9 (de validator waarschuwt als een tekst nieuwer is dan de check).
+Draai deze stap na stap 6 én opnieuw na stap 9 (de validator waarschuwt als een tekst nieuwer is dan de check).
 
 1. **Automatische check:** `node scripts/spellcheck.js <slug>`. Fix elke ERROR direct in het bronbestand
    (sluitletters, aan elkaar geplakt Hebreeuws/Latijn, dubbele woorden, bekende spelfouten).
@@ -24,7 +24,7 @@ Draai deze stap na stap 6 én opnieuw na stap 8/9 (de validator waarschuwt als e
 ```json
 {
   "status": "fixed",
-  "checked": ["03-gempage-copy.he.json", "06-meta-ads.json"],
+  "checked": ["03-gempage-copy.he.json", "07-creative-plan.json"],
   "corrections": [
     { "file": "03-gempage-copy.he.json", "at": "benefits.items[2].text", "before": "…", "after": "…", "reason": "gender agreement" }
   ],

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Build products/<slug>/output/: the final launch package for GemPages, image generation and Meta Ads Manager.
+// Build products/<slug>/output/: the final launch package for GemPages, image generation and the Meta creatives.
 // Usage: node scripts/export.js <slug> | --all
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,11 +8,6 @@ import { loadProduct, loadConfig, listSlugs, parseArgs, writeJSON, shekel } from
 import { renderGpDocument, buildGempages } from './gempages.js';
 import { validateProduct } from './validate.js';
 import { buildShopifyPayload } from './shopify-push.js';
-
-const csvCell = (v) => {
-  const s = String(v ?? '');
-  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-};
 
 // Which of the 26 GemPage elements each block covers.
 const ELEMENTS = {
@@ -134,26 +129,10 @@ function imagePromptsMd(p) {
   return out.join('\n') + '\n';
 }
 
-function metaAdsMd(p) {
-  const a = p.ads;
-  const out = [];
-  if (a.status !== 'ready') out.push(`⚠️ STATUS: ${a.status.toUpperCase()}`, ...(a.flags ?? []).map((x) => `- ${x}`), '');
-  (a.ads ?? []).forEach((ad, i) => {
-    out.push(`AD ${ad.id === 'ad2' ? 2 : ad.id === 'ad1' ? 1 : i + 1} — ${ad.angle}`, '', 'PRIMARY TEXT:', ad.primary_text, '', 'HEADLINE:', ad.headline, '', 'DESCRIPTION:', ad.description, '', '');
-  });
-  return out.join('\n').trimEnd() + '\n';
-}
-
-function metaAdsCsv(p) {
-  const rows = [['ad', 'type', 'angle', 'testimonial_id', 'primary_text', 'headline', 'description']];
-  (p.ads.ads ?? []).forEach((a) => rows.push([a.id, a.type, a.angle, a.testimonial_id, a.primary_text, a.headline, a.description]));
-  return '﻿' + rows.map((r) => r.map(csvCell).join(',')).join('\r\n') + '\r\n';
-}
-
 function creativePlanMd(p) {
   const out = [`# Creative plan — ${p.input?.product_name ?? p.slug}`, ''];
   for (const c of p.creatives?.creatives ?? []) {
-    out.push(`## ${c.id} — ${c.type} (matches ${c.matches})`, '', `**Concept:** ${c.concept}`, '', `**Visual:** ${c.visual}`, '');
+    out.push(`## ${c.id} — ${c.type}`, '', `**Concept:** ${c.concept}`, '', `**Visual:** ${c.visual}`, '');
     if (c.overlay_text_he) out.push(`**Tekst op beeld:** <span dir="rtl">${c.overlay_text_he}</span>`, '');
     out.push(`**Kleur:** ${c.product_color} · **Formaat:** ${c.format}`, '', '```', c.prompt, '```', '');
   }
@@ -171,8 +150,9 @@ function launchPackageMd(p, v, gp) {
   const cfg = loadConfig();
   const plan = p.plan?.images ?? [];
   const gen = plan.filter((i) => i.source === 'generate').length;
-  const ads = p.ads;
   const ok = (b) => (b ? '✓' : '✗');
+  const items = (p.gempage.he?.blocks ?? []).find((b) => b.type === 'benefits')?.items ?? [];
+  const reviews = { total: items.length, withReview: items.filter((i) => i.review?.text).length };
   const step = (id) => p.steps.find((s) => s.id === id)?.done;
   const lines = [
     `# ADINA PRODUCT LAUNCH — ${p.input?.hebrew_product_name ?? p.slug}`,
@@ -185,16 +165,14 @@ function launchPackageMd(p, v, gp) {
     `${ok(plan.length)} ${plan.length} GemPage images planned       ${gen} generate · ${plan.length - gen} existing`,
     `${ok(step('image-prompts'))} Image prompts complete         ${(p.prompts?.prompts ?? []).length}`,
     `${ok(step('images'))} Images generated + on Shopify  ${plan.filter((i) => i.url).length}/${plan.length}${gp?.missingImages?.length ? ` · missing: ${gp.missingImages.join(', ')}` : ''}`,
-    ads?.status === 'ready'
-      ? `✓ 2 Meta ads complete`
-      : `✗ Meta ads ${String(ads?.status ?? 'missing').toUpperCase()}${ads?.flags?.length ? ` — ${ads.flags[0]}` : ''}`,
+    `${ok(reviews.total && reviews.withReview === reviews.total)} Reviews under the photos       ${reviews.withReview}/${reviews.total} benefits · ${(p.input?.testimonials ?? []).length} reviews supplied`,
     `${ok(step('creatives'))} Creative plan complete         ${(p.creatives?.creatives ?? []).length} statics · UGC: ${p.ugc?.needed ? 'yes' : 'no'}`,
     `${ok(!v.errors.length)} QA ${v.errors.length ? 'FAILED' : 'passed'}                      ${v.errors.length} errors · ${v.warnings.length} warnings`,
     '',
     v.ready ? 'READY FOR:' : 'NOT READY YET — resolve the flags/errors below. Available so far:',
     `→ GemPages          ${gp ? gp.name + ' (Import)' : '—'} · gempage.he.html (preview) · gempage-copy.md`,
     '→ Image generation  image-prompts.md',
-    `→ Meta Ads Manager  ${ads?.status === 'ready' ? 'meta-ads.md · meta-ads.csv · creative-plan.md' : '(blocked) · creative-plan.md'}`,
+    '→ Meta creatives    creative-plan.md (4 statics' + (p.ugc?.needed ? ' + UGC' : '') + ')',
     '```',
     '',
     '## Offer (from input + config)',
@@ -229,10 +207,6 @@ export function exportProduct(slug) {
     write(gp.name, gp.file);
   }
   if (p.plan) write('image-prompts.md', imagePromptsMd(p));
-  if (p.ads) {
-    write('meta-ads.md', metaAdsMd(p));
-    if (p.ads.ads?.length) write('meta-ads.csv', metaAdsCsv(p));
-  }
   if (p.creatives) write('creative-plan.md', creativePlanMd(p));
   if (p.input && p.gempage.he) {
     try {
@@ -241,10 +215,10 @@ export function exportProduct(slug) {
     } catch {}
   }
   // The package summary is written once the last pipeline steps exist.
-  if (p.ads && p.creatives && p.qa) {
+  if (p.creatives && p.qa) {
     const pre = validateProduct(slug);
     // launch-package.md itself completes the last step, so recompute readiness as if it exists.
-    pre.ready = !pre.errors.length && p.ads.status === 'ready' && pre.steps.every((s) => s.done || s.id === 'package');
+    pre.ready = !pre.errors.length && pre.steps.every((s) => s.done || s.id === 'package');
     write('launch-package.md', launchPackageMd(p, pre, gp));
   }
   return written;

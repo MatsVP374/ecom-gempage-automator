@@ -68,7 +68,7 @@
 </style>
 </head>
 <body>
-<header><h1>Adina Product Launcher</h1><span>Klant-verhaal (Meta) → Adina's brief (GemPage) → aanbod</span></header>
+<header><h1>Adina Product Launcher</h1><span>Meta-creative → Adina's brief (GemPage) → aanbod</span></header>
 <div class="layout">
   <aside>
     <button class="primary" style="width:100%" id="newbtn">+ New Adina product launch</button>
@@ -87,8 +87,8 @@ const api = async (path, opts = {}) => {
   if (!r.ok) throw new Error(data.error || r.statusText);
   return data;
 };
-const TABS = ['overview', 'input', 'angle', 'gempage', 'images', 'meta ads', 'creatives', 'qa', 'export'];
-const STEP_ARGS = { facts: 'facts', angle: 'angle', gempage: 'gempage', 'image-plan': 'image-plan', 'image-prompts': 'image-prompts', 'gempage-he': 'gempage-he', spellcheck: 'spellcheck', qc: 'qc', 'meta-ads': 'meta-ads', creatives: 'creatives', package: 'package' };
+const TABS = ['overview', 'input', 'angle', 'gempage', 'images', 'creatives', 'qa', 'export'];
+const STEP_ARGS = { facts: 'facts', angle: 'angle', gempage: 'gempage', 'image-plan': 'image-plan', 'image-prompts': 'image-prompts', 'gempage-he': 'gempage-he', spellcheck: 'spellcheck', qc: 'qc', creatives: 'creatives', package: 'package' };
 const state = { slug: null, tab: 'overview', data: null, lang: 'he', poll: null, creating: false };
 try { Object.assign(state, JSON.parse(localStorage.getItem('adina-ui') || '{}'), { data: null, poll: null, creating: false }); } catch {}
 const save = () => { try { localStorage.setItem('adina-ui', JSON.stringify({ slug: state.slug, tab: state.tab, lang: state.lang })); } catch {} };
@@ -125,15 +125,15 @@ function render() {
     <div class="toolbar"><h2 style="margin:0" dir="auto">${esc(d.input?.hebrew_product_name || d.input?.product_name || d.slug)}</h2><span class="pill">${esc(d.slug)}</span></div>
     <nav class="tabs">${TABS.map((t) => `<button data-tab="${t}" class="${t === state.tab ? 'on' : ''}">${t.toUpperCase()}</button>`).join('')}</nav>
     <div id="tab"></div>`;
-  ({ overview, input: inputTab, angle, gempage, images, 'meta ads': metaAds, creatives, qa, export: exportTab })[state.tab]($('#tab'), d);
+  ({ overview, input: inputTab, angle, gempage, images, creatives, qa, export: exportTab })[state.tab]($('#tab'), d);
 }
 
 // ---------- OVERVIEW ----------
 function overview(el, d) {
   const running = d.job?.running;
   const blocked = d.missing.length > 0;
-  const flags = [...(d.facts?.missing ?? []).map((m) => `MISSING: ${m.field}`), ...(d.ads?.flags ?? [])];
-  if (!(d.input?.testimonials ?? []).length) flags.unshift('Geen testimonials → de 2 Meta-ads worden geblokkeerd (er wordt geen klantverhaal verzonnen).');
+  const flags = [...(d.facts?.missing ?? []).map((m) => `MISSING: ${m.field}`)];
+  if (!(d.input?.testimonials ?? []).length) flags.unshift('Geen reviews → er komt geen klantreview onder de foto\'s in de GemPage (er wordt niets verzonnen).');
   el.innerHTML = `
     ${blocked ? `<div class="alert err"><b>Input onvolledig — de workflow verzint niets.</b><ul>${d.missing.map((m) => `<li><b>${esc(m.field)}</b> — nodig voor ${esc(m.needed_for)}</li>`).join('')}</ul><p><button class="small" data-goto="input">Naar INPUT</button></p></div>` : ''}
     ${flags.length ? `<div class="alert warn"><b>Flags</b><ul>${flags.map((f) => `<li>${esc(f)}</li>`).join('')}</ul></div>` : ''}
@@ -145,7 +145,6 @@ function overview(el, d) {
           <div><label>Of één ding (opnieuw)</label>
             <select id="mode">
               <option value="step">Eén stap opnieuw…</option>
-              <option value="meta-ads">De 2 Meta-ads opnieuw</option>
               <option value="launch">Volledige launch opnieuw (--force)</option>
             </select></div>
           <div><label>Stap</label>
@@ -209,7 +208,7 @@ function inputForm(i, { isNew }) {
       <div><label>Existing product images <b>*</b> (URL's of source/…, één per regel)</label><textarea name="existing_product_images" rows="2">${lines(i.existing_product_images)}</textarea></div>
     </div>
     <label>Existing product page content (geplakte tekst)</label><textarea name="page_content" rows="3">${v(i.existing_product_page?.content)}</textarea>
-    <h3 style="margin-top:16px">Customer reviews / testimonials <span class="muted" style="font-weight:400">(nodig voor de 2 ads én voor de review onder elke foto in de GemPage — naam/leeftijd alleen als je ze echt weet)</span></h3>
+    <h3 style="margin-top:16px">Customer reviews / testimonials <span class="muted" style="font-weight:400">(voor de review onder elke foto in de GemPage — naam/leeftijd/sterren alleen als je ze echt weet)</span></h3>
     <div id="tlist">${t.map(testimonialRow).join('')}</div>
     <button type="button" class="small" id="addt">+ Testimonial</button>
     <h3 style="margin-top:16px">Optioneel</h3>
@@ -327,28 +326,12 @@ function images(el, d) {
   $('#regen').onclick = () => confirm('Alle beelden opnieuw genereren (kost API-credits)?') && go('all', true);
 }
 
-// ---------- META ADS ----------
-function metaAds(el, d) {
-  const a = d.ads;
-  if (!a) { el.innerHTML = '<div class="empty">Nog geen Meta-ads (stap 8).</div>'; return; }
-  const field = (label, text, max) => `<div class="fieldhead"><b>${label}</b><span><span class="muted">${String(text ?? '').length}${max ? `/${max}` : ''} tekens</span> <button class="small" data-copy="${esc(text)}">Kopieer</button></span></div><div class="copy" dir="rtl">${esc(text)}</div>`;
-  el.innerHTML = `
-    ${a.status !== 'ready' ? `<div class="alert err"><b>${esc(a.status.toUpperCase())}</b><ul>${(a.flags ?? []).map((f) => `<li>${esc(f)}</li>`).join('')}</ul><p>Voeg echte testimonials toe in INPUT en draai daarna "De 2 Meta-ads opnieuw".</p></div>` : ''}
-    <div class="toolbar">${d.outputs.includes('meta-ads.md') ? `<a class="btn" target="_blank" href="/api/products/${d.slug}/output/meta-ads.md">meta-ads.md</a>` : ''}${d.outputs.includes('meta-ads.csv') ? `<a class="btn" href="/api/products/${d.slug}/output/meta-ads.csv?download">⬇ CSV</a>` : ''}</div>
-    ${(a.ads ?? []).map((ad, i) => `<div class="card">
-      <h3>AD ${ad.id === 'ad2' ? 2 : i + 1} — ${esc(ad.angle)} <span class="pill">${esc(ad.type)}</span> <span class="pill">testimonial ${esc(ad.testimonial_id)}</span></h3>
-      ${field('PRIMARY TEXT', ad.primary_text)}${field('HEADLINE', ad.headline, 40)}${field('DESCRIPTION', ad.description)}
-      <details><summary>Leesversie (EN)</summary><div class="copy">${esc(ad.review_en ?? '—')}</div></details>
-      <details><summary>Trace — waar elke claim vandaan komt (${(ad.trace ?? []).length})</summary><table>${(ad.trace ?? []).map((t) => `<tr><td>${esc(t.claim)}</td><td><span class="pill">${esc(t.source)}</span></td></tr>`).join('')}</table></details>
-    </div>`).join('')}`;
-}
-
 // ---------- CREATIVES ----------
 function creatives(el, d) {
   const c = d.creatives?.creatives ?? [];
   if (!c.length) { el.innerHTML = '<div class="empty">Nog geen creative plan (stap 9).</div>'; return; }
   const u = d.ugc;
-  el.innerHTML = `<div class="grid2">${c.map((x) => `<div class="card"><h3>${esc(x.id)} — ${esc(x.type)} <span class="pill">${esc(x.matches)}</span></h3>
+  el.innerHTML = `<div class="grid2">${c.map((x) => `<div class="card"><h3>${esc(x.id)} — ${esc(x.type)}</h3>
       <p>${esc(x.concept)}</p><p class="muted">${esc(x.visual)}</p>
       ${x.overlay_text_he ? `<p dir="rtl"><b>${esc(x.overlay_text_he)}</b></p>` : ''}
       <p class="muted">${esc(x.product_color)} · ${esc(x.format)}</p>
@@ -368,7 +351,7 @@ async function qa(el, d) {
 
 // ---------- EXPORT ----------
 function exportTab(el, d) {
-  const labels = { [`${d.slug}-founder-letter.gempages`]: '⭐ GemPages-bestand (Import in GemPages)', 'launch-package.md': 'Launch package (samenvatting)', 'gempage-copy.md': 'GemPage copy per blok', 'gempage.he.html': 'GemPage preview HE', 'gempage.en.html': 'GemPage preview EN (master)', 'image-prompts.md': 'Beeldplan + prompts', 'meta-ads.md': 'Meta-ads (Ads Manager-formaat)', 'meta-ads.csv': 'Meta-ads CSV', 'creative-plan.md': 'Creative plan + UGC', 'shopify-product.json': 'Shopify payload', 'shopify-result.json': 'Shopify resultaat' };
+  const labels = { [`${d.slug}-founder-letter.gempages`]: '⭐ GemPages-bestand (Import in GemPages)', 'launch-package.md': 'Launch package (samenvatting)', 'gempage-copy.md': 'GemPage copy per blok', 'gempage.he.html': 'GemPage preview HE', 'gempage.en.html': 'GemPage preview EN (master)', 'image-prompts.md': 'Beeldplan + prompts', 'creative-plan.md': 'Creative plan + UGC', 'shopify-product.json': 'Shopify payload', 'shopify-result.json': 'Shopify resultaat' };
   el.innerHTML = `
     <div class="card toolbar">
       <button id="exp">Export opnieuw bouwen</button>

@@ -3,7 +3,6 @@
     {
       "id": "A",
       "type": "customer_discovery",
-      "matches": "both",
       "concept": "A woman caught in a candid moment on a hot Tel Aviv street, looking fresh and put-together — the 'how does she stay so cool?' moment.",
       "visual": "Candid street shot, Israeli woman about 50 with wavy dark-brown hair in the blue top, sunglasses pushed up in her hair, crossing a sunny street with a tote bag; natural, not posed.",
       "overlay_text_he": null,
@@ -14,7 +13,6 @@
     {
       "id": "B",
       "type": "raw_boutique_offer",
-      "matches": "both",
       "concept": "Raw boutique shot: the four colors on a wooden rail in Adina's boutique, the offer ₪359 → ₪179 added as a simple price tag in the editor.",
       "visual": "Wooden clothing rail in a small bright boutique, the top in blue, green, gray and purple on wooden hangers; a handwritten-style price card space next to it.",
       "overlay_text_he": null,
@@ -25,7 +23,6 @@
     {
       "id": "C",
       "type": "everyday_use",
-      "matches": "both",
       "concept": "Everyday use in a different situation, model and color than A: the top styled with a skirt at the market / errands.",
       "visual": "Israeli woman about 57 with short dark hair with grey streaks in the gray top and a midi skirt, choosing fruit at an outdoor market (Carmel-market style), relaxed and put-together.",
       "overlay_text_he": null,
@@ -36,7 +33,6 @@
     {
       "id": "D",
       "type": "designed_hook",
-      "matches": "both",
       "concept": "Designed hook: product prominent with the central problem as headline, 2 short benefits and the offer.",
       "visual": "Clean warm-beige background, the green top neatly laid flat or on a hanger, large Hebrew headline on top, two short benefit lines and the price underneath (added in the editor).",
       "overlay_text_he": "חם בחוץ, ורוצה גם להיראות מסודרת?",

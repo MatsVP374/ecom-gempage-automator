@@ -65,7 +65,7 @@ angle** (geen nieuwe funnel):
 
 | id | type | Wat |
 |---|---|---|
-| A | `customer_discovery` | Spontane lifestyle-shot die visueel past bij Ad 1 |
+| A | `customer_discovery` | Spontane klant-lifestyle-shot (past bij een testimonial-ad) |
 | B | `raw_boutique_offer` | Product in boetiekomgeving, prijs mag zichtbaar zijn, authentiek eerder dan gepolijst |
 | C | `everyday_use` | Product echt in gebruik, **andere** situatie/model/kleur dan A, zodat het account niet vier bijna identieke creatives test |
 | D | `designed_hook` | Product prominent + de centrale probleem-hook als tekst (`overlay_text_he`), bv. `למה נעל נוחה צריכה להיראות אורתופדית?`, met hooguit enkele voordelen + het aanbod |

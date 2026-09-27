@@ -2,7 +2,7 @@
 
 ## Stijl
 - Modern, natuurlijk Israëlisch Hebreeuws. Zoals een Israëlische vrouw het zelf zou schrijven
-  (ads) of zoals Adina een persoonlijke brief schrijft (GemPage). Niet formeel/bijbels,
+  (reviews, overlays) of zoals Adina een persoonlijke brief schrijft (GemPage). Niet formeel/bijbels,
   geen Google Translate-constructies, geen vertaald-Amerikaanse reclametaal.
 - Schrijf Hebreeuws als origineel. Nooit Engels woord-voor-woord vertalen; de Engelse master is
   alleen voor structuur en betekenis.
@@ -44,4 +44,4 @@
   `יותר מ־15 שנה` / `יותר מ־2,550 ביקורות`. In GemPages-velden met alleen het getal (trust bar): zet het
   element op LTR of gebruik het `.gempages`-bestand (dat isoleert het al).
 - Geen losse haakjes/aanhalingstekens rond gemengde tekst; gebruik ״ (gershayim) voor afkortingen.
-- In ads: geen of hooguit 1–2 emoji. In de GemPage: ✓ voor offer-bullets, ★ voor rating, verder niets.
+- In de GemPage: ✓ voor offer-bullets, ★ voor rating, verder niets.

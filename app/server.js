@@ -26,7 +26,6 @@ const jobs = new Map();
 const COMMANDS = {
   launch: (slug, extra) => `/launch-product ${slug}${extra ? ' ' + extra : ''}`,
   step: (slug, extra) => `/launch-step ${slug} ${extra}`,
-  'meta-ads': (slug, extra) => `/meta-ads ${slug}${extra ? ' ' + extra : ''}`,
 };
 
 // Images (OpenAI → Shopify) run in-process as a job with the same live log as Claude runs.

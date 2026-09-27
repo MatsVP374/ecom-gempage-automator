@@ -33,4 +33,4 @@ Tot slot `benefits`: de 5–6 sterkste voordelen, elk als
 Elk voordeel moet traceren naar feature-id's uit stap 1. Effecten zijn logische gevolgen van het
 feature, geen nieuwe prestatieclaims (zie `brand/fact-rules.md`).
 
-Er is **één** centraal probleem. Alles wat hierna komt (GemPage, beelden, ads, creatives) gebruikt deze angle.
+Er is **één** centraal probleem. Alles wat hierna komt (GemPage, beelden, creatives, en de ads die de gebruiker schrijft) gebruikt deze angle.

@@ -3,11 +3,13 @@
 Deze repo is de vaste product-launch-workflow van **Adina Fashion** (Israël, Hebreeuws, vrouwen 45–65+).
 Voor elk nieuw product maakt hij:
 
-1. een **Hebreeuwse founder-letter GemPage** (advertorial, géén standaard productpagina),
+1. een **Hebreeuwse founder-letter GemPage** (advertorial, géén standaard productpagina), met onder elke foto
+   een **echte klantreview**,
 2. een **beeldplan** + **image-generation prompts** voor de extra storytelling-foto's in die GemPage,
-3. **precies 2 long-form Meta-ads** vanuit een **echte klanttestimonial**,
-4. een **creative plan** (4 statics + optioneel UGC),
-5. een **QA-rapport** en een **launch package** voor GemPages en Meta Ads Manager.
+3. een **creative plan** (4 statics + optioneel UGC),
+4. een **QA-rapport** en een **launch package** voor GemPages en de Meta-creatives.
+
+**De ad copy (primary text/headline/description) schrijft deze workflow niet**; die maakt de gebruiker zelf.
 
 ## Het belangrijkste principe: MESSAGE CONTINUITY
 
@@ -16,8 +18,8 @@ META CREATIVE → CUSTOMER AD STORY → ADINA FOUNDER LETTER → PRODUCT/OFFER �
                  (klant-hoofdstuk)    (Adina's hoofdstuk)    (conversie)
 ```
 
-Ad en GemPage zijn **één verhaal**. Ze gaan over hetzelfde centrale probleem, eindigen bij hetzelfde
-product, benadrukken dezelfde voordelen en gebruiken exact hetzelfde aanbod. `02-central-angle.json`
+Ad en GemPage zijn **één verhaal**. De ad (door de gebruiker geschreven) en de GemPage gaan over hetzelfde
+centrale probleem, eindigen bij hetzelfde product, benadrukken dezelfde voordelen en gebruiken exact hetzelfde aanbod. `02-central-angle.json`
 is de **single source of truth** waar alles na stap 2 op gebouwd wordt.
 
 ## Altijd eerst lezen
@@ -30,7 +32,7 @@ is de **single source of truth** waar alles na stap 2 op gebouwd wordt.
 | `brand/customer-avatar.md` | De klant |
 | `brand/gempage-blueprint.md` | De vaste founder-letter GemPage (blok voor blok) |
 | `brand/image-rules.md` | GemPage-beeldplan, promptformaat, statische creatives |
-| `brand/ad-system.md` | De 2 long-form Meta-ads, stijl, UGC |
+| `brand/ad-system.md` | Hoe de GemPage aansluit op de ads van de gebruiker; UGC-script |
 | `brand/testimonial-rules.md` | Wat je met testimonials wel/niet mag |
 | `brand/hebrew-style.md` | Hebreeuwse stijl en RTL |
 
@@ -51,7 +53,6 @@ Commando: `/launch-product <slug>` (volledig) · `/launch-step <slug> <stap>` (�
 | 6 | GemPage build / Hebreeuws | `prompts/06-gempage-build-he.md` | `03-gempage-copy.he.json` |
 | 6b | Hebreeuwse spellingcheck (script + proeflezen) | `prompts/06b-spellcheck.md` | `03-gempage-spellcheck.json` (+ fixes in de HE-teksten) |
 | 7 | Quality control (feiten, GemPage, beelden) | `prompts/07-quality-control.md` | `09-qa-report.md` (deel 1) |
-| 8 | 2 Meta-ads | `prompts/08-meta-ads.md` | `06-meta-ads.json` |
 | 9 | Creative plan + UGC | `prompts/09-creative-plan.md` | `07-creative-plan.json`, `08-ugc.json` |
 | 10 | Final launch package | `prompts/10-final-package.md` | `09-qa-report.md` (compleet) + `output/` incl. **`<slug>-founder-letter.gempages`** |
 
@@ -68,19 +69,18 @@ Regels:
   de hero met beide ter vergelijking (geen upload). Faalt het (geen sleutel/Shopify-token, netwerk geblokkeerd),
   meld dan de exacte foutmelding als flag `IMAGES NOT GENERATED — …` en ga door; de `.gempages` krijgt dan
   zichtbare placeholders. Genereer nooit beelden op een andere manier en verzin geen beeld-URL's.
-- Na stap 6, 8 en 9: `node scripts/validate.js <slug>` en fix alle **errors** vóór je verdergaat.
-- **Spellingcheck (6b)** na stap 6 én opnieuw na stap 8/9: `node scripts/spellcheck.js <slug>` (sluitletters, geplakt
+- Na stap 6 en 9: `node scripts/validate.js <slug>` en fix alle **errors** vóór je verdergaat.
+- **Spellingcheck (6b)** na stap 6 én opnieuw na stap 9: `node scripts/spellcheck.js <slug>` (sluitletters, geplakt
   Hebreeuws/Latijn, dubbele woorden, nikud, spaties, spelfouten uit `brand/hebrew-spelling.json`) plus proeflezen door jou
   (grammatica, vrouwelijke aanspreekvorm, natuurlijk Hebreeuws). Spelling-errors blokkeren de validatie.
-- Stap 8 zonder bruikbare testimonial → schrijf `06-meta-ads.json` met `"status": "blocked"` en de
-  flag `TESTIMONIAL DATA INSUFFICIENT`, ga door met stap 9–10, en meld het in de eindchecklist.
-  **Nooit een verzonnen klantverhaal schrijven.**
+- Geen (passende) testimonials → geen review onder die foto's (flag `REVIEWS PER PHOTO: x/6`).
+  **Nooit een review of klantverhaal verzinnen.**
 - Eindig met de eindchecklist (onderaan). Niets naar Shopify pushen tenzij gevraagd.
 
 ## Datacontract (strikt — `scripts/` en de UI lezen dit)
 
 Taal: `01`, `02`, `03-…en`, `04`, `05` zijn Engelse werkbestanden (intern, voor review). Alles wat de klant
-ziet — `03-gempage-copy.he.json`, `06-meta-ads.json` (primary text/headline/description),
+ziet — `03-gempage-copy.he.json`,
 `07-creative-plan.json` (`overlay_text_he`), `08-ugc.json` (`voice_he`) — is **Hebreeuws**.
 
 ### `input.json` (door de gebruiker, via UI / `/new-launch` / `node scripts/new-product.js`)
@@ -114,7 +114,7 @@ ziet — `03-gempage-copy.he.json`, `06-meta-ads.json` (primary text/headline/de
 ```
 Verplicht: `product_name`, `hebrew_product_name`, `product_type`, `regular_price`, `sale_price`,
 `promotion`, `sale_reason`, `colors`, `sizes`, `features`, `existing_product_page` (url of content),
-`existing_product_images`. Testimonials zijn **nodig voor de ads** en voor de **review onder elke GemPage-foto**
+`existing_product_images`. Testimonials zijn nodig voor de **review onder elke GemPage-foto**
 (zonder testimonials blijven die reviews weg). `text_he` alleen als de review niet in het Hebreeuws is; `rating` alleen als bekend.
 Shipping/returns komen uit `config/adina.json` (niet per product).
 
@@ -221,29 +221,11 @@ Vaste blokvolgorde (zie `brand/gempage-blueprint.md`), `id` = `type`:
 ```
 Eén prompt per beeld met `source: "generate"`.
 
-### `06-meta-ads.json`
-```json
-{
-  "status": "ready",
-  "flags": [],
-  "ads": [
-    { "id": "ad1", "type": "discovery", "angle": "short angle name", "testimonial_id": "t1",
-      "primary_text": "…", "headline": "…", "description": "…",
-      "trace": [{ "claim": "wat de ad beweert", "source": "testimonial:t1" }],
-      "review_en": "Engelse leesversie voor de gebruiker" },
-    { "id": "ad2", "type": "routine", "…": "…" }
-  ]
-}
-```
-`status` ∈ `ready | partial | blocked`. `ready` = precies 2 ads. `partial` = 1 ad (de testimonial draagt er maar één) + flag. `blocked` = `ads: []`. Bij `partial`/`blocked` bevat `flags` `TESTIMONIAL DATA INSUFFICIENT — …`.
-`trace[].source` ∈ `testimonial:<id> | fact:<feature-id> | input:<veld> | config:<pad> | angle:<veld>`.
-**Elke eerste-persoonservaring in de ad moet traceren naar `testimonial:<id>`.**
-
 ### `07-creative-plan.json`
 ```json
 {
   "creatives": [
-    { "id": "A", "type": "customer_discovery", "matches": "ad1", "concept": "…", "visual": "…",
+    { "id": "A", "type": "customer_discovery", "concept": "…", "visual": "…",
       "overlay_text_he": null, "product_color": "Blue", "format": "4:5", "prompt": "…" }
   ]
 }
@@ -299,12 +281,12 @@ ADINA PRODUCT LAUNCH — <hebrew_product_name>
 ✓ 7 GemPage images planned       5 generate · 2 existing
 ✓ Image prompts complete         5
 ✓ Images generated + on Shopify  7/7
-✓ 2 Meta ads complete            (of: ✗ BLOCKED — TESTIMONIAL DATA INSUFFICIENT)
+✓ Reviews under the photos       6/6 benefits · 23 reviews supplied
 ✓ Creative plan complete         4 statics · UGC: no
 ✓ QA passed                      0 errors · 3 warnings
 
 READY FOR:
 → GemPages          output/<slug>-founder-letter.gempages (Import) · output/gempage.he.html (preview)
 → Image generation  output/image-prompts.md
-→ Meta Ads Manager  output/meta-ads.md · output/meta-ads.csv
+→ Meta creatives    output/creative-plan.md (4 statics)
 ```

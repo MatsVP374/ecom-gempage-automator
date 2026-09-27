@@ -128,7 +128,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
       console.log(`\nStill missing (required):`);
       missing.forEach((m) => console.log(`  MISSING INPUT: ${m.field} — needed for ${m.needed_for}`));
     }
-    if (!input.testimonials.length) console.log(`\nNo testimonials yet → the Meta ads step will be BLOCKED until real testimonials are added.`);
+    if (!input.testimonials.length) console.log(`\nNo testimonials yet → the GemPage gets no customer reviews under its photos until real reviews are added.`);
     console.log(`\nNext: fill input.json (or use the UI), then in Claude Code:  /launch-product ${slug}`);
   } catch (e) {
     console.error(`✗ ${e.message}`);

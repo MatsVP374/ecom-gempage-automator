@@ -20,10 +20,10 @@ Gebruik alleen de problemen die bij het aangeleverde product passen; `input.know
 gaat voor.
 
 ## Toon
-Laat haar zich **nooit "oud" voelen**. Geen betutteling. Noem haar leeftijd niet in ads.
+Laat haar zich **nooit "oud" voelen**. Geen betutteling. Noem haar leeftijd niet in de copy.
 
 ## Echte situaties (om voordelen in te laten landen)
 Met jeans · diner · koffie · boodschappen · wandelen · reizen · de ochtend · de avond ·
 wisselend weer · uren op de been · werk · familie · sjabbat/feestdagen · kleinkinderen.
-Gebruik alleen situaties die logisch uit de productfeiten volgen. In testimonial-ads alleen
-situaties die de klant zelf noemt.
+Gebruik alleen situaties die logisch uit de productfeiten volgen. In reviews alleen
+wat de klant zelf schreef.

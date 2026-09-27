@@ -1,50 +1,21 @@
-# Testimonial-regels (Meta-ads)
+# Testimonial-regels (reviews in de GemPage)
 
-De ads zijn **klanttestimonial-ads**: eerste persoon, vanuit een **echte klant**, gebaseerd op
-**aangeleverd** review- of testimonialmateriaal (`input.testimonials`).
+Reviews komen **alleen** uit `input.testimonials` (door de gebruiker aangeleverd, met bron).
+Ze staan op de GemPage **onder elke voordeelfoto** (`benefits[].review`) en in `social_proof.quotes`.
 
-## Je mag
-- vertalen (ook naar natuurlijk Hebreeuws);
-- herstructureren en de volgorde verbeteren;
-- de leesbaarheid verbeteren;
-- inkorten of uitbreiden in formulering **zonder de betekenis te veranderen**;
-- feitelijke uitspraken van de klant natuurlijk verbinden met **geverifieerde productfeiten**
-  ("de kap heeft verstelbare koordjes" is een productfeit; "ik gebruik de kap elke avond" is alleen
-  toegestaan als de klant dat zei);
-- de brug naar Adina's brief maken (dat is de functie van de ad, geen klantclaim):
-  "Adina schreef er een brief over", "in haar brief legt ze uit waarom…".
+## Letterlijk
+De klant staat **tussen aanhalingstekens**, dus alleen een **letterlijk fragment** (inkorten mag, herschrijven niet).
+In het Hebreeuws woord voor woord uit `text`, of uit `text_he` als de review in een andere taal is; de validator
+controleert dat. De EN-master mag een vertaling tonen.
+
+## Kiezen
+- Kies per voordeel de review die **dát voordeel** noemt (licht in de hitte, pasvorm, combineren, kleur…).
+- Elk fragment maar één keer op de pagina.
+- Winkel-/bestelervaringen (verpakking, service, terugkomen) passen bij `social_proof`, niet onder een productfoto.
+- Geen passende review → geen review onder die foto (flag `REVIEWS PER PHOTO: x/6`). Nooit een review
+  "verbuigen" naar een voordeel dat de klant niet noemt.
 
 ## Je mag NIET verzinnen
-naam · leeftijd · vriendin · ontmoeting in een café · reis · aankoopverhaal · **hoe ze het product
-ontdekte** · hoe lang ze het draagt · **situaties waarin ze het gebruikte** · resultaten die ze niet noemde ·
-"ik bestelde" / "toen het binnenkwam" als ze dat niet zei.
-
-Naam en leeftijd alleen als ze in `input.testimonials[]` staan.
-
-## Reviews in de GemPage (onder elke foto en in `social_proof`)
-Strenger dan in de ads: hier staat de klant **tussen aanhalingstekens**, dus alleen een **letterlijk fragment**
-(inkorten mag, herschrijven niet). In het Hebreeuws woord voor woord uit `text` of `text_he`; de validator controleert
-dat. Naam/leeftijd/sterren komen automatisch uit `input.testimonials` en worden nooit in de copy getypt.
-
-## Traceerbaarheid
-Elke eerste-persoonservaring in een ad staat in `06-meta-ads.json` → `trace` met
-`source: "testimonial:<id>"`. Kun je een zin niet traceren → schrap hem.
-
-## Te weinig materiaal
-```
-DO NOT WRITE FAKE FIRST-PERSON EXPERIENCES.
-Flag: TESTIMONIAL DATA INSUFFICIENT
-```
-Dan:
-- `06-meta-ads.json` → `"status": "blocked"`, `"ads": []`, en in `flags` precies wat er ontbreekt
-  (bv. "t1 noemt geen gebruikssituaties; ad 2 (routine) heeft minimaal 2 concrete situaties nodig");
-- vraag de gebruiker om het ontbrekende testimonialmateriaal.
-
-Je mag ook een ad schrijven die **alleen** uitspraken gebruikt die de testimonial ondersteunt, als dat
-genoeg is voor een geloofwaardige long-form ad. Maar liever geblokkeerd dan verzonnen.
-
-## Één of twee testimonials?
-- Twee testimonials: Ad 1 = de een, Ad 2 = de ander (kies de beste match: ontdekking vs. routine).
-- Eén testimonial met genoeg materiaal voor twee verschillende verhalen: mag voor beide, met
-  **verschillende** uitspraken als opening.
-- Eén dunne testimonial: schrijf alleen de ad die hij draagt en flag de andere.
+naam · leeftijd · sterren · bron · situaties · resultaten. Naam, leeftijd en sterren typ je nooit in de copy: de
+GemPage haalt ze zelf uit `input.testimonials` (geen naam → "לקוחה של Adina Fashion", geen rating → geen sterren).
+Leeftijd alleen als de klant die zelf opgeeft.

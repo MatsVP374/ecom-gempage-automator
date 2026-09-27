@@ -6,7 +6,7 @@ Laat onbekende velden leeg. Het systeem verzint niets en flagt wat ontbreekt.
 
 ## Verplicht
 PRODUCT NAME*:
-HEBREW PRODUCT NAME*:            (exact zoals hij op de site/in de ads moet staan)
+HEBREW PRODUCT NAME*:            (exact zoals hij op de site moet staan)
 PRODUCT TYPE*:
 
 REGULAR PRICE* (₪):
@@ -25,8 +25,8 @@ PRODUCT FEATURES*:
 EXISTING PRODUCT PAGE*:          (URL en/of geplakte tekst)
 EXISTING PRODUCT IMAGES*:        (URL's, of zet de bestanden in products/<slug>/source/)
 
-## Optioneel (maar nodig voor de ads en de reviews in de GemPage)
-CUSTOMER REVIEWS / TESTIMONIALS: (nodig voor de 2 ads én de review onder elke GemPage-foto; per testimonial: letterlijke tekst +
+## Optioneel (maar nodig voor de reviews in de GemPage)
+CUSTOMER REVIEWS / TESTIMONIALS: (nodig voor de review onder elke GemPage-foto; per testimonial: letterlijke tekst +
   naam/leeftijd/sterren ALLEEN als bekend + bron. Tip: 5–6 reviews die elk een ander voordeel noemen = een review per foto)
   Testimonial 1:
     Name:

@@ -20,14 +20,14 @@ INPUT NEW PRODUCT
   → [6] GemPage build (Hebreeuws)
   → [6b] Hebreeuwse spellingcheck  ← script + proeflezen door Claude
   → [7] Quality control
-  → [8] 2 long-form Meta-ads       ← vanuit een echte klanttestimonial
   → [9] Creative plan (4 statics + optioneel UGC)
   → [10] FINAL LAUNCH PACKAGE
 ```
 
 **Er wordt niets verzonnen.** Ontbreekt een verplicht veld, dan stopt de workflow met `MISSING INPUT`.
-Zijn er geen of te weinig testimonials, dan worden de ads geblokkeerd met
-`TESTIMONIAL DATA INSUFFICIENT` in plaats van een nep-klantverhaal te schrijven.
+Onder elke voordeelfoto komt een **echte klantreview** (letterlijk, uit jouw input). Zonder passende review blijft
+die plek leeg; er wordt nooit een review verzonnen. **De ad copy schrijf je zelf**; deze workflow levert de GemPage
+en de creatives waar je ads naartoe leiden.
 
 Geen `npm install` nodig (Node 20+, geen dependencies).
 
@@ -42,7 +42,7 @@ npm start          # → http://localhost:3000
 1. **+ New Adina product launch** → vul het formulier in (zie "Wat je aanlevert").
 2. Ontbreekt er iets verplicht, dan zie je het in rood en blijft Generate uit.
 3. **🚀 GENERATE COMPLETE LAUNCH**: Claude Code draait de hele pipeline op de achtergrond, met live log.
-4. Bekijk en kopieer het resultaat in de tabs: ANGLE · GEMPAGE · IMAGES · META ADS · CREATIVES · QA · EXPORT.
+4. Bekijk en kopieer het resultaat in de tabs: ANGLE · GEMPAGE · IMAGES · CREATIVES · QA · EXPORT.
 
 Vereist: [Claude Code](https://docs.claude.com/en/docs/claude-code) geïnstalleerd en ingelogd (`claude`).
 Anders pad: `CLAUDE_BIN=/pad/naar/claude npm start`.
@@ -58,13 +58,12 @@ claude
 |---|---|
 | `/new-launch [input]` | Intake: zet jouw productinput om naar `products/<slug>/input.json` en flagt wat ontbreekt |
 | `/launch-product <slug> [--force]` | Volledige pipeline; slaat bestaande stappen over (`--force` = alles opnieuw) |
-| `/launch-step <slug> <stap> [instructies]` | Eén stap opnieuw: `facts`, `angle`, `gempage`, `image-plan`, `image-prompts`, `gempage-he`, `qc`, `meta-ads`, `creatives`, `package` |
-| `/meta-ads <slug> [instructies]` | Alleen de 2 Meta-ads (opnieuw), bv. nadat je testimonials hebt toegevoegd |
+| `/launch-step <slug> <stap> [instructies]` | Eén stap opnieuw: `facts`, `angle`, `gempage`, `image-plan`, `image-prompts`, `gempage-he`, `spellcheck`, `qc`, `creatives`, `package` |
 | `/push-shopify <slug>` | Validatie → dry-run → na jouw "ja" als DRAFT in Shopify |
 
 ## Automatisering: OpenAI-beelden + importeerbare GemPage
 
-- **Tekst** (fact sheet, angle, brief, ads, creatives) schrijft Claude Code volgens de blueprints.
+- **Tekst** (fact sheet, angle, brief, creatives) schrijft Claude Code volgens de blueprints.
 - **Beelden**: `npm run images -- <slug>` stuurt elke beeldprompt, met de bestaande productfoto's als referentie,
   naar **Gemini** (`gemini-2.5-flash-image`, instelbaar met `GEMINI_IMAGE_MODEL`) of **OpenAI**
   (`OPENAI_IMAGE_MODEL`). Kiezen met `IMAGE_PROVIDER=gemini|openai`; zonder keuze wordt Gemini gebruikt als
@@ -87,8 +86,8 @@ promotion · current sale reason · available colors · available sizes · produ
 existing product page (URL en/of geplakte tekst) · existing product images (URL's of bestanden in
 `products/<slug>/source/`).
 
-**Nodig voor de ads:** echte customer reviews/testimonials. Per testimonial: de letterlijke tekst, de
-bron, en naam/leeftijd/details **alleen als je ze echt weet**.
+**Nodig voor de reviews onder de foto's:** echte customer reviews. Per review: de letterlijke tekst, de
+bron, en naam/leeftijd/sterren **alleen als je ze echt weet**. Tip: 5–6 reviews die elk een ander voordeel noemen.
 
 **Optioneel:** known customer problems · central problem (als je hem al weet) · competitor/reference ·
 extra product info · UGC nodig (ja/nee) · launch month.
@@ -109,7 +108,6 @@ products/<slug>/
 ├── 03-gempage-spellcheck.json spellingcheck: verbeteringen + twijfels
 ├── 04-gempage-image-plan.json ±7 beelden, elk gekoppeld aan een GemPage-blok
 ├── 05-image-prompts.json      production-ready prompts (13 vaste velden)
-├── 06-meta-ads.json           2 ads + trace (bron van elke claim) + Engelse leesversie
 ├── 07-creative-plan.json      4 statics (A discovery · B boutique/offer · C everyday · D designed hook)
 ├── 08-ugc.json                UGC-script (alleen als gevraagd)
 ├── 09-qa-report.md            QA-checklist + flags + "voor de mens"
@@ -119,8 +117,6 @@ products/<slug>/
     ├── gempage-copy.md        copy per GemPage-blok (26 elementen), plakklaar
     ├── gempage.he.html        preview (RTL) · gempage.en.html (master)
     ├── image-prompts.md       beeldplan + prompts
-    ├── meta-ads.md            exact Ads Manager-formaat (AD 1 / PRIMARY TEXT / HEADLINE / DESCRIPTION)
-    ├── meta-ads.csv
     ├── creative-plan.md       statics + UGC
     └── shopify-product.json   DRAFT-payload
 ```
@@ -132,7 +128,7 @@ products/<slug>/
 | `config/adina.json` | **Globale feiten**: trust, verzending, retour, bundel, vaste Hebreeuwse teksten (byline, badge, CTA's, brand line) |
 | `CLAUDE.md` | Pipeline, datacontract, harde regels |
 | `brand/gempage-blueprint.md` | De founder-letter GemPage, blok voor blok |
-| `brand/ad-system.md` | De 2 long-form testimonial-ads, stijl, UGC |
+| `brand/ad-system.md` | Aansluiting op jouw Meta-ads, UGC-script |
 | `brand/testimonial-rules.md` | Wat wel/niet mag met testimonials |
 | `brand/image-rules.md` | Beeldplan, promptformaat, statische creatives |
 | `brand/fact-rules.md` | Nooit verzinnen + hoe ontbrekende input geflagd wordt |
@@ -142,7 +138,7 @@ products/<slug>/
 Wijzigingen aan `config/` vragen in Claude Code altijd eerst bevestiging.
 
 ## Spellingcheck (`npm run spellcheck -- <slug>`)
-Controleert alle Hebreeuwse klantteksten (GemPage, ads, overlay-teksten, UGC): sluitletters (ך ם ן ף ץ), aan elkaar
+Controleert alle Hebreeuwse klantteksten (GemPage, overlay-teksten, UGC): sluitletters (ך ם ן ף ץ), aan elkaar
 geplakt Hebreeuws/Latijn, dubbele woorden, nikud, spaties/leestekens, spellingvarianten (הכל/הכול) en bekende spelfouten
 uit `brand/hebrew-spelling.json` (die lijst vul je zelf aan). Daarna leest Claude alles proef op grammatica, vrouwelijke
 aanspreekvorm en natuurlijk Hebreeuws, en legt elke verbetering vast in `03-gempage-spellcheck.json`.
@@ -158,9 +154,10 @@ De validator houdt de workflow eerlijk:
   bundel exact 10/15/20/25, trust-waarden uit config
 - oude logica geblokkeerd: "2e item 20%", "7–14 werkdagen", voorraadclaims, medische claims
 - beelden: elk beeld een doel en een blok, alle 13 promptvelden, geen regeneratie van bestaande foto's
-- ads: precies 2 (discovery + routine), elke ad gekoppeld aan een echte testimonial, elke claim getraced,
-  geen verzonnen leeftijd, Adina + brief-brug aanwezig, prijs laat in de tekst, twee echt verschillende verhalen,
-  geen clichés/emoji-regens
+- reviews: elke review hoort bij een echte testimonial en is in het Hebreeuws een letterlijk fragment ervan;
+  meldt hoeveel voordeelfoto's nog geen review hebben
+- casting: Israëlische vrouwen van 40–60 in elke prompt met een persoon
+- Hebreeuwse spelling (zie Spellingcheck)
 
 `npm test` draait de testsuite (met een DEMO-fixture, geen echt product) + validatie van alle producten; ook in GitHub Actions.
 

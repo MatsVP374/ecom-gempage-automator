@@ -6,12 +6,9 @@
    `IMAGES NOT GENERATED — <welke IMG's>` (de `.gempages` bevat dan placeholders).
 3. Vul `09-qa-report.md` aan met `## Stap 10: Final QA`:
 
-TESTIMONIAL
-☐ Echte bron aangeleverd? ☐ Geen verzonnen ervaringen? ☐ Naam/leeftijd alleen als aangeleverd? ☐ Betekenis behouden?
-
-ADS
-☐ Precies 2? ☐ Verschillende verhalen? ☐ Zelfde GemPage-angle? ☐ Prijs laat? ☐ Founder-letter-brug?
-☐ Geen onbewezen claims?
+REVIEWS
+☐ Echte bron aangeleverd? ☐ Letterlijke fragmenten? ☐ Review past bij het voordeel onder die foto?
+☐ Naam/leeftijd/sterren alleen uit input?
 
 OFFER
 ☐ Verzending correct (gratis, Israel Post)? ☐ Retour 30 dagen? ☐ Bundel 10/15/20/25? ☐ Reviews/rating correct (4.7/5, 2,550+)?
@@ -19,9 +16,8 @@ OFFER
 CREATIVES
 ☐ 4 statics, zelfde angle? ☐ Kleuren uit input? ☐ UGC volgens input?
 
-Plus: `## Flags` (alles wat ontbreekt/geblokkeerd is, bv. TESTIMONIAL DATA INSUFFICIENT, MISSING INPUT)
-en `## Voor de mens` (bv. echte reviews in het GemPages-widget, beelden genereren en plaatsen,
-ontbrekende testimonial aanleveren).
+Plus: `## Flags` (alles wat ontbreekt/geblokkeerd is, bv. REVIEWS PER PHOTO, MISSING INPUT)
+en `## Voor de mens` (bv. beelden genereren en plaatsen, ontbrekende reviews aanleveren).
 
 Kan een feit niet worden geverifieerd uit input/config → **FLAG IT**. Niet gokken.
 

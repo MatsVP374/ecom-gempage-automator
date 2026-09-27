@@ -15,5 +15,5 @@ New Adina product launch. Input van de gebruiker: `$ARGUMENTS`
    - Onbekend = leeg laten (`null` / `[]` / `""`). Niets aanvullen.
    - Maak de map via `node scripts/new-product.js <slug>` en schrijf daarna het volledige `input.json`.
 4. Draai `node scripts/validate.js <slug> --stage input` en toon de ontbrekende verplichte velden als
-   `MISSING INPUT: <veld>`, en of er testimonials zijn (zonder testimonials worden de ads geblokkeerd).
+   `MISSING INPUT: <veld>`, en of er testimonials zijn (zonder testimonials komen er geen reviews onder de foto's in de GemPage).
 5. Is de input compleet, vraag dan of je `/launch-product <slug>` moet starten.

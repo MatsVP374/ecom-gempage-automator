@@ -23,7 +23,7 @@ test('complete demo product validates with 0 errors and exports a ready launch p
   const slug = writeDemo(dir);
   assert.deepEqual(errs(slug), []);
   const files = exportProduct(slug);
-  for (const f of ['gempage.he.html', 'gempage-copy.md', 'image-prompts.md', 'meta-ads.md', 'meta-ads.csv', 'creative-plan.md', 'launch-package.md'])
+  for (const f of ['gempage.he.html', 'gempage-copy.md', 'image-prompts.md', 'creative-plan.md', 'launch-package.md'])
     assert.ok(files.includes(f), `missing ${f}`);
   const pkg = fs.readFileSync(path.join(dir, slug, 'output', 'launch-package.md'), 'utf8');
   assert.match(pkg, /READY FOR:/);
@@ -40,14 +40,14 @@ test('launch without generated images is not ready and the .gempages shows place
   assert.match(pkg, /missing: IMG-01/);
 });
 
-test('meta-ads.md uses the exact Meta output format', () => {
-  const slug = writeDemo(dir);
-  exportProduct(slug);
-  const md = fs.readFileSync(path.join(dir, slug, 'output', 'meta-ads.md'), 'utf8');
-  assert.match(md, /^AD 1 — Test discovery\n\nPRIMARY TEXT:\n/);
-  assert.match(md, /\nHEADLINE:\n/);
-  assert.match(md, /\nDESCRIPTION:\n/);
-  assert.match(md, /\n\n\nAD 2 — Test routine\n/);
+test('no testimonials → the GemPage gets no reviews and a flag, nothing is invented', () => {
+  const slug = writeDemo(dir, (d) => {
+    d.input.testimonials = [];
+    d.facts.testimonials = [];
+  });
+  const r = validateProduct(slug);
+  assert.deepEqual(r.errors, []);
+  assert.ok(has(r.flags, /NO TESTIMONIALS SUPPLIED/));
 });
 
 test('input gate flags every missing required field and never fills it in', () => {
@@ -62,53 +62,10 @@ test('input gate flags every missing required field and never fills it in', () =
   assert.deepEqual(saved.colors, []);
 });
 
-test('no testimonials → ads must be blocked with a flag, never invented', () => {
-  const slug = writeDemo(dir, (d) => {
-    d.input.testimonials = [];
-    d.facts.testimonials = [];
-    d.ads = { status: 'blocked', flags: ['TESTIMONIAL DATA INSUFFICIENT — no testimonials supplied'], ads: [] };
-  });
-  const r = validateProduct(slug);
-  assert.deepEqual(r.errors, []);
-  assert.ok(has(r.flags, /TESTIMONIAL DATA INSUFFICIENT/));
-  assert.equal(r.ready, false);
-});
-
-test('an ad without a real testimonial source is an error', () => {
-  const slug = writeDemo(dir, (d) => {
-    d.ads.ads[0].testimonial_id = 't9';
-    d.ads.ads[0].trace = [{ claim: 'I ordered it', source: 'testimonial:t9' }];
-  });
-  const e = errs(slug);
-  assert.ok(has(e, /not a supplied testimonial/));
-  assert.ok(has(e, /trace source "testimonial:t9" does not resolve/));
-});
-
-test('blocked status without the flag is an error', () => {
-  const slug = writeDemo(dir, (d) => (d.ads = { status: 'blocked', flags: [], ads: [] }));
-  assert.ok(has(errs(slug), /TESTIMONIAL DATA INSUFFICIENT/));
-});
-
-test('ready requires exactly 2 ads: one discovery and one routine', () => {
-  const slug = writeDemo(dir, (d) => (d.ads.ads[1].type = 'discovery'));
-  assert.ok(has(errs(slug), /one "discovery" and one "routine"/));
-  const slug2 = 'three-ads';
-  writeDemo(dir, (d) => {
-    d.input.slug = slug2;
-    d.ads.ads.push({ ...d.ads.ads[0], id: 'ad3' });
-  });
-  assert.ok(has(errs(slug2), /requires exactly 2 ads/));
-});
-
-test('ad invents an age the testimonial does not supply', () => {
-  const slug = writeDemo(dir, (d) => (d.ads.ads[0].primary_text = 'אני בת 58 ' + d.ads.ads[0].primary_text));
-  assert.ok(has(errs(slug), /mentions an age/));
-});
-
 test('old offer logic is rejected everywhere', () => {
   const slug = writeDemo(dir, (d) => {
     d.gempageHe.blocks.find((b) => b.type === 'sale').paragraphs.push('20% הנחה על הפריט השני');
-    d.ads.ads[1].primary_text += ' משלוח 7–14 ימי עסקים';
+    d.creatives.creatives[3].overlay_text_he = 'משלוח 7–14 ימי עסקים';
   });
   const e = errs(slug);
   assert.ok(has(e, /old "2nd item" offer/));
@@ -125,7 +82,7 @@ test('bundle must be exactly 10/15/20/25 from config', () => {
 test('wrong or invented prices are rejected', () => {
   const slug = writeDemo(dir, (d) => {
     d.gempageHe.blocks.find((b) => b.type === 'offer_box').sale_price = 149;
-    d.ads.ads[0].description = 'רק ב־₪99';
+    d.creatives.creatives[3].overlay_text_he = 'רק ב־₪99';
   });
   const e = errs(slug);
   assert.ok(has(e, /offer_box.sale_price 149 ≠ input 150/));

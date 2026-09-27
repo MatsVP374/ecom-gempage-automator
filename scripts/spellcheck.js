@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Hebrew spelling & typography check for everything the customer sees: the GemPage (03-gempage-copy.he.json),
-// the Meta ads, the creative overlay texts and the UGC voice-over.
+// the creative overlay texts and the UGC voice-over.
 // Mechanical rules only (final letters, glued Latin, doubled words, niqqud, spacing, known misspellings from
 // brand/hebrew-spelling.json). Grammar and wording are proofread by Claude in step 6b (03-gempage-spellcheck.json).
 // Usage: node scripts/spellcheck.js <slug> [--json]
@@ -80,7 +80,6 @@ export function hebrewStrings(p) {
     else if (o && typeof o === 'object') for (const [k, v] of Object.entries(o)) walk(file, v, at ? `${at}.${k}` : k);
   };
   if (p.gempage?.he) p.gempage.he.blocks?.forEach((b) => walk('03-gempage-copy.he.json', b, b.id));
-  (p.ads?.ads ?? []).forEach((a) => ['primary_text', 'headline', 'description'].forEach((k) => walk('06-meta-ads.json', a[k], `${a.id}.${k}`)));
   (p.creatives?.creatives ?? []).forEach((c) => walk('07-creative-plan.json', c.overlay_text_he, `${c.id}.overlay_text_he`));
   (p.ugc?.script ?? []).forEach((l, i) => walk('08-ugc.json', l.voice_he, `script[${i}].voice_he`));
   return out;

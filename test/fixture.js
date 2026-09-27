@@ -148,20 +148,10 @@ export function demoProduct() {
       prompt: 'Test prompt. No text in image. Consistent with the reference images.',
     })),
   };
-  const adText = (opening) => `${opening} ${filler(22)} עדינה כתבה על זה. ${filler(8)} עכשיו ב־₪150 במקום ₪300. אם זה מוכר לך, הייתי מתחילה מהמכתב של עדינה.`;
-  const ads = {
-    status: 'ready',
-    flags: [],
-    ads: [
-      { id: 'ad1', type: 'discovery', angle: 'Test discovery', testimonial_id: 't1', primary_text: adText('פתיחה ראשונה שונה לגמרי.'), headline: 'כותרת בדיקה', description: 'תיאור בדיקה ₪150', trace: [{ claim: 'x', source: 'testimonial:t1' }, { claim: 'y', source: 'input:sale_price' }], review_en: 'test' },
-      { id: 'ad2', type: 'routine', angle: 'Test routine', testimonial_id: 't2', primary_text: adText('יש לי כלל קבוע.'), headline: 'כותרת שנייה', description: 'תיאור שני', trace: [{ claim: 'x', source: 'testimonial:t2' }, { claim: 'z', source: 'config:trust.shipping' }], review_en: 'test' },
-    ],
-  };
   const creatives = {
     creatives: ['customer_discovery', 'raw_boutique_offer', 'everyday_use', 'designed_hook'].map((type, i) => ({
       id: 'ABCD'[i],
       type,
-      matches: i === 0 ? 'ad1' : i === 2 ? 'ad2' : 'both',
       concept: 'test',
       visual: `visual ${type}`,
       overlay_text_he: type === 'designed_hook' ? 'שאלה לבדיקה?' : null,
@@ -171,7 +161,7 @@ export function demoProduct() {
     })),
   };
   const ugc = { needed: false, reason: 'not requested in input' };
-  return { input, facts, angle, gempageEn: gempage('en'), gempageHe: gempage('he'), plan, prompts, ads, creatives, ugc };
+  return { input, facts, angle, gempageEn: gempage('en'), gempageHe: gempage('he'), plan, prompts, creatives, ugc };
 }
 
 export function writeDemo(productsDir, mutate = (d) => d, { omit = [] } = {}) {
@@ -187,10 +177,9 @@ export function writeDemo(productsDir, mutate = (d) => d, { omit = [] } = {}) {
     '04-gempage-image-plan.json': d.plan,
     '05-image-prompts.json': d.prompts,
     '03-gempage-copy.he.json': d.gempageHe,
-    '06-meta-ads.json': d.ads,
     '07-creative-plan.json': d.creatives,
     '08-ugc.json': d.ugc,
-    '03-gempage-spellcheck.json': { status: 'clean', checked: ['03-gempage-copy.he.json', '06-meta-ads.json'], corrections: [], doubts: [] },
+    '03-gempage-spellcheck.json': { status: 'clean', checked: ['03-gempage-copy.he.json', '07-creative-plan.json'], corrections: [], doubts: [] },
   };
   for (const [name, data] of Object.entries(files)) if (!omit.includes(name)) fs.writeFileSync(path.join(dir, name), JSON.stringify(data, null, 2));
   if (!omit.includes('09-qa-report.md')) fs.writeFileSync(path.join(dir, '09-qa-report.md'), '# QA — demo\n');
