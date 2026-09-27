@@ -72,7 +72,12 @@
       "source": "product_page"
     }
   ],
-  "image_observations": [],
+  "image_observations": [
+    {
+      "image": "reference photos (cdn.shopify.com, viewed 2026-09-27)",
+      "observed": "V-neck, front button placket, crinkled/textured woven fabric, three-quarter sleeves worn rolled up, loose relaxed fit with a hem just below the hips"
+    }
+  ],
   "testimonials": [
     {
       "id": "t1",

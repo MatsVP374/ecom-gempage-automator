@@ -65,7 +65,7 @@ claude
 
 - **Tekst** (fact sheet, angle, brief, creatives) schrijft Claude Code volgens de blueprints.
 - **Beelden**: `npm run images -- <slug>` stuurt elke beeldprompt, met de bestaande productfoto's als referentie,
-  naar **Gemini** (`gemini-2.5-flash-image`, instelbaar met `GEMINI_IMAGE_MODEL`) of **OpenAI**
+  naar **Gemini** (`gemini-3.1-flash-image`, instelbaar met `GEMINI_IMAGE_MODEL`) of **OpenAI**
   (`OPENAI_IMAGE_MODEL`). Kiezen met `IMAGE_PROVIDER=gemini|openai`; zonder keuze wordt Gemini gebruikt als
   `GEMINI_API_KEY` er is. `npm run images -- <slug> compare` maakt de hero met beide, om te vergelijken. Het resultaat gaat naar
   Shopify Files en de CDN-URL komt in het beeldplan. Bestaande productfoto's worden nooit opnieuw gegenereerd.

@@ -325,6 +325,8 @@ export function validateProduct(slug, { stage } = {}) {
         castingCheck(w, x.prompt, x.fields?.age);
       }
       if (!x.reference_images?.length) warn(`${w}: no reference_images`);
+      if (/full-length/i.test(`${x.fields?.framing ?? ''}`) && /^(3:2|16:9|4:3)$/.test(x.aspect_ratio ?? '')) warn(`${w}: full-length shot in landscape ${x.aspect_ratio} tends to become a two-panel collage — use 4:5`);
+      if (/\bmirror|reflection\b/i.test(`${x.fields?.action ?? ''} ${x.fields?.framing ?? ''}`)) warn(`${w}: mirrors/reflections tend to duplicate the person — avoid them`);
     });
   }
 

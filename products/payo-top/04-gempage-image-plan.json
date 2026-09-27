@@ -14,9 +14,10 @@
       "file": "images/IMG-01.jpg",
       "generated": {
         "provider": "gemini",
-        "model": "gemini-3-pro-image",
+        "model": "gemini-3.1-flash-image",
         "size": "4:5",
-        "at": "2026-09-27T19:47:28.260Z"
+        "at": "2026-09-27T19:47:00Z",
+        "chosen_by_user": true
       }
     },
     {
@@ -29,7 +30,14 @@
       "existing_image": null,
       "product_color": "ירוק",
       "model": "Israeli woman, about 50, olive skin; only shoulder and upper body visible",
-      "setting": "bright apartment near an open window with a light breeze"
+      "setting": "bright apartment near an open window with a light breeze",
+      "file": "images/IMG-02.jpg",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-3.1-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T19:49:06.571Z"
+      }
     },
     {
       "id": "IMG-03",
@@ -41,7 +49,14 @@
       "existing_image": null,
       "product_color": "אפור",
       "model": "Israeli woman, about 58, short dark hair with natural grey streaks, slim-average build",
-      "setting": "quiet tree-lined Tel Aviv boulevard"
+      "setting": "quiet tree-lined Tel Aviv boulevard",
+      "file": "images/IMG-03.jpg",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-3.1-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T19:49:16.625Z"
+      }
     },
     {
       "id": "IMG-04",
@@ -53,7 +68,14 @@
       "existing_image": null,
       "product_color": "סגול",
       "model": "Israeli woman, about 47, curly black hair tied back, olive skin",
-      "setting": "bedroom with a full-length mirror and a simple wooden wardrobe"
+      "setting": "ordinary bedroom with a simple wooden wardrobe",
+      "file": "images/IMG-04.jpg",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-3.1-flash-image",
+        "size": "4:5",
+        "at": "2026-09-27T19:50:32.383Z"
+      }
     },
     {
       "id": "IMG-05",
@@ -65,7 +87,14 @@
       "existing_image": null,
       "product_color": "כחול",
       "model": "same woman as IMG-01 (about 52, shoulder-length wavy dark-brown hair, olive skin)",
-      "setting": "family dinner on an ordinary Tel Aviv apartment balcony in the evening"
+      "setting": "family dinner on an ordinary Tel Aviv apartment balcony in the evening",
+      "file": "images/IMG-05.jpg",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-3.1-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T19:49:31.742Z"
+      }
     },
     {
       "id": "IMG-06",
@@ -77,7 +106,14 @@
       "existing_image": null,
       "product_color": "ירוק",
       "model": "Israeli woman, about 44, long dark wavy hair, olive skin",
-      "setting": "small boutique interior with a wooden rail"
+      "setting": "small boutique interior with a wooden rail",
+      "file": "images/IMG-06.jpg",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-3.1-flash-image",
+        "size": "3:2",
+        "at": "2026-09-27T19:49:38.436Z"
+      }
     },
     {
       "id": "IMG-07",
@@ -89,7 +125,14 @@
       "existing_image": null,
       "product_color": "אפור",
       "model": "only mature olive-toned hands of an Israeli woman about 55",
-      "setting": "wooden packing table in a small Tel Aviv boutique"
+      "setting": "wooden packing table in a small Tel Aviv boutique",
+      "file": "images/IMG-07.jpg",
+      "generated": {
+        "provider": "gemini",
+        "model": "gemini-3.1-flash-image",
+        "size": "1:1",
+        "at": "2026-09-27T19:49:44.435Z"
+      }
     }
   ],
   "existing_images_reviewed": [],

@@ -46,6 +46,11 @@ in plaats van "golden hour", "string lights" of "dreamy". De validator controlee
 Photo style: an ordinary candid photo taken on a smartphone by a friend, not a professional shoot and not stock photography. Slightly imperfect framing, natural unretouched skin with visible pores, fine lines and wrinkles that fit her age, a few flyaway hairs, real fabric creases. Ordinary background with everyday details, only mildly out of focus (no creamy bokeh, no glowing light balls). Plain, uneven natural light (no golden-hour glow, no studio light, no HDR). No beauty filter, no airbrushing, no posed model smile. It must look like a real photo from an Israeli woman's phone, not like AI.
 ```
 
+Compositie die AI vaak verpest:
+- **Geen spiegels of reflecties**: die leveren dubbele of vervormde mensen op. Wil je "outfit checken", laat haar dan
+  naast de kast staan en de top gladstrijken.
+- **Van top tot teen = staand (4:5)**. Een full-length persoon in 3:2 wordt vaak een collage van twee foto's.
+
 ## Image-generation prompt (stap 5)
 Elke foto met `source: "generate"` krijgt één losse, production-ready prompt. Minimaal deze velden:
 

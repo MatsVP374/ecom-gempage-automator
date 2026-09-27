@@ -132,7 +132,7 @@ test('gemini: sends prompt + reference photos + aspect ratio, saves the returned
     const s = await runImages(slug, { provider: 'gemini', only: ['IMG-01', 'IMG-02'], log: () => {} });
     assert.deepEqual(s.errors, []);
     assert.deepEqual(s.generated, ['IMG-01', 'IMG-02']);
-    const reqs = calls.filter((c) => c.url === '/v1beta/models/gemini-2.5-flash-image:generateContent');
+    const reqs = calls.filter((c) => c.url === '/v1beta/models/gemini-3.1-flash-image:generateContent');
     assert.equal(reqs.length, 2);
     assert.equal(calls.find((c) => c.url.startsWith('/v1beta')).auth, undefined, 'key goes in x-goog-api-key, not Authorization');
     const body = JSON.parse(reqs[0].text);

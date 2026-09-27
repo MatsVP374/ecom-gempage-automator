@@ -11,7 +11,7 @@
 // Usage: node scripts/images.js <slug> [generate|upload|all|compare] [--provider gemini|openai]
 //        [--only IMG-02,IMG-03] [--force] [--dry-run]
 // Env:   IMAGE_PROVIDER (gemini|openai; default: gemini when GEMINI_API_KEY is set, else openai)
-//        GEMINI_API_KEY, GEMINI_IMAGE_MODEL (default gemini-2.5-flash-image), GEMINI_BASE_URL
+//        GEMINI_API_KEY, GEMINI_IMAGE_MODEL (default gemini-3.1-flash-image), GEMINI_BASE_URL
 //        OPENAI_API_KEY, OPENAI_IMAGE_MODEL (default gpt-image-1), OPENAI_IMAGE_QUALITY (default high), OPENAI_BASE_URL
 //        SHOPIFY_STORE_DOMAIN, SHOPIFY_ADMIN_TOKEN
 import fs from 'node:fs';
@@ -88,7 +88,7 @@ async function openaiImage({ prompt, aspect, references = [] }) {
 async function geminiImage({ prompt, aspect, references = [] }) {
   const key = process.env.GEMINI_API_KEY;
   const base = (process.env.GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta').replace(/\/$/, '');
-  const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.5-flash-image';
+  const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-3.1-flash-image';
   const parts = [
     { text: `${prompt}\n\nThe attached photos are reference images of the exact product. Reproduce the garment exactly as shown in them.` },
     ...references.map((r) => ({ inline_data: { mime_type: r.type, data: r.buffer.toString('base64') } })),
