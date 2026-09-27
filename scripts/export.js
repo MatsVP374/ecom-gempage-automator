@@ -48,7 +48,6 @@ function blockCopy(b, routes = null) {
       (b.parts ?? []).forEach((p) => L.push(`_${p.role}_\n\n${p.text}`));
       break;
     case 'benefits':
-      if (routes) L.push(`_Na voordeel ${routes.afterBenefit}: tussen-CTA → productpagina: ${routes.mid}_`);
       f('Titel', b.title);
       (b.items ?? []).forEach((i) => L.push(`### ${i.n}. ${i.headline}\n\n${i.text}\n\n📷 ${i.image ?? '—'}`));
       break;

@@ -67,6 +67,13 @@
       "before": "בסוף שנות החמישים שלה",
       "after": "בתחילת שנות החמישים שלה",
       "reason": "alt text matches the new casting (about 52)"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "headline + founder_story",
+      "before": "(long opening, ~860 characters)",
+      "after": "(shortened opening, ~450 characters)",
+      "reason": "user request: lighter opening; proofread again after shortening"
     }
   ],
   "doubts": []

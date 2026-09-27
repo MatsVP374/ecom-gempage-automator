@@ -30,8 +30,9 @@ REVIEWS
 ☑ Review onder elk voordeel: 6/6 (t3, t13, t4, t6, t5, t8) + 3 winkelreviews in social proof (t9, t17, t16)
 
 PRODUCTROUTES & RTL
-☑ Tussen-CTA na voordeel 3 · ☑ Knop in de productbox · ☑ Sticky → alle drie naar de productpagina
-☑ RTL-QA op mobiel (390 px): ₪179/₪359, 4.7/5, S–3XL, Adina Fashion geïsoleerd; oude prijs doorgestreept; pijl op dezelfde regel
+☑ Knop in de productbox + sticky → productpagina (geen tussen-CTA)
+☑ RTL-QA op mobiel (390 px): ₪179/₪359, 4.7/5, S–3XL, Adina Fashion geïsoleerd; punt/komma na prijzen aan de juiste kant; ב־₪179 op één regel
+☑ Opening ingekort (~450 tekens), 1 winkelreview in social proof, geen extra groot prijsblok
 
 OFFER
 ☑ Verzending correct ☑ Retour 30 dagen ☑ Bundel 10/15/20/25 ☑ 4.7/5 · 2,550+ reviews

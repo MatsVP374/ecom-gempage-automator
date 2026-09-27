@@ -189,6 +189,15 @@ export function validateProduct(slug, { stage } = {}) {
     const used = items.filter((i) => i.review?.text).map((i) => i.review.testimonial_id + '|' + i.review.text);
     if (new Set(used).size !== used.length) warn(`${f}: the same review excerpt is used under more than one photo`);
     (by.social_proof?.quotes ?? []).forEach((q, k) => checkReview(f, `social_proof quote ${k + 1}`, q, lang));
+    // Keep the opening light (brand/gempage-blueprint.md → founder_story): the reader should reach the product soon.
+    if (lang === 'he') {
+      const story = (by.founder_story?.parts ?? []).map((x) => x.text ?? '');
+      const total = story.join(' ').length;
+      if (total > 550) warn(`${f}: founder_story is ${total} characters — keep it under ~550 (1–2 short sentences per part)`);
+      story.forEach((x, k) => x.length > 120 && warn(`${f}: founder_story part ${k + 1} is ${x.length} characters — max ~120`));
+      if ((by.headline?.headline ?? '').length > 70) warn(`${f}: headline is ${(by.headline.headline).length} characters — max ~70`);
+    }
+    if ((by.social_proof?.quotes ?? []).length > 1) err(`${f}: social_proof has ${(by.social_proof.quotes).length} quotes — max 1 (the reviews already sit under the photos)`);
     const rows = by.comparison?.rows ?? [];
     if (by.comparison && (rows.length < 3 || rows.length > 5)) warn(`${f}: comparison has ${rows.length} rows (blueprint: 3–5)`);
     // prices
@@ -221,7 +230,7 @@ export function validateProduct(slug, { stage } = {}) {
     }
     if (by.offer_box?.rating_line && !(by.offer_box.rating_line.includes(String(cfg.trust.rating)) && by.offer_box.rating_line.includes(cfg.trust.reviews_label)))
       err(`${f}: offer_box.rating_line must contain ${cfg.trust.rating} and ${cfg.trust.reviews_label}`);
-    // Product routes: mid-CTA after benefit 3, the product-box button, the sticky bar — all to the real product page.
+    // Product routes: the product-box button and the sticky bar, both to the real product page.
     if (input) {
       const r = productRoutes(g, input, cfg);
       if (!r.url) err(`${f}: no product URL (input.existing_product_page.url) — the page needs a route to the real product page`);
@@ -232,12 +241,14 @@ export function validateProduct(slug, { stage } = {}) {
       if (r.url) {
         const html = renderGpHtml(g, { plan: p.plan, input }).html;
         const links = html.split(`href="${r.url.replace(/&/g, '&amp;')}"`).length - 1;
-        if (links < 3) err(`${f}: only ${links} link(s) to the product page — need the mid-CTA, the product-box button and the sticky CTA`);
+        if (links < 2) err(`${f}: only ${links} link(s) to the product page — need the product-box button and the sticky CTA`);
         // RTL QA: every left-to-right run must sit in an isolated span in the rendered page.
         if (lang === 'he') {
           const bare = html.replace(/<span class="gp-(?:ltr|brand)">[^<]*<\/span>/g, ' ').replace(/<[^>]+>/g, ' ');
           const loose = [...new Set([...bare.matchAll(LTR_RUN)].map((m) => m[1]).concat(bare.includes('Adina Fashion') ? ['Adina Fashion'] : []))];
           if (loose.length) err(`${f}: RTL — not isolated in the rendered page: ${loose.join(' · ')}`);
+          const punct = [...html.matchAll(/<span class="gp-ltr">([^<]*[.,:;!?])<\/span>/g)].map((m) => m[1]);
+          if (punct.length) err(`${f}: RTL — punctuation inside an isolated run lands on the wrong side: ${punct.join(' · ')}`);
         }
       }
     }

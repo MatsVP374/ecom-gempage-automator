@@ -17,7 +17,7 @@ Schrijf de founder letter in het **Hebreeuws**, met dezelfde blokken, volgorde, 
 - Productnaam exact `input.hebrew_product_name` in `offer_box.product_name`.
 - Prijzen exact uit input. Bundel-`label`s exact `config.bundle_discount[].label_he`.
 - `trust_bar` zoals in het blueprint (₪sale / 15+ / 2,550+ / 30).
-- De productbox en de tussen-CTA na voordeel 3 bouwt de GemPage zelf (zie blueprint → Productroutes).
+- De productbox bouwt de GemPage zelf (zie blueprint → Productroutes).
 
 Daarna: stap 6b (`prompts/06b-spellcheck.md`), `node scripts/validate.js <slug>` en fix alle errors. Dan `node scripts/export.js <slug>`
 en bekijk `output/gempage.he.html` op RTL-problemen (zie `brand/hebrew-style.md` → RTL-QA).

@@ -40,6 +40,9 @@ product duidelijk zichtbaar, realistisch, spontaan, volwassen. Niet fashion-edit
 5. `search`: waar Adina naar ging zoeken
 6. `discovery`: de introductie van het product, als **conclusie** van haar zoektocht
 
+**Kort houden.** Elk deel 1–2 korte zinnen (max ~120 tekens), het hele verhaal max ~550 tekens. De kop max ~70
+tekens, zonder de 15+ jaar (die staan al in de byline en het intro). De lezer moet snel bij de voordelen en foto's zijn.
+
 ### 5. `benefits`: 5–6 genummerde blokken
 Elk blok: `n`, een **benefit-headline** (menselijk probleem, geen feature), korte uitleg in Adina's stem
 volgens **FEATURE → PRACTICAL EFFECT → REAL-LIFE BENEFIT**, `feature_ids` (bron), en een `image` die
@@ -66,6 +69,7 @@ Eén zin die de hele positionering samenvat, in de geest van:
 Niet letterlijk die constructie. Hij moet natuurlijk bij het product passen.
 
 ### 8. `sale`: waarom het product nu in de aanbieding is
+Geen apart groot prijsblok: de prijs staat in de tekst, in de trust bar en in de productbox. Dat is genoeg.
 Nu pas gaan we echt verkopen. Flow: natuurlijke sale reason (`input.sale_reason`) → huidige situatie →
 reguliere prijs → saleprijs → alleen **echte** urgentie/beschikbaarheid. Geen nep-schaarste.
 
@@ -84,7 +88,8 @@ Nog een korte persoonlijke observatie van Adina over het product of haar klanten
 
 ### 12. `social_proof`
 `★★★★★ 4.7/5` · `2,550+ ביקורות` + korte boutique/trust-copy. `quotes` alleen uit
-`input.testimonials` (letterlijk of trouw vertaald), anders leeg laten. Nooit reviews verzinnen.
+`input.testimonials` (letterlijk), **maximaal één**: de reviews staan al onder de foto's. Kies een winkelervaring
+(terugkomen, verpakking, service). Nooit reviews verzinnen.
 In GemPages kan hier het echte review-widget (Judge.me/Loox) staan.
 
 ### 13. `offer_box`: de productbox, hier bestelt ze
@@ -125,11 +130,10 @@ Altijd zichtbaar onderaan, linkt **rechtstreeks naar de productpagina** (niet na
 
 ## Productroutes: nooit laten zoeken waar ze kan kopen
 De brief verkoopt met het verhaal, maar zodra ze overtuigd is moet de weg naar maat/kleur meteen zichtbaar zijn.
-Elke GemPage heeft **minimaal drie routes** naar `input.existing_product_page.url` (de validator telt ze):
-1. **Tussen-CTA na voordeel 3** (`config.landing_page.mid_cta_after_benefit`): subtiele link
-   `לצפייה ב<korte naam> ובצבעים הזמינים ←`.
-2. **De knop in de productbox** (`cta.button`), groot en contrasterend.
-3. **De sticky CTA** onderaan (`sticky_cta`).
+Elke GemPage heeft **twee vaste routes** naar `input.existing_product_page.url` (de validator telt ze):
+1. **De knop in de productbox** (`cta.button`), groot en contrasterend.
+2. **De sticky CTA** onderaan (`sticky_cta`), altijd zichtbaar.
+Geen extra tussen-CTA's in het verhaal: die maken de brief onrustig.
 `<korte naam>` = het deel van `hebrew_product_name` vóór `|` (bv. `פאיו`). Zonder product-URL faalt de validatie.
 
 ---

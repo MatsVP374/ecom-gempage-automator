@@ -21,12 +21,14 @@ export const LETTER_CSS_TEMPLATE = () => fs.readFileSync(path.join(TEMPLATE_DIR,
 // ₪179 · 179₪ · 15+ · 2,550+ · 4.7/5 · 25% · S–3XL · Adina Fashion (brand/hebrew-style.md → RTL).
 const SIZE = '(?:XXXL|XXL|XL|XS|[2-6]XL|S|M|L)';
 export const LTR_RUN = new RegExp(
-  `(₪\\s?\\d[\\d,.]*|\\d[\\d,.]*\\s?₪|\\d[\\d.,/]*\\+|\\d+(?:\\.\\d+)?\\s?\\/\\s?\\d+|\\d+(?:\\.\\d+)?%|\\b${SIZE}\\s?[–-]\\s?${SIZE}\\b)`,
+  `(₪\\s?\\d+(?:[.,]\\d+)*|\\d+(?:[.,]\\d+)*\\s?₪|\\d+(?:[.,/]\\d+)*\\+|\\d+(?:\\.\\d+)?\\s?\\/\\s?\\d+|\\d+(?:\\.\\d+)?%|\\b${SIZE}\\s?[–-]\\s?${SIZE}\\b)`,
   'g',
 );
 const t = (s) =>
   esc(s)
     .replace(LTR_RUN, '<span class="gp-ltr">$1</span>')
+    // A one-letter prefix with maqaf (ב־₪179, מ־15+) stays on the same line as its number.
+    .replace(/([א-ת]־)(<span class="gp-ltr">[^<]*<\/span>)/g, '<span class="gp-nb">$1$2</span>')
     .replace(/Adina Fashion/g, '<span class="gp-brand">Adina Fashion</span>');
 const brand = t;
 const shekel = (n) => (n == null ? '' : `₪${n}`);
@@ -53,7 +55,7 @@ function reviewCard(r, ctx, lang) {
   return `<div class="gp-review-card gp-photo-review">${stars}<span class="gp-quote">”${t(r.text)}“</span><cite>— ${brand(who)}</cite></div>`;
 }
 
-// The three routes to the real product page (brand/gempage-blueprint.md → Productroutes).
+// The routes to the real product page (brand/gempage-blueprint.md → Productroutes): product-box button + sticky bar.
 // Texts are fixed in config/adina.json; {name} = short product name (before "|"), {price} = sale price.
 export function productRoutes(page, input, cfg = loadConfig()) {
   const L = cfg.landing_page;
@@ -68,10 +70,8 @@ export function productRoutes(page, input, cfg = loadConfig()) {
   const sizes = sz.length > 2 ? `${sz[0]}–${sz.at(-1)}` : sz.join(', ');
   return {
     url: /^https?:\/\//.test(input?.existing_product_page?.url ?? '') ? input.existing_product_page.url : null,
-    mid: fill(he ? (many ? L.mid_cta_he : L.mid_cta_no_color_he) : many ? 'See {name} and the available colours →' : 'See {name} →'),
     box: fill(he ? (many ? L.cta_he : L.cta_no_color_he) : many ? 'Choose size and colour of {name} →' : 'Choose the size of {name} →'),
     sticky: fill(he ? (many ? L.sticky_cta_he : L.sticky_cta_no_color_he) : many ? '{name} now ₪{price} — choose size and colour' : '{name} now ₪{price} — choose your size'),
-    afterBenefit: L.mid_cta_after_benefit ?? 3,
     facts: [
       colors.length ? list(colors) : null,
       sizes ? (he ? `מידות ${sizes}` : `Sizes ${sizes}`) : null,
@@ -119,8 +119,6 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     if (by.benefits.title) out.push(`<div class="gp-measure"><h2 class="gp-section-title">${t(by.benefits.title)}</h2></div>`);
     for (const i of by.benefits.items ?? []) {
       out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: i.headline })}${reviewCard(i.review, ctx, page.lang)}</div>`);
-      // Route 1: a quiet in-between link once the reader is warming up.
-      if (i.n === routes.afterBenefit) out.push(`<div class="gp-measure gp-mid-cta-wrap"><a class="gp-mid-cta" href="${esc(productUrl)}">${t(routes.mid)}</a></div>`);
     }
     out.push('</div>');
   }
@@ -146,7 +144,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     out.push('<div class="gp-measure">');
     if (s) {
       out.push(`<h2 class="gp-section-title">${t(s.title)}</h2>`, ...(s.paragraphs ?? []).map((p) => `<p>${t(p)}</p>`));
-      out.push(`<div class="gp-sale-prices"><del class="gp-old">${t(shekel(s.regular_price))}</del><span class="gp-new">${t(shekel(s.sale_price))}</span></div>`);
+      // No separate big price here: the sale text, the trust bar and the product box already show it.
       if (s.availability_note) out.push(`<p>${t(s.availability_note)}</p>`);
     }
     if (tb) out.push(`<div class="gp-stats-row">${(tb.items ?? []).map((i) => `<div><div class="gp-stat-num">${t(i.value)}</div><div class="gp-stat-label">${t(i.label)}</div></div>`).join('')}</div>`);
@@ -160,7 +158,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     if (fo) out.push(`<p>${t(fo.text)}</p>`, `<p class="gp-signature">— ${esc(cfg.founder.name_he)}</p>`);
     if (sp) {
       out.push(`<div class="gp-social"><div class="gp-stars">★★★★★</div><div class="gp-rating-line">${t(page.lang === 'he' ? `${sp.rating} / ${cfg.trust.rating_scale} מתוך ${sp.reviews_label} ביקורות` : `${sp.rating} / ${cfg.trust.rating_scale} from ${sp.reviews_label} reviews`)}</div><p>${t(sp.text)}</p></div>`);
-      for (const r of sp.quotes ?? []) out.push(reviewCard(r, ctx, page.lang));
+      for (const r of (sp.quotes ?? []).slice(0, 1)) out.push(reviewCard(r, ctx, page.lang));
     }
     out.push('</div>');
   }
@@ -177,7 +175,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
         `<div class="gp-rating"><span class="gp-stars">★★★★★</span> ${t(`${cfg.trust.rating}/${cfg.trust.rating_scale}`)}</div>`,
         `<div class="gp-prices"><del class="gp-old">${t(shekel(ob.regular_price))}</del><span class="gp-new">${t(shekel(ob.sale_price))}</span></div>`,
         `<ul class="gp-facts">${routes.facts.map((b) => `<li>${t(b)}</li>`).join('')}</ul>`,
-        // Route 2: the big button. This is where she orders.
+        // The big button. This is where she orders.
         `<a class="gp-cta-btn gp-buy" href="${esc(productUrl)}">${t(routes.box)}</a>`,
       );
     if (bu) out.push(`<div class="gp-stack"><div class="gp-bundle-title">${t(bu.title)}</div><ul class="gp-bundle">${(bu.tiers ?? []).map((x) => `<li>${t(x.label)}</li>`).join('')}</ul></div>`);
@@ -187,7 +185,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
   }
   if (ab) out.push(`<div class="gp-about-box"><strong>${t(ab.title)}</strong><p>${t(ab.text)}</p><p class="gp-signature">${t(ab.signoff)}</p></div>`);
   out.push('</div>', '</div></div>');
-  // Route 3: always visible, straight to the product page.
+  // Always visible, straight to the product page.
   if (by.sticky_cta) out.push(`<div class="gp-sticky-bar"><a href="${esc(productUrl)}">${t(by.sticky_cta.text)}</a></div>`);
   out.push('</div>');
   return { html: out.filter(Boolean).join('\n'), missingImages: [...new Set(ctx.missingImages)] };

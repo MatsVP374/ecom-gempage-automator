@@ -18,15 +18,13 @@ const html = (slug) => {
   return renderGpHtml(p.gempage.he, { plan: p.plan, input: p.input }).html;
 };
 
-test('three routes to the real product page: mid-CTA after benefit 3, product-box button, sticky bar', () => {
+test('two routes to the real product page: product-box button and sticky bar, no mid-CTA', () => {
   const slug = writeDemo(dir);
   const h = html(slug);
-  assert.equal(h.split('href="https://example.com/demo"').length - 1, 3);
-  assert.match(h, /gp-mid-cta" href="https:\/\/example.com\/demo">לצפייה בדמו ובצבעים הזמינים\u00a0←/);
+  assert.equal(h.split('href="https://example.com/demo"').length - 1, 2);
+  assert.ok(!h.includes('gp-mid-cta'));
   assert.match(h, /gp-buy" href="https:\/\/example.com\/demo">לבחירת מידה וצבע של דמו\u00a0←/);
   assert.match(h, /gp-sticky-bar"><a href="https:\/\/example.com\/demo">/);
-  // the mid-CTA comes right after benefit 3
-  assert.ok(h.indexOf('gp-mid-cta') > h.indexOf('gp-fnum">3') && h.indexOf('gp-mid-cta') < h.indexOf('gp-fnum">4'));
 });
 
 test('product box shows fixed facts: colours, size range, free shipping, 30-day returns', () => {
@@ -51,4 +49,6 @@ test('RTL: ₪ prices, ratings, +counts, percentages, size ranges and the brand 
   for (const s of ['₪150', '₪300', 'S–5XL', '25%', '4.7/5', '2,550+']) assert.ok(h.includes(`<span class="gp-ltr">${s}</span>`), s);
   assert.ok(h.includes('<span class="gp-brand">Adina Fashion</span>'));
   assert.deepEqual(validateProduct(slug).errors.filter((x) => /RTL/.test(x)), []);
+  // punctuation after a price stays outside the isolated run, and ב־ stays glued to its number
+  assert.ok(h.includes('<span class="gp-nb">ב־<span class="gp-ltr">₪150</span></span> במקום <span class="gp-ltr">₪300</span>,'));
 });

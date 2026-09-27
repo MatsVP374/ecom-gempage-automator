@@ -266,7 +266,7 @@ Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle 
 - Aanbod komt **alleen** uit input (prijzen, promotie, sale reason) + `config/adina.json`
   (bundel 10/15/20/25%, gratis verzending met Israel Post, 30 dagen retour, 4.7/5, 2,550+ reviews, 15+ jaar).
 - De GemPage begint **nooit** met het product of de korting; het product is de conclusie van Adina's verhaal.
-- Maar zodra ze overtuigd is, hoeft ze **niet te zoeken**: minimaal 3 routes naar de productpagina (blueprint → Productroutes).
+- Maar zodra ze overtuigd is, hoeft ze **niet te zoeken**: de knop in de productbox en de sticky CTA gaan direct naar de productpagina (blueprint → Productroutes).
 - **RTL-QA** bij elke pagina: expliciete RTL per tekstelement, geïsoleerde ₪/4.7/5/S–3XL/Adina Fashion (validator + mobiele preview).
 - Productnamen exact zoals aangeleverd.
 - Geen medische claims.

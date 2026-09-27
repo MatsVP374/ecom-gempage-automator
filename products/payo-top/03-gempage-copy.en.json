@@ -13,8 +13,8 @@
     {
       "id": "headline",
       "type": "headline",
-      "headline": "For more than 15 years I've heard the same question in my boutique at the end of every summer: how do you stay fresh in the heat without looking sloppy?",
-      "subtitle": "Why I kept looking for a top that is light enough for the heat and still looks put-together, and what I finally found."
+      "headline": "How do you stay fresh in the heat without looking sloppy?",
+      "subtitle": "Why I looked for a top that is both light and neat, and what I found."
     },
     {
       "id": "hero",
@@ -29,27 +29,27 @@
       "parts": [
         {
           "role": "intro",
-          "text": "For more than 15 years I've been running a small family boutique in Tel Aviv, together with my husband Daniel and our daughter Yael."
+          "text": "For more than 15 years I have run a family boutique in Tel Aviv, with my husband Daniel and our daughter Yael."
         },
         {
           "role": "observation",
-          "text": "Every year, when summer refuses to end, I hear the same sentence at the counter: \"It's hot, I want to be comfortable, but I don't want to look like I left the house in my house clothes.\""
+          "text": "And every end of summer I hear at the counter: \"I'm hot, but I don't want to look like I left the house in loungewear.\""
         },
         {
           "role": "problem",
-          "text": "In the Israeli heat, getting dressed becomes a compromise. What keeps you cool usually looks shapeless, and what looks nice feels heavy and clings exactly where you don't want it to."
+          "text": "In the Israeli heat, what keeps you cool looks shapeless, and what looks nice feels heavy and clings."
         },
         {
           "role": "alternatives",
-          "text": "So most of us end up with one of two options: a loose basic T-shirt that is comfortable but leaves you feeling unfinished, or a dressier blouse that looks good in the mirror and becomes uncomfortable by noon."
+          "text": "A wide T-shirt is comfortable but looks unfinished. A tailored blouse looks good, until it starts to bother you by noon."
         },
         {
           "role": "search",
-          "text": "I was looking for something in between: light and breathable, with a cut that glides gently over the body instead of clinging to it, and that goes with the jeans, skirts and shorts you already have."
+          "text": "I looked for something in between: light, breathable, with a cut that doesn't cling."
         },
         {
           "role": "discovery",
-          "text": "That's how I found Payo. A light, pleasant top you put on in the morning and still feel good in at dinner. Let me tell you what convinced me."
+          "text": "That is how I found Payo. Let me tell you what convinced me."
         }
       ]
     },
@@ -239,14 +239,6 @@
         {
           "testimonial_id": "t9",
           "text": "I bought one first, and after wearing it a few times I came back to order another colour. For me that's the best sign a purchase really worked."
-        },
-        {
-          "testimonial_id": "t17",
-          "text": "The package arrived neat and beautifully wrapped. I know it's a small thing, but it feels much more personal when you open the order."
-        },
-        {
-          "testimonial_id": "t16",
-          "text": "This isn't my first order from Adina Fashion. I love that the pieces feel like someone really thought about what women want to wear every day, not just how it looks in a photo."
         }
       ]
     },

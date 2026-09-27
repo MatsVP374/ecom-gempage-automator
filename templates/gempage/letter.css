@@ -30,6 +30,7 @@
 .{{rootClassName}} ul,.{{rootClassName}} ol{padding-right:22px;padding-left:0;}
 /* Left-to-right runs (₪179, 4.7/5, 2,550+, S–3XL, 25%, Adina Fashion) are isolated so they never jump. */
 .{{rootClassName}} .gp-ltr,.{{rootClassName}} .gp-brand{direction:ltr;unicode-bidi:isolate;}
+.{{rootClassName}} .gp-nb{white-space:nowrap;}
 .{{rootClassName}} .gp-hero-photo img,.{{rootClassName}} .gp-feature img,.{{rootClassName}} .gp-fold-photo img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;}
 .{{rootClassName}} .gp-img-missing{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;}
 .{{rootClassName}} a{color:inherit;}
@@ -207,10 +208,7 @@
 .{{rootClassName}} .gp-measure > p + p{margin-top:14px;}
 .{{rootClassName}} .gp-ltr{direction:ltr;unicode-bidi:isolate;display:inline-block;}
 
-/* ---- Productroutes: route 1 (after benefit 3), route 2 (product box button), route 3 (sticky). */
-.{{rootClassName}} .gp-mid-cta-wrap{text-align:center;margin:6px auto 30px;}
-.{{rootClassName}} a.gp-mid-cta{display:inline-block;color:#38452f;font-weight:700;font-size:1rem;text-decoration:none;
-  border-bottom:2px solid #38452f;padding:2px 2px 3px;}
+/* ---- Productroutes: product-box button + sticky bar. */
 .{{rootClassName}} .gp-product-box{border:2px solid #38452f;}
 .{{rootClassName}} .gp-product-box h3{text-align:center;text-transform:none;}
 .{{rootClassName}} .gp-product-box .gp-rating{text-align:center;}
