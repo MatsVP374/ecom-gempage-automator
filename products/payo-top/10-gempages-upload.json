@@ -1,0 +1,10 @@
+{
+  "shop": { "shopId": "628059619029156765", "domain": "vs0ms8-kn.myshopify.com", "themeId": "628059621109531579" },
+  "page": { "id": "639230173698327505", "name": "Payo – מכתב מעדינה", "handle": "payo-founder-letter", "type": "GP_STATIC", "status": "DRAFT" },
+  "section": { "id": "639230571687444998", "cid": "g5W7QoMQDD", "element": "CSSCode" },
+  "editorUrl": "https://admin.shopify.com/store/vs0ms8-kn/apps/gempages-cro/app/builder/v7?pageId=639230173698327505&version=v7&shopId=628059619029156765&themeId=628059621109531579&type=gempagesv7&pageType=GP_STATIC&shop=vs0ms8-kn.myshopify.com",
+  "previewUrl": "https://vs0ms8-kn.myshopify.com/a/gempages?version=v7&shop_id=628059619029156765&theme_page_id=639230173698327505&page_type=GP_STATIC",
+  "uploaded_at": "2026-09-27T20:25:20Z",
+  "checked_before_upload": "validate 0 errors · spellcheck 0 · 7/7 images 200 · product page 200 · 2 product links · no mid-CTA · no big sale price · RTL isolation",
+  "checked_after_upload": "preview 200 on adina-fashion.com: headline, 7 images, 7 review cards, product-box button, sticky → product page, ₪179 isolated, S–3XL"
+}

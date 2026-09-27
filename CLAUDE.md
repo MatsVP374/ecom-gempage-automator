@@ -55,6 +55,7 @@ Commando: `/launch-product <slug>` (volledig) Â· `/launch-step <slug> <stap>` (Ã
 | 7 | Quality control (feiten, GemPage, beelden) | `prompts/07-quality-control.md` | `09-qa-report.md` (deel 1) |
 | 9 | Creative plan + UGC | `prompts/09-creative-plan.md` | `07-creative-plan.json`, `08-ugc.json` |
 | 10 | Final launch package | `prompts/10-final-package.md` | `09-qa-report.md` (compleet) + `output/` incl. **`<slug>-founder-letter.gempages`** |
+| 11 | Upload naar GemPages (als de GemPages-koppeling er is) | `prompts/11-gempages-upload.md` | `10-gempages-upload.json` (pagina-id, editor- en previewlink) |
 
 Regels:
 - **Stap 0 is een poort.** Draai eerst `node scripts/validate.js <slug> --stage input`. Ontbreken
