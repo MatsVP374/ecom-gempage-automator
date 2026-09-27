@@ -114,6 +114,10 @@ export async function runImages(slug, { mode = 'all', only = null, force = false
   for (const i of p.plan.images ?? [])
     if (i.source === 'existing' && /^https?:\/\//.test(i.existing_image ?? '') && !i.url) i.url = i.existing_image;
 
+  const toGenerate = (p.plan.images ?? []).filter((x) => x.source === 'generate' && pick(x) && (force || !(x.file && fs.existsSync(path.join(p.dir, x.file)))));
+  if ((mode === 'all' || mode === 'generate') && toGenerate.length && !dryRun && !process.env.OPENAI_API_KEY)
+    throw new Error('OPENAI_API_KEY is not set — add it to the environment (see .env.example)');
+
   if (mode === 'all' || mode === 'generate') {
     const refsCache = new Map();
     for (const i of (p.plan.images ?? []).filter((x) => x.source === 'generate' && pick(x))) {

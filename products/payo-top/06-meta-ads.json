@@ -1,0 +1,7 @@
+{
+  "status": "blocked",
+  "flags": [
+    "TESTIMONIAL DATA INSUFFICIENT — no customer reviews/testimonials were supplied for Payo in input.json; both ads (discovery + routine) need a real customer's own words. Add at least 1–2 real reviews (text + source; name/age only if known) and run /meta-ads payo-top."
+  ],
+  "ads": []
+}

@@ -1,0 +1,94 @@
+{
+  "product_name": "פאיו",
+  "hebrew_product_name": "פאיו | טופ יום נעים",
+  "product_type": "טופ",
+  "price": {
+    "regular": 359,
+    "sale": 179,
+    "currency": "ILS"
+  },
+  "promotion": "50% הנחה — ₪359 → ₪179 (Shopify compare-at price)",
+  "sale_reason": "מבצע סוף העונה",
+  "colors": [
+    {
+      "name": "כחול",
+      "he": "כחול"
+    },
+    {
+      "name": "ירוק",
+      "he": "ירוק"
+    },
+    {
+      "name": "אפור",
+      "he": "אפור"
+    },
+    {
+      "name": "סגול",
+      "he": "סגול"
+    }
+  ],
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ],
+  "features": [
+    {
+      "id": "f1",
+      "fact": "Light and pleasant; designed to keep you cool and fresh on hot days and cool evenings",
+      "source": "input"
+    },
+    {
+      "id": "f2",
+      "fact": "Breathable",
+      "source": "input"
+    },
+    {
+      "id": "f3",
+      "fact": "Cut that glides gently over the body, creating a flattering silhouette",
+      "source": "input"
+    },
+    {
+      "id": "f4",
+      "fact": "Easy to pair with jeans, skirts or shorts; goes from day to evening, with or without accessories",
+      "source": "input"
+    },
+    {
+      "id": "f5",
+      "fact": "Available in 4 colors: כחול, ירוק, אפור, סגול",
+      "source": "input"
+    }
+  ],
+  "page_facts": [
+    {
+      "fact": "Positioned on the product page for the spring and summer season, 'from sunny mornings to cool evenings'",
+      "source": "product_page"
+    },
+    {
+      "fact": "24 variants (4 colors × sizes S–3XL), all ₪179 with compare-at ₪359",
+      "source": "product_page"
+    }
+  ],
+  "image_observations": [],
+  "testimonials": [],
+  "unverified": [
+    "Material / fabric composition — not stated anywhere in Shopify or on the product page",
+    "Neckline, sleeve length, garment length, closure — not stated; the 7 product photos could not be viewed (cdn.shopify.com blocked by this environment's network policy)",
+    "'איכות פרימיום' and 'עמידות' (premium quality, durability) — marketing claims on the product page, not used",
+    "All Shopify variants show inventory 0 or -1 — stock level unknown; no availability claims are made"
+  ],
+  "missing": [
+    {
+      "field": "product construction details (material, neckline, sleeves, length)",
+      "needed_for": "concrete benefits and precise image prompts; prompts now rely on the reference photos"
+    },
+    {
+      "field": "testimonials",
+      "needed_for": "the 2 Meta ads (blocked without real customer reviews)"
+    }
+  ],
+  "status": "complete"
+}

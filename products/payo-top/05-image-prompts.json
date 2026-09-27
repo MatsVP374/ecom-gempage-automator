@@ -1,0 +1,186 @@
+{
+  "prompts": [
+    {
+      "image_id": "IMG-01",
+      "aspect_ratio": "4:5",
+      "reference_images": [
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/1uhphQOSS3CIlAI5RWDU0w.webp?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-12-320342_83e58bf7-f030-4df4-b995-ecefb34c97b3.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-13_5314efe3-d596-40db-a9f2-3b48ef1b6d3d.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-6-688390_bda855d1-5be3-41ed-a4f3-7dd81703fe6e.jpg?v=1786329871"
+      ],
+      "fields": {
+        "subject": "Israeli woman, about 58, natural shoulder-length dark-blonde hair, warm smile",
+        "age": "about 52–60",
+        "product": "the Payo top ('פאיו | טופ יום נעים') exactly as shown in the reference photos",
+        "exact_color": "כחול",
+        "styling": "light-wash straight jeans, simple gold earrings",
+        "action": "sitting at a small outdoor café table, laughing slightly while holding an iced coffee",
+        "environment": "Tel Aviv café terrace, late afternoon",
+        "framing": "medium shot from the waist up, eye level, the whole top clearly visible",
+        "light": "warm late-afternoon Mediterranean daylight",
+        "mood": "relaxed, confident, cool on a hot day",
+        "must_be_visible": "the top's overall shape and how it falls over the body — because this photo accompanies: Hero: a real woman looks fresh and put-together in the heat — the central promise of the letter",
+        "realism": "realistic candid lifestyle photograph, natural skin texture, normal body proportions, not glossy fashion advertising, no text in image",
+        "must_not_change": "Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+      },
+      "prompt": "Create a realistic candid lifestyle photograph. An Israeli woman, about 58, natural shoulder-length dark-blonde hair, warm smile wearing the top shown in the reference images, in the blue colorway. She is sitting at a small outdoor café table, laughing slightly while holding an iced coffee. Setting: Tel Aviv café terrace, late afternoon. Styling: light-wash straight jeans, simple gold earrings. Framing: medium shot from the waist up, eye level, the whole top clearly visible. Light: warm late-afternoon Mediterranean daylight. Mood: relaxed, confident, cool on a hot day. The following must be clearly visible because this photograph accompanies the section about \"Hero: a real woman looks fresh and put-together in the heat — the central promise of the letter\": the top's overall shape and how it falls over the body. Natural daylight feel, realistic skin texture, normal body proportions, small Tel Aviv boutique/lifestyle photography, not glossy fashion advertising. No text in image. The product design must remain consistent with the supplied reference images. Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+    },
+    {
+      "image_id": "IMG-02",
+      "aspect_ratio": "3:2",
+      "reference_images": [
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/1uhphQOSS3CIlAI5RWDU0w.webp?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-12-320342_83e58bf7-f030-4df4-b995-ecefb34c97b3.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-13_5314efe3-d596-40db-a9f2-3b48ef1b6d3d.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-6-688390_bda855d1-5be3-41ed-a4f3-7dd81703fe6e.jpg?v=1786329871"
+      ],
+      "fields": {
+        "subject": "same age group, only shoulder and upper body visible",
+        "age": "about 52–60",
+        "product": "the Payo top ('פאיו | טופ יום נעים') exactly as shown in the reference photos",
+        "exact_color": "ירוק",
+        "styling": "no jewelry except a thin gold chain",
+        "action": "standing by an open window, the fabric of the top moving slightly in the breeze",
+        "environment": "bright apartment near an open window with a light breeze",
+        "framing": "close-up of shoulder and chest area, fabric texture in sharp focus",
+        "light": "soft natural window light",
+        "mood": "airy, fresh, calm",
+        "must_be_visible": "the fabric texture and how light it is — because this photo accompanies: Benefit 2 (breathable, comfortable all day): shows the light fabric up close",
+        "realism": "realistic candid lifestyle photograph, natural skin texture, normal body proportions, not glossy fashion advertising, no text in image",
+        "must_not_change": "Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+      },
+      "prompt": "Create a realistic candid lifestyle photograph. An same age group, only shoulder and upper body visible wearing the top shown in the reference images, in the green colorway. She is standing by an open window, the fabric of the top moving slightly in the breeze. Setting: bright apartment near an open window with a light breeze. Styling: no jewelry except a thin gold chain. Framing: close-up of shoulder and chest area, fabric texture in sharp focus. Light: soft natural window light. Mood: airy, fresh, calm. The following must be clearly visible because this photograph accompanies the section about \"Benefit 2 (breathable, comfortable all day): shows the light fabric up close\": the fabric texture and how light it is. Natural daylight feel, realistic skin texture, normal body proportions, small Tel Aviv boutique/lifestyle photography, not glossy fashion advertising. No text in image. The product design must remain consistent with the supplied reference images. Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+    },
+    {
+      "image_id": "IMG-03",
+      "aspect_ratio": "3:2",
+      "reference_images": [
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/1uhphQOSS3CIlAI5RWDU0w.webp?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-12-320342_83e58bf7-f030-4df4-b995-ecefb34c97b3.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-13_5314efe3-d596-40db-a9f2-3b48ef1b6d3d.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-6-688390_bda855d1-5be3-41ed-a4f3-7dd81703fe6e.jpg?v=1786329871"
+      ],
+      "fields": {
+        "subject": "Israeli woman, about 60, short silver hair, slim-average build",
+        "age": "about 60",
+        "product": "the Payo top ('פאיו | טופ יום נעים') exactly as shown in the reference photos",
+        "exact_color": "אפור",
+        "styling": "white linen trousers, flat sandals",
+        "action": "walking toward the camera at an easy pace, mid-step",
+        "environment": "quiet tree-lined Tel Aviv boulevard",
+        "framing": "three-quarter body shot, slightly from the side so the cut is visible",
+        "light": "dappled daylight through trees",
+        "mood": "easy, elegant, unbothered",
+        "must_be_visible": "how the cut falls gently over the body without clinging — because this photo accompanies: Benefit 3 (cut glides over the body): the silhouette in motion, flattering without clinging",
+        "realism": "realistic candid lifestyle photograph, natural skin texture, normal body proportions, not glossy fashion advertising, no text in image",
+        "must_not_change": "Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+      },
+      "prompt": "Create a realistic candid lifestyle photograph. An Israeli woman, about 60, short silver hair, slim-average build wearing the top shown in the reference images, in the gray colorway. She is walking toward the camera at an easy pace, mid-step. Setting: quiet tree-lined Tel Aviv boulevard. Styling: white linen trousers, flat sandals. Framing: three-quarter body shot, slightly from the side so the cut is visible. Light: dappled daylight through trees. Mood: easy, elegant, unbothered. The following must be clearly visible because this photograph accompanies the section about \"Benefit 3 (cut glides over the body): the silhouette in motion, flattering without clinging\": how the cut falls gently over the body without clinging. Natural daylight feel, realistic skin texture, normal body proportions, small Tel Aviv boutique/lifestyle photography, not glossy fashion advertising. No text in image. The product design must remain consistent with the supplied reference images. Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+    },
+    {
+      "image_id": "IMG-04",
+      "aspect_ratio": "3:2",
+      "reference_images": [
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/1uhphQOSS3CIlAI5RWDU0w.webp?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-12-320342_83e58bf7-f030-4df4-b995-ecefb34c97b3.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-13_5314efe3-d596-40db-a9f2-3b48ef1b6d3d.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-6-688390_bda855d1-5be3-41ed-a4f3-7dd81703fe6e.jpg?v=1786329871"
+      ],
+      "fields": {
+        "subject": "Israeli woman, about 55, curly dark hair tied back",
+        "age": "about 52–60",
+        "product": "the Payo top ('פאיו | טופ יום נעים') exactly as shown in the reference photos",
+        "exact_color": "סגול",
+        "styling": "navy flowing midi skirt, flat sandals",
+        "action": "checking her outfit in a full-length mirror, top worn with a flowing midi skirt",
+        "environment": "bedroom with a full-length mirror and a simple wooden wardrobe",
+        "framing": "full-length shot including the mirror reflection",
+        "light": "soft morning daylight",
+        "mood": "quick, satisfied, ready to go",
+        "must_be_visible": "the top styled with a skirt, looking complete — because this photo accompanies: Benefit 4 (goes with jeans, skirts or shorts): easy everyday styling",
+        "realism": "realistic candid lifestyle photograph, natural skin texture, normal body proportions, not glossy fashion advertising, no text in image",
+        "must_not_change": "Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+      },
+      "prompt": "Create a realistic candid lifestyle photograph. An Israeli woman, about 55, curly dark hair tied back wearing the top shown in the reference images, in the purple colorway. She is checking her outfit in a full-length mirror, top worn with a flowing midi skirt. Setting: bedroom with a full-length mirror and a simple wooden wardrobe. Styling: navy flowing midi skirt, flat sandals. Framing: full-length shot including the mirror reflection. Light: soft morning daylight. Mood: quick, satisfied, ready to go. The following must be clearly visible because this photograph accompanies the section about \"Benefit 4 (goes with jeans, skirts or shorts): easy everyday styling\": the top styled with a skirt, looking complete. Natural daylight feel, realistic skin texture, normal body proportions, small Tel Aviv boutique/lifestyle photography, not glossy fashion advertising. No text in image. The product design must remain consistent with the supplied reference images. Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+    },
+    {
+      "image_id": "IMG-05",
+      "aspect_ratio": "3:2",
+      "reference_images": [
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/1uhphQOSS3CIlAI5RWDU0w.webp?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-12-320342_83e58bf7-f030-4df4-b995-ecefb34c97b3.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-13_5314efe3-d596-40db-a9f2-3b48ef1b6d3d.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-6-688390_bda855d1-5be3-41ed-a4f3-7dd81703fe6e.jpg?v=1786329871"
+      ],
+      "fields": {
+        "subject": "same woman as IMG-01 (about 58, shoulder-length dark-blonde hair)",
+        "age": "about 52–60",
+        "product": "the Payo top ('פאיו | טופ יום נעים') exactly as shown in the reference photos",
+        "exact_color": "כחול",
+        "styling": "a delicate gold necklace, light jeans",
+        "action": "sitting at a set dinner table, raising a glass with family members softly blurred in the background",
+        "environment": "family dinner on a Tel Aviv balcony at dusk, string lights",
+        "framing": "medium shot, the top clearly visible",
+        "light": "warm dusk light with string lights",
+        "mood": "warm, festive, relaxed",
+        "must_be_visible": "the top looking right for an evening occasion, with a delicate necklace — because this photo accompanies: Benefit 5 (day to evening): the same top at an evening dinner",
+        "realism": "realistic candid lifestyle photograph, natural skin texture, normal body proportions, not glossy fashion advertising, no text in image",
+        "must_not_change": "Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+      },
+      "prompt": "Create a realistic candid lifestyle photograph. An same woman as IMG-01 (about 58, shoulder-length dark-blonde hair) wearing the top shown in the reference images, in the blue colorway. She is sitting at a set dinner table, raising a glass with family members softly blurred in the background. Setting: family dinner on a Tel Aviv balcony at dusk, string lights. Styling: a delicate gold necklace, light jeans. Framing: medium shot, the top clearly visible. Light: warm dusk light with string lights. Mood: warm, festive, relaxed. The following must be clearly visible because this photograph accompanies the section about \"Benefit 5 (day to evening): the same top at an evening dinner\": the top looking right for an evening occasion, with a delicate necklace. Natural daylight feel, realistic skin texture, normal body proportions, small Tel Aviv boutique/lifestyle photography, not glossy fashion advertising. No text in image. The product design must remain consistent with the supplied reference images. Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+    },
+    {
+      "image_id": "IMG-06",
+      "aspect_ratio": "3:2",
+      "reference_images": [
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/1uhphQOSS3CIlAI5RWDU0w.webp?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-12-320342_83e58bf7-f030-4df4-b995-ecefb34c97b3.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-13_5314efe3-d596-40db-a9f2-3b48ef1b6d3d.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-6-688390_bda855d1-5be3-41ed-a4f3-7dd81703fe6e.jpg?v=1786329871"
+      ],
+      "fields": {
+        "subject": "Israeli woman, about 52, long dark hair, olive skin",
+        "age": "about 52–60",
+        "product": "the Payo top ('פאיו | טופ יום נעים') exactly as shown in the reference photos",
+        "exact_color": "ירוק",
+        "styling": "dark jeans",
+        "action": "holding the top in another color against herself while wearing the green one, other colors on the rail beside her",
+        "environment": "small boutique interior with a wooden rail",
+        "framing": "medium shot, rail with the four colors visible",
+        "light": "soft shop daylight",
+        "mood": "choosing, pleased",
+        "must_be_visible": "the four real colors: blue, green, gray, purple — because this photo accompanies: Benefit 6 (four colors): another woman in another real color, with the other colors nearby",
+        "realism": "realistic candid lifestyle photograph, natural skin texture, normal body proportions, not glossy fashion advertising, no text in image",
+        "must_not_change": "Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+      },
+      "prompt": "Create a realistic candid lifestyle photograph. An Israeli woman, about 52, long dark hair, olive skin wearing the top shown in the reference images, in the green colorway. She is holding the top in another color against herself while wearing the green one, other colors on the rail beside her. Setting: small boutique interior with a wooden rail. Styling: dark jeans. Framing: medium shot, rail with the four colors visible. Light: soft shop daylight. Mood: choosing, pleased. The following must be clearly visible because this photograph accompanies the section about \"Benefit 6 (four colors): another woman in another real color, with the other colors nearby\": the four real colors: blue, green, gray, purple. Natural daylight feel, realistic skin texture, normal body proportions, small Tel Aviv boutique/lifestyle photography, not glossy fashion advertising. No text in image. The product design must remain consistent with the supplied reference images. Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+    },
+    {
+      "image_id": "IMG-07",
+      "aspect_ratio": "1:1",
+      "reference_images": [
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/1uhphQOSS3CIlAI5RWDU0w.webp?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-12-320342_83e58bf7-f030-4df4-b995-ecefb34c97b3.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-13_5314efe3-d596-40db-a9f2-3b48ef1b6d3d.jpg?v=1786329869",
+        "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-6-688390_bda855d1-5be3-41ed-a4f3-7dd81703fe6e.jpg?v=1786329871"
+      ],
+      "fields": {
+        "subject": "only mature hands visible (woman about 60)",
+        "age": "about 60",
+        "product": "the Payo top ('פאיו | טופ יום נעים') exactly as shown in the reference photos",
+        "exact_color": "אפור",
+        "styling": "no product styling; kraft box, tissue paper, twine",
+        "action": "folding the top into a kraft box lined with tissue paper",
+        "environment": "wooden packing table in a small Tel Aviv boutique",
+        "framing": "top-down / slight angle shot of the table",
+        "light": "soft daylight",
+        "mood": "careful, personal, warm",
+        "must_be_visible": "the folded top in the box, other colors (blue, purple) folded in the background — because this photo accompanies: Packing: reminds the reader the order comes from Adina's family boutique",
+        "realism": "realistic candid lifestyle photograph, natural skin texture, normal body proportions, not glossy fashion advertising, no text in image",
+        "must_not_change": "Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+      },
+      "prompt": "Create a realistic candid lifestyle photograph. Mature hands of a woman about 60 with the top shown in the reference images, in the gray colorway. She is folding the top into a kraft box lined with tissue paper. Setting: wooden packing table in a small Tel Aviv boutique. Styling: no product styling; kraft box, tissue paper, twine. Framing: top-down / slight angle shot of the table. Light: soft daylight. Mood: careful, personal, warm. The following must be clearly visible because this photograph accompanies the section about \"Packing: reminds the reader the order comes from Adina's family boutique\": the folded top in the box, other colors (blue, purple) folded in the background. Natural daylight feel, realistic skin texture, normal body proportions, small Tel Aviv boutique/lifestyle photography, not glossy fashion advertising. No text in image. The product design must remain consistent with the supplied reference images. Keep the garment exactly as in the supplied reference photos: same neckline, sleeve length and shape, hem length, fit, fabric texture and construction. Do not add or remove buttons, pockets, prints, seams, logos or decorative details."
+    }
+  ]
+}

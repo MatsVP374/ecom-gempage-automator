@@ -107,7 +107,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     out.push('<div class="gp-measure">');
     if (fo) out.push(`<p>${t(fo.text)}</p>`, `<p class="gp-signature">— ${esc(cfg.founder.name_he)}</p>`);
     if (sp) {
-      out.push(`<div class="gp-social"><div class="gp-stars">★★★★★</div><div class="gp-rating-line">${t(`${sp.rating} / ${cfg.trust.rating_scale} · ${sp.reviews_label}`)}</div><p>${t(sp.text)}</p></div>`);
+      out.push(`<div class="gp-social"><div class="gp-stars">★★★★★</div><div class="gp-rating-line">${t(page.lang === 'he' ? `${sp.rating} / ${cfg.trust.rating_scale} מתוך ${sp.reviews_label} ביקורות` : `${sp.rating} / ${cfg.trust.rating_scale} from ${sp.reviews_label} reviews`)}</div><p>${t(sp.text)}</p></div>`);
       for (const r of sp.quotes ?? []) out.push(`<div class="gp-review-card"><div class="gp-stars">★★★★★</div><span class="gp-quote">${t(r.text)}</span></div>`);
     }
     out.push('</div>');

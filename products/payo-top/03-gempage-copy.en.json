@@ -1,0 +1,277 @@
+{
+  "lang": "en",
+  "dir": "ltr",
+  "blocks": [
+    {
+      "id": "founder_header",
+      "type": "founder_header",
+      "byline": "Letter from Adina · Founder of Adina Fashion",
+      "place_date": "Tel Aviv · September 2026",
+      "note": "A note from Adina — the dilemma of every hot morning: comfortable, or put-together?",
+      "badge": "Letter from the founder"
+    },
+    {
+      "id": "headline",
+      "type": "headline",
+      "headline": "For more than 15 years I've heard the same question in my boutique at the end of every summer: how do you stay fresh in the heat without looking sloppy?",
+      "subtitle": "Why I kept looking for a top that is light enough for the heat and still looks put-together, and what I finally found."
+    },
+    {
+      "id": "hero",
+      "type": "hero",
+      "image": "IMG-01",
+      "alt": "A woman in her late fifties on a Tel Aviv café terrace, wearing the top in blue"
+    },
+    {
+      "id": "founder_story",
+      "type": "founder_story",
+      "greeting": "Hello, I'm Adina.",
+      "parts": [
+        {
+          "role": "intro",
+          "text": "For more than 15 years I've been running a small family boutique in Tel Aviv, together with my husband Daniel and our daughter Yael."
+        },
+        {
+          "role": "observation",
+          "text": "Every year, when summer refuses to end, I hear the same sentence at the counter: \"It's hot, I want to be comfortable, but I don't want to look like I left the house in my house clothes.\""
+        },
+        {
+          "role": "problem",
+          "text": "In the Israeli heat, getting dressed becomes a compromise. What keeps you cool usually looks shapeless, and what looks nice feels heavy and clings exactly where you don't want it to."
+        },
+        {
+          "role": "alternatives",
+          "text": "So most of us end up with one of two options: a loose basic T-shirt that is comfortable but leaves you feeling unfinished, or a dressier blouse that looks good in the mirror and becomes uncomfortable by noon."
+        },
+        {
+          "role": "search",
+          "text": "I was looking for something in between: light and breathable, with a cut that glides gently over the body instead of clinging to it, and that goes with the jeans, skirts and shorts you already have."
+        },
+        {
+          "role": "discovery",
+          "text": "That's how I found Payo. A light, pleasant top you put on in the morning and still feel good in at dinner. Let me tell you what convinced me."
+        }
+      ]
+    },
+    {
+      "id": "benefits",
+      "type": "benefits",
+      "title": "Six things I love about Payo",
+      "items": [
+        {
+          "n": 1,
+          "headline": "Because the heat doesn't care what you planned to wear.",
+          "text": "Payo is light and pleasant on the body. On a hot day it doesn't weigh you down, so you can run your errands and still feel fresh.",
+          "feature_ids": [
+            "f1"
+          ]
+        },
+        {
+          "n": 2,
+          "headline": "Because a long day should end the way it started.",
+          "text": "The fabric breathes, so you're not counting the minutes until you can change. Morning, afternoon and evening, it stays comfortable.",
+          "feature_ids": [
+            "f2"
+          ],
+          "image": "IMG-02"
+        },
+        {
+          "n": 3,
+          "headline": "Because flattering doesn't have to mean tight.",
+          "text": "The cut glides gently over the body. It creates a soft silhouette without clinging anywhere, so you won't spend the day tugging at your top.",
+          "feature_ids": [
+            "f3"
+          ],
+          "image": "IMG-03"
+        },
+        {
+          "n": 4,
+          "headline": "Because getting dressed should take a minute.",
+          "text": "Payo goes with what you already own: jeans, a skirt or shorts. You don't need to build a whole outfit around it.",
+          "feature_ids": [
+            "f4"
+          ],
+          "image": "IMG-04"
+        },
+        {
+          "n": 5,
+          "headline": "Because plans change after five o'clock.",
+          "text": "The same top works for the day and for the evening. With a piece of jewelry or without, and you're ready for dinner.",
+          "feature_ids": [
+            "f4"
+          ],
+          "image": "IMG-05"
+        },
+        {
+          "n": 6,
+          "headline": "Because every woman has her own colors.",
+          "text": "Payo comes in blue, green, gray and purple. Choose the shade that fits the wardrobe you already love.",
+          "feature_ids": [
+            "f5"
+          ],
+          "image": "IMG-06"
+        }
+      ]
+    },
+    {
+      "id": "comparison",
+      "type": "comparison",
+      "title": "Payo, compared with the choices women usually make",
+      "columns": {
+        "a": "Loose basic T-shirt",
+        "b": "Dressy blouse",
+        "product": "Payo"
+      },
+      "rows": [
+        {
+          "label": "Light on the body",
+          "a": "✓",
+          "b": "✗",
+          "product": "✓"
+        },
+        {
+          "label": "Flattering silhouette",
+          "a": "✗",
+          "b": "✓",
+          "product": "✓"
+        },
+        {
+          "label": "Comfortable all day",
+          "a": "✓",
+          "b": "✗",
+          "product": "✓"
+        },
+        {
+          "label": "Goes with jeans, a skirt or shorts",
+          "a": "✓",
+          "b": "Not always",
+          "product": "✓"
+        },
+        {
+          "label": "Works for the evening too",
+          "a": "✗",
+          "b": "✓",
+          "product": "✓"
+        }
+      ]
+    },
+    {
+      "id": "founder_quote",
+      "type": "founder_quote",
+      "quote": "I don't think a woman should have to choose between staying cool and looking put-together.",
+      "author": "Adina"
+    },
+    {
+      "id": "sale",
+      "type": "sale",
+      "title": "Why Payo is on sale now",
+      "paragraphs": [
+        "We're in the middle of our end-of-season sale. Summer is officially over, but anyone who lives here knows the heat stays with us for a while longer.",
+        "Payo's regular price is ₪359. Right now it's ₪179, and when you take more than one item you get an extra discount on top."
+      ],
+      "regular_price": 359,
+      "sale_price": 179
+    },
+    {
+      "id": "trust_bar",
+      "type": "trust_bar",
+      "items": [
+        {
+          "value": "₪179",
+          "label": "Sale price"
+        },
+        {
+          "value": "15+",
+          "label": "Years in fashion"
+        },
+        {
+          "value": "2,550+",
+          "label": "Reviews"
+        },
+        {
+          "value": "30",
+          "label": "Days to return"
+        }
+      ]
+    },
+    {
+      "id": "packing",
+      "type": "packing",
+      "image": "IMG-07",
+      "caption": "Packed and ready to go. Every order is packed with care and love in our boutique."
+    },
+    {
+      "id": "founder_observation",
+      "type": "founder_observation",
+      "text": "What I notice most about Payo is how little you have to think about it. You put it on, it looks right, and you get on with your day. That's exactly what I want from a top in this weather."
+    },
+    {
+      "id": "social_proof",
+      "type": "social_proof",
+      "rating": 4.7,
+      "reviews_label": "2,550+",
+      "text": "Over the years, more than 2,550 reviews have been written about our boutique, with an average of 4.7 out of 5. I keep that trust in mind every time I choose a new piece.",
+      "quotes": []
+    },
+    {
+      "id": "offer_box",
+      "type": "offer_box",
+      "product_name": "Payo | Pleasant Day Top",
+      "rating_line": "★★★★★ 4.7/5 from 2,550+ reviews",
+      "regular_price": 359,
+      "sale_price": 179,
+      "bullets": [
+        "Light and breathable, for hot days and cool evenings",
+        "A cut that glides gently over the body",
+        "Goes with jeans, a skirt or shorts",
+        "Blue, green, gray, purple · sizes S to 3XL",
+        "Free shipping with Israel Post · 30-day returns"
+      ]
+    },
+    {
+      "id": "bundle",
+      "type": "bundle",
+      "title": "The more you take, the more you save",
+      "tiers": [
+        {
+          "items": 2,
+          "extra_discount_pct": 10,
+          "label": "2 items — 10% extra discount"
+        },
+        {
+          "items": 3,
+          "extra_discount_pct": 15,
+          "label": "3 items — 15% extra discount"
+        },
+        {
+          "items": 4,
+          "extra_discount_pct": 20,
+          "label": "4 items — 20% extra discount"
+        },
+        {
+          "items": 5,
+          "extra_discount_pct": 25,
+          "label": "5+ items — 25% extra discount"
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "type": "cta",
+      "button": "Check if your size and color are still in stock",
+      "subtext": "Free shipping with Israel Post · 30-day returns"
+    },
+    {
+      "id": "about",
+      "type": "about",
+      "title": "About the writer",
+      "text": "I'm Adina, founder of Adina Fashion, a family boutique in Tel Aviv that my husband Daniel, our daughter Yael and I have been running together for more than 15 years. Payo is the top I would hand you myself on a hot day, when you want to feel comfortable and still look like yourself.",
+      "signoff": "From Tel Aviv, with love!"
+    },
+    {
+      "id": "sticky_cta",
+      "type": "sticky_cta",
+      "text": "Payo now ₪179 — check if your size is still in stock"
+    }
+  ]
+}

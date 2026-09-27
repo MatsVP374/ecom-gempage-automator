@@ -1,0 +1,107 @@
+{
+  "questions": {
+    "who": "An Israeli woman of about 50–65 who wants to look put-together, but not at the cost of comfort in the heat.",
+    "everyday_problem": "On hot days she has to choose between staying cool and looking put-together.",
+    "current_workaround": "She wears either a loose basic T-shirt, or a dressier blouse and puts up with the heat.",
+    "why_frustrating": "The basic tee is comfortable but makes her feel unfinished; the dressier blouse looks good in the mirror but feels heavy and clings by noon.",
+    "what_changes": "One light, breathable top whose cut glides softly over the body: cool and still put-together, from morning to evening.",
+    "enabling_features": [
+      "f1",
+      "f2",
+      "f3",
+      "f4"
+    ],
+    "adina_observation": "Every end of summer, women at the boutique counter say the same thing: 'It's hot, I want to be comfortable, but I don't want to look like I'm in house clothes.'",
+    "core_belief": "A woman shouldn't have to choose between staying cool and looking put-together.",
+    "easiest_comparison": "Loose basic tee (cool but shapeless) vs. dressy blouse (put-together but hot) vs. Payo (both).",
+    "why_now": "The official summer season ends, but the Israeli heat stays for weeks; end-of-season sale ₪359 → ₪179."
+  },
+  "central_problem": "In the heat, what keeps you cool looks sloppy, and what looks put-together feels heavy and clings.",
+  "customer_insight": "She doesn't want 'comfortable clothes'; she wants to feel cool AND like herself — dressed, not in house clothes.",
+  "product_solution": "Payo: a light, breathable top with a cut that glides gently over the body, easy with jeans, skirts or shorts, from day to evening.",
+  "adina_belief": "A woman shouldn't have to choose between staying cool and looking put-together.",
+  "core_promise": "Stay fresh in the heat and still look put-together, from morning to evening.",
+  "old_alternative_a": "Loose basic T-shirt",
+  "old_alternative_b": "Dressy blouse",
+  "why_now": "End-of-season sale (₪359 → ₪179) while the heat is still here.",
+  "founder_letter_hook": "The question Adina hears at the counter every end of summer: how do you stay cool without looking sloppy?",
+  "benefits": [
+    {
+      "n": 1,
+      "human_problem": "The heat makes everything feel heavy",
+      "feature_ids": [
+        "f1"
+      ],
+      "practical_effect": "Light and pleasant on the body",
+      "real_life_benefit": "She runs her errands and still feels fresh",
+      "situations": [
+        "errands",
+        "walking in the city"
+      ]
+    },
+    {
+      "n": 2,
+      "human_problem": "Counting the minutes until she can change",
+      "feature_ids": [
+        "f2"
+      ],
+      "practical_effect": "Breathable fabric",
+      "real_life_benefit": "Comfortable from morning to evening",
+      "situations": [
+        "long day out",
+        "morning to evening"
+      ]
+    },
+    {
+      "n": 3,
+      "human_problem": "Flattering clothes usually mean tight clothes",
+      "feature_ids": [
+        "f3"
+      ],
+      "practical_effect": "Cut glides gently over the body",
+      "real_life_benefit": "A soft, flattering silhouette without clinging or constant adjusting",
+      "situations": [
+        "all day"
+      ]
+    },
+    {
+      "n": 4,
+      "human_problem": "Getting dressed takes too long",
+      "feature_ids": [
+        "f4"
+      ],
+      "practical_effect": "Pairs with jeans, skirts or shorts",
+      "real_life_benefit": "Works with what's already in her closet",
+      "situations": [
+        "with jeans",
+        "with a skirt",
+        "with shorts"
+      ]
+    },
+    {
+      "n": 5,
+      "human_problem": "Plans change after five o'clock",
+      "feature_ids": [
+        "f4"
+      ],
+      "practical_effect": "Goes from day to evening, with or without accessories",
+      "real_life_benefit": "Ready for dinner without changing",
+      "situations": [
+        "dinner",
+        "evening out"
+      ]
+    },
+    {
+      "n": 6,
+      "human_problem": "Every woman has her own colors",
+      "feature_ids": [
+        "f5"
+      ],
+      "practical_effect": "4 colors: blue, green, gray, purple",
+      "real_life_benefit": "She picks the one that fits her wardrobe",
+      "situations": [
+        "choosing a color"
+      ]
+    }
+  ]
+}

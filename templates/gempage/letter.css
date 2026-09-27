@@ -191,4 +191,5 @@
 .{{rootClassName}} .gp-bundle-title{font-weight:700;margin-bottom:8px;}
 .{{rootClassName}} .gp-cta-sub{font-size:.85rem;color:#7a7565;margin-top:10px;}
 .{{rootClassName}} .gp-img-missing{border:2px dashed #ddd4bc;border-radius:6px;padding:28px 14px;margin:18px 0;text-align:center;color:#7a7565;font-size:.85rem;background:#faf7ef;}
+.{{rootClassName}} .gp-measure > p + p{margin-top:14px;}
 .{{rootClassName}} .gp-ltr{direction:ltr;unicode-bidi:isolate;display:inline-block;}
