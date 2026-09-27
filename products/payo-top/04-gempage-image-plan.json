@@ -18,7 +18,9 @@
         "size": "4:5",
         "at": "2026-09-27T19:47:00Z",
         "chosen_by_user": true
-      }
+      },
+      "url": "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/payo-top-IMG-01.jpg?v=1790539016",
+      "shopify_file_id": "gid://shopify/MediaImage/73878575088003"
     },
     {
       "id": "IMG-02",
@@ -37,7 +39,9 @@
         "model": "gemini-3.1-flash-image",
         "size": "4:5",
         "at": "2026-09-27T19:52:41.418Z"
-      }
+      },
+      "url": "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/payo-top-IMG-02.jpg?v=1790539016",
+      "shopify_file_id": "gid://shopify/MediaImage/73878575120771"
     },
     {
       "id": "IMG-03",
@@ -56,7 +60,9 @@
         "model": "gemini-3.1-flash-image",
         "size": "4:5",
         "at": "2026-09-27T19:52:50.702Z"
-      }
+      },
+      "url": "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/payo-top-IMG-03.jpg?v=1790539016",
+      "shopify_file_id": "gid://shopify/MediaImage/73878575153539"
     },
     {
       "id": "IMG-04",
@@ -75,7 +81,9 @@
         "model": "gemini-3.1-flash-image",
         "size": "4:5",
         "at": "2026-09-27T19:50:32.383Z"
-      }
+      },
+      "url": "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/payo-top-IMG-04.jpg?v=1790539016",
+      "shopify_file_id": "gid://shopify/MediaImage/73878575186307"
     },
     {
       "id": "IMG-05",
@@ -94,7 +102,9 @@
         "model": "gemini-3.1-flash-image",
         "size": "4:5",
         "at": "2026-09-27T19:52:57.555Z"
-      }
+      },
+      "url": "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/payo-top-IMG-05.jpg?v=1790539017",
+      "shopify_file_id": "gid://shopify/MediaImage/73878575219075"
     },
     {
       "id": "IMG-06",
@@ -113,7 +123,9 @@
         "model": "gemini-3.1-flash-image",
         "size": "4:5",
         "at": "2026-09-27T19:53:05.890Z"
-      }
+      },
+      "url": "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/payo-top-IMG-06.jpg?v=1790539016",
+      "shopify_file_id": "gid://shopify/MediaImage/73878575251843"
     },
     {
       "id": "IMG-07",
@@ -132,7 +144,9 @@
         "model": "gemini-3.1-flash-image",
         "size": "4:5",
         "at": "2026-09-27T19:53:13.930Z"
-      }
+      },
+      "url": "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/payo-top-IMG-07.jpg?v=1790539016",
+      "shopify_file_id": "gid://shopify/MediaImage/73878575284611"
     }
   ],
   "existing_images_reviewed": [],

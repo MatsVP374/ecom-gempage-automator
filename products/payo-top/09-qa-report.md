@@ -18,7 +18,7 @@ GEMPAGE
 ☑ Hebreeuws natuurlijk, vrouwelijk enkelvoud ☑ RTL ☑ CTA met kleur (4 kleuren)
 
 IMAGES
-☐ Product visueel consistent — nog niet te controleren: beelden niet gegenereerd
+☑ Product visueel consistent met de referentiefoto's (V-hals, knoopjes, gekreukte stof, driekwart opgerolde mouwen) — 7 beelden, gemaakt met gemini-3.1-flash-image, allemaal 4:5
 ☑ Kleuren uit input ☑ Elk beeld heeft een doel en een blok
 ☑ Variatie: 3 verschillende modellen, 4 kleuren, 7 verschillende settings
 
@@ -37,18 +37,18 @@ CREATIVES
 
 ## Validator
 ```
-✓ payo-top — 0 errors · 0 warnings · 1 flags
-  ■ 0 Product input  ■ 1 Product facts  ■ 2 Central angle  ■ 3 GemPage copy (EN master)  ■ 4 GemPage image plan  ■ 5 Image prompts  □ 5b Images (Gemini/OpenAI → Shopify)  ■ 6 GemPage build (HE)  ■ 6b Spellcheck (HE)  ■ 7 Quality control  ■ 9 Creative plan + UGC  ■ 10 Launch package
+✓ payo-top — 0 errors · 0 warnings · 1 flags · READY
+  ■ 0 Product input  ■ 1 Product facts  ■ 2 Central angle  ■ 3 GemPage copy (EN master)  ■ 4 GemPage image plan  ■ 5 Image prompts  ■ 5b Images (Gemini/OpenAI → Shopify)  ■ 6 GemPage build (HE)  ■ 6b Spellcheck (HE)  ■ 7 Quality control  ■ 9 Creative plan + UGC  ■ 10 Launch package
   FLAG   MISSING: product construction details (material, neckline, sleeves, length) — concrete benefits and precise image prompts; prompts now rely on the reference photos
 ```
 
 ## Flags
-- IMAGES NOT GENERATED — Gemini API returns 429 (free tier, limit 0) for the key in this environment; billing must be enabled on that key's Google project. The .gempages file contains visible placeholders for IMG-01…IMG-07.
 - MISSING: product construction details (material, neckline, sleeves, length). Benefits stay on feel/cut/styling; image prompts rely on the reference photos.
 - Product photos could not be viewed, so none were reused as GemPage images.
 
 ## Voor de mens
-- [ ] Sleutels + netwerktoegang instellen → `npm run images -- payo-top` → export opnieuw (dan zitten de echte beelden in de .gempages)
+- [x] Beelden gemaakt en op Shopify Files gezet (7/7, CDN-URL's in het beeldplan)
+- [ ] `.gempages` importeren in GemPages (Pages → Import) en controleren
 - [x] Echte Payo-reviews aangeleverd → review onder elke foto
 - [ ] Ad copy schrijf je zelf (niet meer in deze workflow)
 - [ ] Bevestigen dat de 23 reviews echte klantreviews zijn (ze staan met naam op de pagina)
