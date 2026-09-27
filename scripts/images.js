@@ -41,6 +41,9 @@ export function sizeFor(aspect = '4:5') {
 
 async function loadReference(ref, dir) {
   if (/^https?:\/\//.test(ref)) {
+    // Local copy first (images/refs/<basename>), e.g. when the CDN is only reachable via curl.
+    const cached = path.join(dir, 'images', 'refs', path.basename(new URL(ref).pathname));
+    if (fs.existsSync(cached)) return { buffer: fs.readFileSync(cached), type: MIME[path.extname(cached).toLowerCase()] ?? 'image/jpeg', name: path.basename(cached) };
     const res = await fetch(ref);
     if (!res.ok) throw new Error(`reference image ${ref}: HTTP ${res.status}`);
     const type = (res.headers.get('content-type') || 'image/jpeg').split(';')[0];
