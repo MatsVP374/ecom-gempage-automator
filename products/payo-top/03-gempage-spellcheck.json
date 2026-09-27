@@ -2,6 +2,7 @@
   "status": "fixed",
   "checked": [
     "03-gempage-copy.he.json",
+    "06-meta-ads.json",
     "07-creative-plan.json"
   ],
   "corrections": [
@@ -67,6 +68,62 @@
       "before": "בסוף שנות החמישים שלה",
       "after": "בתחילת שנות החמישים שלה",
       "reason": "alt text matches the new casting (about 52)"
+    },
+    {
+      "file": "06-meta-ads.json",
+      "at": "ad1.primary_text",
+      "before": "פאיו הוא הטופ שעדינה מצאה באמצע.",
+      "after": "פאיו היא החולצה שעדינה מצאה באמצע.",
+      "reason": "gender agreement: Payo is feminine (אותה/חולצה) throughout the customer's voice"
+    },
+    {
+      "file": "06-meta-ads.json",
+      "at": "ad1.primary_text",
+      "before": "הטופ קליל ונעים על הגוף, והבד נושם.",
+      "after": "היא קלילה ונעימה על הגוף, והבד נושם.",
+      "reason": "gender agreement: Payo is feminine (אותה/חולצה) throughout the customer's voice"
+    },
+    {
+      "file": "06-meta-ads.json",
+      "at": "ad1.primary_text",
+      "before": "הוא מתאים לג׳ינס, לחצאיות ולשורטים, ועובר מהיום לערב, עם תכשיט או בלי. יש אותו",
+      "after": "היא מתאימה לג׳ינס, לחצאיות ולשורטים, ועוברת מהיום לערב, עם תכשיט או בלי. יש אותה",
+      "reason": "gender agreement: Payo is feminine (אותה/חולצה) throughout the customer's voice"
+    },
+    {
+      "file": "06-meta-ads.json",
+      "at": "ad1.primary_text",
+      "before": "למה חיפשה בדיוק את הטופ הזה.",
+      "after": "למה חיפשה בדיוק חולצה כזאת.",
+      "reason": "gender agreement: Payo is feminine (אותה/חולצה) throughout the customer's voice"
+    },
+    {
+      "file": "06-meta-ads.json",
+      "at": "ad2.primary_text",
+      "before": "אני מדברת על פאיו, טופ של Adina Fashion.",
+      "after": "אני מדברת על פאיו, חולצה של Adina Fashion.",
+      "reason": "gender agreement: Payo is feminine (אותה/חולצה) throughout the customer's voice"
+    },
+    {
+      "file": "06-meta-ads.json",
+      "at": "ad2.primary_text",
+      "before": "פאיו בנוי בדיוק ליום כזה. הוא קליל ונעים על הגוף, מבד נושם, כך שגם ביום חם הוא לא מכביד.",
+      "after": "פאיו בנויה בדיוק ליום כזה. היא קלילה ונעימה על הגוף, מבד נושם, כך שגם ביום חם היא לא מכבידה.",
+      "reason": "gender agreement: Payo is feminine (אותה/חולצה) throughout the customer's voice"
+    },
+    {
+      "file": "06-meta-ads.json",
+      "at": "ad2.primary_text",
+      "before": "והוא מתאים לג׳ינס, לחצאיות ולשורטים, כך שאפשר לשנות את הלוק לערב בלי להחליף את הטופ.",
+      "after": "והיא מתאימה לג׳ינס, לחצאיות ולשורטים, כך שאפשר לשנות את הלוק לערב בלי להחליף חולצה.",
+      "reason": "gender agreement: Payo is feminine (אותה/חולצה) throughout the customer's voice"
+    },
+    {
+      "file": "06-meta-ads.json",
+      "at": "ad2.primary_text",
+      "before": "ועל הדרך שבה הגיעה בסוף לטופ הזה.",
+      "after": "ועל הדרך שבה הגיעה בסוף לחולצה הזאת.",
+      "reason": "gender agreement: Payo is feminine (אותה/חולצה) throughout the customer's voice"
     }
   ],
   "doubts": []

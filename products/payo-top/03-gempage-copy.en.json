@@ -64,7 +64,11 @@
           "text": "Payo is light and pleasant on the body. On a hot day it doesn't weigh you down, so you can run your errands and still feel fresh.",
           "feature_ids": [
             "f1"
-          ]
+          ],
+          "review": {
+            "testimonial_id": "t3",
+            "text": "I wore it on a hot day and was surprised how light and pleasant it felt. I didn't feel like I was waiting to get home to change my top."
+          }
         },
         {
           "n": 2,
@@ -73,7 +77,11 @@
           "feature_ids": [
             "f2"
           ],
-          "image": "IMG-02"
+          "image": "IMG-02",
+          "review": {
+            "testimonial_id": "t13",
+            "text": "For me this is exactly a top for a long day. Comfortable in the morning, still pleasant hours later, and still feels neat when I go out afterwards."
+          }
         },
         {
           "n": 3,
@@ -82,7 +90,11 @@
           "feature_ids": [
             "f3"
           ],
-          "image": "IMG-03"
+          "image": "IMG-03",
+          "review": {
+            "testimonial_id": "t4",
+            "text": "What I love most about Payo is how it falls on the body. It isn't tight where I prefer to blur, but it doesn't feel big and shapeless either."
+          }
         },
         {
           "n": 4,
@@ -91,7 +103,11 @@
           "feature_ids": [
             "f4"
           ],
-          "image": "IMG-04"
+          "image": "IMG-04",
+          "review": {
+            "testimonial_id": "t6",
+            "text": "It's one of those tops I pull out of the closet when I have no energy to think about what to wear. Jeans, light trousers or something a bit more elegant — it just fits in."
+          }
         },
         {
           "n": 5,
@@ -100,7 +116,11 @@
           "feature_ids": [
             "f4"
           ],
-          "image": "IMG-05"
+          "image": "IMG-05",
+          "review": {
+            "testimonial_id": "t5",
+            "text": "I wore it in the morning for errands and kept it on for dinner in the evening. I only changed my trousers and shoes and felt completely put-together."
+          }
         },
         {
           "n": 6,
@@ -109,7 +129,11 @@
           "feature_ids": [
             "f5"
           ],
-          "image": "IMG-06"
+          "image": "IMG-06",
+          "review": {
+            "testimonial_id": "t8",
+            "text": "I took the green one because I finally wanted something other than the black I always buy. The colour is lovely and I ended up wearing it much more than I expected."
+          }
         }
       ]
     },
@@ -211,7 +235,20 @@
       "rating": 4.7,
       "reviews_label": "2,550+",
       "text": "Over the years, more than 2,550 reviews have been written about our boutique, with an average of 4.7 out of 5. I keep that trust in mind every time I choose a new piece.",
-      "quotes": []
+      "quotes": [
+        {
+          "testimonial_id": "t9",
+          "text": "I bought one first, and after wearing it a few times I came back to order another colour. For me that's the best sign a purchase really worked."
+        },
+        {
+          "testimonial_id": "t17",
+          "text": "The package arrived neat and beautifully wrapped. I know it's a small thing, but it feels much more personal when you open the order."
+        },
+        {
+          "testimonial_id": "t16",
+          "text": "This isn't my first order from Adina Fashion. I love that the pieces feel like someone really thought about what women want to wear every day, not just how it looks in a photo."
+        }
+      ]
     },
     {
       "id": "offer_box",

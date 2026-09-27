@@ -25,11 +25,14 @@ IMAGES
 ## Stap 10: Final QA
 
 TESTIMONIAL
-☐ Echte bron aangeleverd — geen testimonials → ads geblokkeerd
-☑ Geen verzonnen ervaringen ☑ Geen naam/leeftijd verzonnen
+☑ Echte bron aangeleverd — 23 reviews (5★, door de gebruiker aangeleverd op 2026-09-27)
+☑ Geen verzonnen ervaringen ☑ Naam/leeftijd alleen uit de reviews (leeftijd alleen bij t14, die haar leeftijd zelf noemt)
+☑ Review onder elke GemPage-foto: 6/6 letterlijke fragmenten (t3, t13, t4, t6, t5, t8) + 3 winkelreviews in social proof (t9, t17, t16)
 
 ADS
-☐ Precies 2 — BLOCKED (TESTIMONIAL DATA INSUFFICIENT)
+☑ Precies 2: ad1 discovery (t14 אסתר דיין) · ad2 routine (t5 אורית מזרחי)
+☑ Elke eerste-persoonservaring getraced naar de review; de rest komt uit de brief, de feiten of de config
+☑ Aanbod pas aan het eind ☑ Einde leidt naar het brief van Adina ☑ Spellingcheck + proeflezen (Payo consequent vrouwelijk)
 
 OFFER
 ☑ Verzending correct ☑ Retour 30 dagen ☑ Bundel 10/15/20/25 ☑ 4.7/5 · 2,550+ reviews
@@ -39,24 +42,20 @@ CREATIVES
 
 ## Validator
 ```
-
-✓ payo-top — 0 errors · 0 warnings · 4 flags
-  ■ 0 Product input  ■ 1 Product facts  ■ 2 Central angle  ■ 3 GemPage copy (EN master)  ■ 4 GemPage image plan  ■ 5 Image prompts  □ 5b Images (OpenAI → Shopify)  ■ 6 GemPage build (HE)  □ 7 Quality control  ■ 8 2 Meta ads  ■ 9 Creative plan + UGC  □ 10 Launch package
-  FLAG   NO TESTIMONIALS SUPPLIED — the 2 Meta ads will be BLOCKED until real testimonials are added to input.json
+✓ payo-top — 0 errors · 0 warnings · 1 flags
+  ■ 0 Product input  ■ 1 Product facts  ■ 2 Central angle  ■ 3 GemPage copy (EN master)  ■ 4 GemPage image plan  ■ 5 Image prompts  □ 5b Images (Gemini/OpenAI → Shopify)  ■ 6 GemPage build (HE)  ■ 6b Spellcheck (HE)  ■ 7 Quality control  ■ 8 2 Meta ads  ■ 9 Creative plan + UGC  ■ 10 Launch package
   FLAG   MISSING: product construction details (material, neckline, sleeves, length) — concrete benefits and precise image prompts; prompts now rely on the reference photos
-  FLAG   MISSING: testimonials — the 2 Meta ads (blocked without real customer reviews)
-  FLAG   TESTIMONIAL DATA INSUFFICIENT — no customer reviews/testimonials were supplied for Payo in input.json; both ads (discovery + routine) need a real customer's own words. Add at least 1–2 real reviews (text + source; name/age only if known) and run /meta-ads payo-top.
 ```
 
 ## Flags
-- IMAGES NOT GENERATED — OPENAI_API_KEY is not set; cdn.shopify.com is blocked by the environment's network policy (HTTP 403). The .gempages file contains visible placeholders for IMG-01…IMG-07.
-- TESTIMONIAL DATA INSUFFICIENT — no reviews supplied; both Meta ads blocked.
+- IMAGES NOT GENERATED — Gemini API returns 429 (free tier, limit 0) for the key in this environment; billing must be enabled on that key's Google project. The .gempages file contains visible placeholders for IMG-01…IMG-07.
 - MISSING: product construction details (material, neckline, sleeves, length). Benefits stay on feel/cut/styling; image prompts rely on the reference photos.
 - Product photos could not be viewed, so none were reused as GemPage images.
 
 ## Voor de mens
 - [ ] Sleutels + netwerktoegang instellen → `npm run images -- payo-top` → export opnieuw (dan zitten de echte beelden in de .gempages)
-- [ ] Echte Payo-reviews aanleveren → `/meta-ads payo-top`
+- [x] Echte Payo-reviews aangeleverd → 2 ads geschreven, reviews onder elke foto
+- [ ] Bevestigen dat de 23 reviews echte klantreviews zijn (ze staan met naam op de pagina en in de ads)
 - [ ] Materiaal/halslijn/mouwlengte bevestigen (maakt de voordelen concreter)
 - [ ] Voorraad controleren: alle Shopify-varianten staan op 0 of -1
 - [ ] Afbeelding `veronique_1.png` in de huidige productomschrijving komt van de CDN van een andere winkel

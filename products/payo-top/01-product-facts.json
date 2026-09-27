@@ -73,7 +73,192 @@
     }
   ],
   "image_observations": [],
-  "testimonials": [],
+  "testimonials": [
+    {
+      "id": "t1",
+      "supported_statements": [
+        "soft, light fabric that stays pleasant for hours"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t2",
+      "supported_statements": [
+        "relaxed cut that does not cling, still feminine and neat"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t3",
+      "supported_statements": [
+        "light and pleasant on a hot day"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t4",
+      "supported_statements": [
+        "drapes well, not tight, not shapeless"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t5",
+      "supported_statements": [
+        "worn from morning errands to evening dinner"
+      ],
+      "sufficient_for_ad": true,
+      "gaps": []
+    },
+    {
+      "id": "t6",
+      "supported_statements": [
+        "combines with jeans, light trousers or dressier pieces"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t7",
+      "supported_statements": [
+        "likes the blue colour; looks good with jeans"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t8",
+      "supported_statements": [
+        "green colour; wears it more than expected"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t9",
+      "supported_statements": [
+        "bought a second colour after wearing it"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t10",
+      "supported_statements": [
+        "does not need adjusting; comfortable, not tight"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t11",
+      "supported_statements": [
+        "flattering cut, loose in the right places"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t12",
+      "supported_statements": [
+        "became one of her regular tops because it is comfortable"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t13",
+      "supported_statements": [
+        "comfortable through a long day"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t14",
+      "supported_statements": [
+        "age 58; comfortable and easy to wear, no fussing"
+      ],
+      "sufficient_for_ad": true,
+      "gaps": []
+    },
+    {
+      "id": "t15",
+      "supported_statements": [
+        "purple colour; more beautiful in reality; combines with her wardrobe"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t16",
+      "supported_statements": [
+        "shop experience: זו כבר לא ההזמנה הראשונה שלי מ-Adina Fas…"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t17",
+      "supported_statements": [
+        "shop experience: החבילה הגיעה מסודרת וארוזה יפה. אני יודע…"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t18",
+      "supported_statements": [
+        "shop experience: הייתה לי שאלה לפני שהזמנתי וקיבלתי תשובה…"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t19",
+      "supported_statements": [
+        "shop experience: אני אוהבת להזמין מעדינה כי החנות מרגישה …"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t20",
+      "supported_statements": [
+        "shop experience: מה שאני אוהבת ב-Adina Fashion הוא שהבגדי…"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t21",
+      "supported_statements": [
+        "shop experience: פאיו הייתה ההזמנה הראשונה שלי מעדינה ובה…"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t22",
+      "supported_statements": [
+        "shop experience: הכול הרגיש פשוט ונעים, מההזמנה ועד שקיבל…"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    },
+    {
+      "id": "t23",
+      "supported_statements": [
+        "shop experience: כבר המלצתי לחברה שלי להסתכל באתר של עדינ…"
+      ],
+      "sufficient_for_ad": false,
+      "gaps": []
+    }
+  ],
   "unverified": [
     "Material / fabric composition — not stated anywhere in Shopify or on the product page",
     "Neckline, sleeve length, garment length, closure — not stated; the 7 product photos could not be viewed (cdn.shopify.com blocked by this environment's network policy)",
@@ -84,10 +269,6 @@
     {
       "field": "product construction details (material, neckline, sleeves, length)",
       "needed_for": "concrete benefits and precise image prompts; prompts now rely on the reference photos"
-    },
-    {
-      "field": "testimonials",
-      "needed_for": "the 2 Meta ads (blocked without real customer reviews)"
     }
   ],
   "status": "complete"

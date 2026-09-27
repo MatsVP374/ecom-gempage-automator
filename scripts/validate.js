@@ -132,8 +132,11 @@ export function validateProduct(slug, { stage } = {}) {
     (facts.features ?? []).forEach((f) => !['input', 'product_page', 'image'].includes(f.source) && err(`01-product-facts: feature ${f.id} has no valid source`));
     (facts.testimonials ?? []).forEach((t) => {
       if (!tIds.has(t.id)) err(`01-product-facts: testimonial "${t.id}" does not exist in input`);
-      if (t.sufficient_for_ad === false) flag(`TESTIMONIAL DATA INSUFFICIENT — ${t.id}: ${(t.gaps ?? []).join('; ') || 'see 01-product-facts.json'}`);
     });
+    // Only a problem when fewer than the 2 ads can be carried; short reviews are still fine as quotes.
+    const carrying = (facts.testimonials ?? []).filter((t) => t.sufficient_for_ad !== false).length;
+    if ((facts.testimonials ?? []).length && carrying < cfg.meta_ads.count)
+      (facts.testimonials ?? []).filter((t) => t.sufficient_for_ad === false).forEach((t) => flag(`TESTIMONIAL DATA INSUFFICIENT — ${t.id}: ${(t.gaps ?? []).join('; ') || 'see 01-product-facts.json'}`));
   }
 
   // ---------- 02 angle ----------

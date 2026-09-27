@@ -41,7 +41,238 @@
     "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-8_2dbe5366-20c6-47d6-9d4d-ffc4799dcdc6.jpg?v=1786329869",
     "https://cdn.shopify.com/s/files/1/1023/4226/3171/files/description-image-9_8efea01c-0f9c-46f2-bc7b-5623decde94b.jpg?v=1786329869"
   ],
-  "testimonials": [],
+  "testimonials": [
+    {
+      "id": "t1",
+      "name": "מיכל רוזן",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "הבד של פאיו הוא הדבר הראשון ששמתי לב אליו. הוא מרגיש רך, קליל ונעים על הגוף, גם אחרי כמה שעות. בדיוק מסוג החולצות שאני אוהבת ללבוש ביום־יום.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t2",
+      "name": "רחל לוי",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "אני לא אוהבת חולצות שנצמדות לגוף, ופאיו יושבת עליי בדיוק כמו שרציתי. הגזרה נינוחה ונופלת יפה, אבל עדיין נראית נשית ומסודרת.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t3",
+      "name": "יעל כהן",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "לבשתי אותה ביום חם והופתעתי מכמה שהיא הרגישה קלילה ונעימה. לא הרגשתי שאני מחכה להגיע הביתה כדי להחליף חולצה.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t4",
+      "name": "דפנה אברהמי",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "מה שאני הכי אוהבת בפאיו הוא איך שהיא נופלת על הגוף. היא לא צמודה באזור שאני מעדיפה לטשטש, אבל גם לא מרגישה גדולה וחסרת צורה.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t5",
+      "name": "אורית מזרחי",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "לבשתי אותה בבוקר לסידורים והמשכתי איתה בערב לארוחת ערב. החלפתי רק את המכנסיים והנעליים והרגשתי מסודרת לגמרי.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t6",
+      "name": "נעמי פרידמן",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "זו אחת החולצות האלה שאני שולפת מהארון כשאין לי כוח לחשוב מה ללבוש. ג'ינס, מכנסיים בהירים או משהו קצת יותר אלגנטי — היא פשוט משתלבת.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t7",
+      "name": "שרון בן־דוד",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "הזמנתי את הכחולה ואני ממש אוהבת את הצבע. היא נראית יפה עם ג'ינס ולא צריך להוסיף הרבה כדי שהלבוש ירגיש מסודר.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t8",
+      "name": "תמר אלון",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "לקחתי את הירוקה כי רציתי סוף סוף משהו אחר מהשחור שאני תמיד קונה. הצבע מקסים ובסוף מצאתי את עצמי לובשת אותה הרבה יותר ממה שציפיתי.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t9",
+      "name": "חנה גולדברג",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "קניתי קודם אחת ואחרי כמה פעמים שלבשתי אותה חזרתי להזמין צבע נוסף. מבחינתי זה הסימן הכי טוב לכך שקנייה באמת הצליחה.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t10",
+      "name": "סיגל ברק",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "אני אוהבת במיוחד שאני לא צריכה לסדר אותה כל כמה דקות. היא יושבת בנוחות, לא מרגישה צמודה ואני פשוט שוכחת ממנה וממשיכה עם היום.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t11",
+      "name": "גלית שפירא",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "הגזרה מאוד מחמיאה בעיניי. משוחררת בדיוק במקומות הנכונים ועדיין מספיק מסודרת כדי שלא תרגיש כמו חולצת בית.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t12",
+      "name": "רונית אדרי",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "יש לי לא מעט חולצות יפות בארון שאני כמעט לא לובשת כי הן פשוט לא נוחות. פאיו הפכה מהר מאוד לאחת החולצות הקבועות שלי.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t13",
+      "name": "ליאת אברהם",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "בשבילי זו בדיוק חולצה ליום ארוך. נוחה בבוקר, נעימה גם אחרי כמה שעות ועדיין מרגישה מסודרת כשאני יוצאת אחר כך.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t14",
+      "name": "אסתר דיין",
+      "age": 58,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "אני בת 58 וכבר אין לי סבלנות לבגדים שנראים יפה אבל דורשים ממני להתעסק איתם כל היום. פאיו פשוט נוחה וקלה ללבישה.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t15",
+      "name": "ורד ישראלי",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "הזמנתי את הסגולה והיא אפילו יותר יפה במציאות. צבע מיוחד בלי להיות צעקני, והצלחתי לשלב אותה עם הרבה דברים שכבר היו לי בארון.",
+      "text_he": null,
+      "details": "Product review (Payo)"
+    },
+    {
+      "id": "t16",
+      "name": "נורית פרץ",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "זו כבר לא ההזמנה הראשונה שלי מ-Adina Fashion. אני אוהבת שהפריטים מרגישים כאילו מישהי באמת חשבה על מה נשים רוצות ללבוש ביום־יום ולא רק על איך זה נראה בתמונה.",
+      "text_he": null,
+      "details": "Shop / ordering experience review (Adina Fashion)"
+    },
+    {
+      "id": "t17",
+      "name": "אביבה שלום",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "החבילה הגיעה מסודרת וארוזה יפה. אני יודעת שזה דבר קטן, אבל זה נותן תחושה הרבה יותר אישית כשפותחים את ההזמנה.",
+      "text_he": null,
+      "details": "Shop / ordering experience review (Adina Fashion)"
+    },
+    {
+      "id": "t18",
+      "name": "דליה רבינוביץ",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "הייתה לי שאלה לפני שהזמנתי וקיבלתי תשובה נעימה וברורה. פאיו הגיעה אחר כך בדיוק כמו שציפיתי ואני מאוד מרוצה.",
+      "text_he": null,
+      "details": "Shop / ordering experience review (Adina Fashion)"
+    },
+    {
+      "id": "t19",
+      "name": "מירה ביטון",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "אני אוהבת להזמין מעדינה כי החנות מרגישה הרבה יותר אישית מחנויות האופנה הגדולות. זו כבר הפעם השנייה שאני חוזרת.",
+      "text_he": null,
+      "details": "Shop / ordering experience review (Adina Fashion)"
+    },
+    {
+      "id": "t20",
+      "name": "יהודית כץ",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "מה שאני אוהבת ב-Adina Fashion הוא שהבגדים באמת מתאימים לחיים שלי. אני לא מחפשת משהו ללבוש פעם אחת — אני רוצה דברים שאחזור אליהם שוב ושוב.",
+      "text_he": null,
+      "details": "Shop / ordering experience review (Adina Fashion)"
+    },
+    {
+      "id": "t21",
+      "name": "רבקה סגל",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "פאיו הייתה ההזמנה הראשונה שלי מעדינה ובהחלט לא האחרונה. אהבתי גם את החולצה וגם את התחושה האישית מסביב להזמנה.",
+      "text_he": null,
+      "details": "Shop / ordering experience review (Adina Fashion)"
+    },
+    {
+      "id": "t22",
+      "name": "סמדר רוזנברג",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "הכול הרגיש פשוט ונעים, מההזמנה ועד שקיבלתי את החבילה. ופאיו היא בדיוק מסוג הפריטים השימושיים שבסוף לובשים הכי הרבה.",
+      "text_he": null,
+      "details": "Shop / ordering experience review (Adina Fashion)"
+    },
+    {
+      "id": "t23",
+      "name": "איריס מלכה",
+      "age": null,
+      "rating": 5,
+      "source": "5-star customer review, supplied by the user on 2026-09-27",
+      "text": "כבר המלצתי לחברה שלי להסתכל באתר של עדינה. אני אוהבת במיוחד את השילוב בין בגדים נוחים לבין דברים שעדיין גורמים לי להרגיש מסודרת.",
+      "text_he": null,
+      "details": "Shop / ordering experience review (Adina Fashion)"
+    }
+  ],
   "known_customer_problems": "",
   "central_problem_hint": "",
   "competitor_reference": "",
