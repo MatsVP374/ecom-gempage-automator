@@ -181,6 +181,7 @@ function launchPackageMd(p, v, gp) {
     `${ok(step('facts') && !(p.facts?.missing ?? []).length)} Product facts validated        ${(p.facts?.missing ?? []).length} missing · ${(p.facts?.unverified ?? []).length} unverified`,
     `${ok(step('angle'))} Central angle created          "${p.angle?.central_problem ?? '—'}"`,
     `${ok(step('gempage-he'))} GemPage copy complete          ${(p.gempage.he?.blocks ?? []).length} blocks · HE + EN master`,
+    `${ok(step('spellcheck') && !v.errors.some((x) => x.startsWith('spelling')))} Hebrew spellcheck              ${v.errors.filter((x) => x.startsWith('spelling')).length} errors · ${(p.spellcheck?.corrections ?? []).length} corrections · ${(p.spellcheck?.doubts ?? []).length} doubts`,
     `${ok(plan.length)} ${plan.length} GemPage images planned       ${gen} generate · ${plan.length - gen} existing`,
     `${ok(step('image-prompts'))} Image prompts complete         ${(p.prompts?.prompts ?? []).length}`,
     `${ok(step('images'))} Images generated + on Shopify  ${plan.filter((i) => i.url).length}/${plan.length}${gp?.missingImages?.length ? ` · missing: ${gp.missingImages.join(', ')}` : ''}`,

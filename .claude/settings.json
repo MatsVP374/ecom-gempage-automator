@@ -12,7 +12,8 @@
       "Bash(node scripts/export.js:*)",
       "Bash(ls:*)",
       "Bash(node scripts/images.js:*)",
-      "Bash(node scripts/gempages.js:*)"
+      "Bash(node scripts/gempages.js:*)",
+      "Bash(node scripts/spellcheck.js:*)"
     ],
     "deny": [
       "Read(.env)"

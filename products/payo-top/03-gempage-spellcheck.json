@@ -1,0 +1,73 @@
+{
+  "status": "fixed",
+  "checked": [
+    "03-gempage-copy.he.json",
+    "07-creative-plan.json"
+  ],
+  "corrections": [
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "headline.headline",
+      "before": "איך נשארים רעננות",
+      "after": "איך נשארות רעננות",
+      "reason": "gender agreement: verb must be feminine plural like רעננות/מרושלות"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "headline.headline",
+      "before": "מ-15",
+      "after": "מ־15",
+      "reason": "maqaf instead of hyphen after prefix"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "founder_story.parts[0].text",
+      "before": "מ-15",
+      "after": "מ־15",
+      "reason": "maqaf instead of hyphen after prefix"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "about.text",
+      "before": "מ-15",
+      "after": "מ־15",
+      "reason": "maqaf instead of hyphen after prefix"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "founder_header.note",
+      "before": "נוחות, או מראה",
+      "after": "נוחות או מראה",
+      "reason": "superfluous comma before או"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "founder_story.parts[3].text",
+      "before": "והופכת ללא נוחה כבר בצהריים",
+      "after": "אבל כבר בצהריים מתחילה להציק",
+      "reason": "unnatural construction (translation-like)"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "comparison.title",
+      "before": "פאיו, מול הבחירות שנשים עושות בדרך כלל",
+      "after": "פאיו מול מה שרובנו לובשות בדרך כלל",
+      "reason": "stray comma; more natural wording"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "founder_observation.text",
+      "before": "וממשיכים ביום",
+      "after": "וממשיכים עם היום",
+      "reason": "idiom: ממשיכים עם היום"
+    },
+    {
+      "file": "03-gempage-copy.he.json",
+      "at": "hero.alt",
+      "before": "בסוף שנות החמישים שלה",
+      "after": "בתחילת שנות החמישים שלה",
+      "reason": "alt text matches the new casting (about 52)"
+    }
+  ],
+  "doubts": []
+}

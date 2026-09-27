@@ -5,7 +5,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { loadProduct, loadConfig, listSlugs, parseArgs, missingInput, isFilled } from './lib.js';
+import { loadProduct, loadConfig, listSlugs, parseArgs, missingInput, isFilled, FILES } from './lib.js';
+import { spellcheckProduct } from './spellcheck.js';
 
 export const BLOCK_ORDER = [
   'founder_header', 'headline', 'hero', 'founder_story', 'benefits', 'comparison', 'founder_quote', 'sale',
@@ -414,6 +415,20 @@ export function validateProduct(slug, { stage } = {}) {
     if (!s.length) err('08-ugc: needed but no script');
     s.forEach((x, i) => !(x.voice_he && HEBREW.test(x.voice_he)) && err(`08-ugc: script[${i}] needs Hebrew voice_he`));
     checkForbidden(p.ugc, '08-ugc', err);
+  }
+
+  // ---------- Hebrew spelling (scripts/spellcheck.js + Claude's proofread in 03-gempage-spellcheck.json) ----------
+  if (p.gempage.he || p.ads || p.creatives) {
+    for (const i of spellcheckProduct(p).issues) (i.level === 'error' ? err : warn)(`spelling ${i.file} ${i.at}: ${i.message}`);
+    const mtime = (f) => (fs.existsSync(path.join(p.dir, f)) ? fs.statSync(path.join(p.dir, f)).mtimeMs : 0);
+    const proofed = mtime(FILES.spellcheck);
+    if (p.gempage.he && !p.spellcheck) warn(`${FILES.spellcheck} missing — Claude has not proofread the Hebrew yet (step 6b)`);
+    else if (p.spellcheck) {
+      if (!['clean', 'fixed'].includes(p.spellcheck.status)) err(`${FILES.spellcheck}: status must be clean|fixed`);
+      const stale = [FILES.gempageHe, FILES.ads, FILES.creatives, FILES.ugc].filter((f) => mtime(f) > proofed + 1000);
+      if (stale.length) warn(`${FILES.spellcheck} is older than ${stale.join(', ')} — proofread again (/launch-step <slug> spellcheck)`);
+      (p.spellcheck.doubts ?? []).forEach((d) => flag(`SPELLING DOUBT — ${d.text ?? d}${d.question ? ': ' + d.question : ''}`));
+    }
   }
 
   return summary();

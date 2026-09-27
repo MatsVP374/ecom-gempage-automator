@@ -18,6 +18,7 @@ INPUT NEW PRODUCT
   → [5] Image-generation prompts
   → [5b] Beelden genereren (OpenAI) + uploaden naar Shopify-CDN   ← script, volledig automatisch
   → [6] GemPage build (Hebreeuws)
+  → [6b] Hebreeuwse spellingcheck  ← script + proeflezen door Claude
   → [7] Quality control
   → [8] 2 long-form Meta-ads       ← vanuit een echte klanttestimonial
   → [9] Creative plan (4 statics + optioneel UGC)
@@ -105,6 +106,7 @@ products/<slug>/
 ├── 02-central-angle.json      de 10 vragen + centrale angle + 5–6 voordelen
 ├── 03-gempage-copy.en.json    founder letter, Engelse master (voor review)
 ├── 03-gempage-copy.he.json    founder letter, Hebreeuws (live)
+├── 03-gempage-spellcheck.json spellingcheck: verbeteringen + twijfels
 ├── 04-gempage-image-plan.json ±7 beelden, elk gekoppeld aan een GemPage-blok
 ├── 05-image-prompts.json      production-ready prompts (13 vaste velden)
 ├── 06-meta-ads.json           2 ads + trace (bron van elke claim) + Engelse leesversie
@@ -138,6 +140,13 @@ products/<slug>/
 | `prompts/01…10-*.md` | Instructies per pipeline-stap |
 
 Wijzigingen aan `config/` vragen in Claude Code altijd eerst bevestiging.
+
+## Spellingcheck (`npm run spellcheck -- <slug>`)
+Controleert alle Hebreeuwse klantteksten (GemPage, ads, overlay-teksten, UGC): sluitletters (ך ם ן ף ץ), aan elkaar
+geplakt Hebreeuws/Latijn, dubbele woorden, nikud, spaties/leestekens, spellingvarianten (הכל/הכול) en bekende spelfouten
+uit `brand/hebrew-spelling.json` (die lijst vul je zelf aan). Daarna leest Claude alles proef op grammatica, vrouwelijke
+aanspreekvorm en natuurlijk Hebreeuws, en legt elke verbetering vast in `03-gempage-spellcheck.json`.
+Spelling-errors blokkeren de validatie; de validator waarschuwt als een tekst na de laatste check is gewijzigd.
 
 ## Controles (`npm run validate -- <slug>`)
 

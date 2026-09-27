@@ -10,7 +10,7 @@ PRODUCT
 GEMPAGE
 ☐ Eén centraal probleem? ☐ Founder-verhaal consistent met angle? ☐ Begint niet met het product/korting?
 ☐ Voordelen onderbouwd? ☐ Vergelijking logisch? ☐ Aanbod correct? ☐ Hebreeuws natuurlijk? ☐ RTL ok?
-☐ CTA correct (kleur-variant)?
+☐ CTA correct (kleur-variant)? ☐ Spellingcheck 0 errors en `03-gempage-spellcheck.json` actueel?
 
 IMAGES
 ☐ Product visueel consistent met referenties? ☐ Juiste kleuren? ☐ Juist ontwerp?

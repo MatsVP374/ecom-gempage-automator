@@ -16,5 +16,5 @@ Schrijf de founder letter in het **Hebreeuws**, met dezelfde blokken, volgorde, 
 - `trust_bar` zoals in het blueprint (₪sale / 15+ / 2,550+ / 30).
 - `sticky_cta.text`: `<korte productnaam> עכשיו ב־₪<sale> — בדקי אם המידה שלך עדיין במלאי`.
 
-Daarna: `node scripts/validate.js <slug>` en fix alle errors. Dan `node scripts/export.js <slug>`
+Daarna: stap 6b (`prompts/06b-spellcheck.md`), `node scripts/validate.js <slug>` en fix alle errors. Dan `node scripts/export.js <slug>`
 en bekijk `output/gempage.he.html` op RTL-problemen.

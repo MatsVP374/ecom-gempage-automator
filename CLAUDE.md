@@ -49,6 +49,7 @@ Commando: `/launch-product <slug>` (volledig) · `/launch-step <slug> <stap>` (�
 | 5 | Image-generation prompts | `prompts/05-image-prompts.md` | `05-image-prompts.json` |
 | 5b | Beelden genereren (Gemini of OpenAI) + uploaden (Shopify CDN) | `node scripts/images.js <slug>` | `images/IMG-xx.png`, `url` per beeld in `04-…plan.json` |
 | 6 | GemPage build / Hebreeuws | `prompts/06-gempage-build-he.md` | `03-gempage-copy.he.json` |
+| 6b | Hebreeuwse spellingcheck (script + proeflezen) | `prompts/06b-spellcheck.md` | `03-gempage-spellcheck.json` (+ fixes in de HE-teksten) |
 | 7 | Quality control (feiten, GemPage, beelden) | `prompts/07-quality-control.md` | `09-qa-report.md` (deel 1) |
 | 8 | 2 Meta-ads | `prompts/08-meta-ads.md` | `06-meta-ads.json` |
 | 9 | Creative plan + UGC | `prompts/09-creative-plan.md` | `07-creative-plan.json`, `08-ugc.json` |
@@ -68,6 +69,9 @@ Regels:
   meld dan de exacte foutmelding als flag `IMAGES NOT GENERATED — …` en ga door; de `.gempages` krijgt dan
   zichtbare placeholders. Genereer nooit beelden op een andere manier en verzin geen beeld-URL's.
 - Na stap 6, 8 en 9: `node scripts/validate.js <slug>` en fix alle **errors** vóór je verdergaat.
+- **Spellingcheck (6b)** na stap 6 én opnieuw na stap 8/9: `node scripts/spellcheck.js <slug>` (sluitletters, geplakt
+  Hebreeuws/Latijn, dubbele woorden, nikud, spaties, spelfouten uit `brand/hebrew-spelling.json`) plus proeflezen door jou
+  (grammatica, vrouwelijke aanspreekvorm, natuurlijk Hebreeuws). Spelling-errors blokkeren de validatie.
 - Stap 8 zonder bruikbare testimonial → schrijf `06-meta-ads.json` met `"status": "blocked"` en de
   flag `TESTIMONIAL DATA INSUFFICIENT`, ga door met stap 9–10, en meld het in de eindchecklist.
   **Nooit een verzonnen klantverhaal schrijven.**
@@ -250,6 +254,14 @@ Precies 4: `A customer_discovery`, `B raw_boutique_offer`, `C everyday_use`, `D 
 ```
 Als `input.ugc_needed` false is: `{ "needed": false, "reason": "not requested" }`.
 
+### `03-gempage-spellcheck.json`
+```json
+{ "status": "fixed", "checked": ["03-gempage-copy.he.json"],
+  "corrections": [{ "file": "…", "at": "benefits.items[2].text", "before": "…", "after": "…", "reason": "…" }],
+  "doubts": [{ "text": "…", "question": "…" }] }
+```
+`status` ∈ `clean | fixed`. Alleen spelling/grammatica/formulering verbeteren, nooit inhoud. `doubts` worden flags.
+
 ### `09-qa-report.md`
 Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle flags, en "Voor de mens".
 
@@ -281,6 +293,7 @@ ADINA PRODUCT LAUNCH — <hebrew_product_name>
 ✓ Product facts validated        0 missing · 2 unverified
 ✓ Central angle created          "<central_problem>"
 ✓ GemPage copy complete          17 blocks · HE + EN master
+✓ Hebrew spellcheck              0 errors · 4 corrections · 0 doubts
 ✓ 7 GemPage images planned       5 generate · 2 existing
 ✓ Image prompts complete         5
 ✓ Images generated + on Shopify  7/7

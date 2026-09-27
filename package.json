@@ -15,6 +15,7 @@
     "shopify": "node scripts/shopify-push.js",
     "test": "node --test test/*.test.js && node scripts/validate.js --all",
     "images": "node scripts/images.js",
-    "gempages": "node scripts/gempages.js"
+    "gempages": "node scripts/gempages.js",
+    "spellcheck": "node scripts/spellcheck.js"
   }
 }
