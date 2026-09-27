@@ -49,7 +49,7 @@ CREATIVES
 ```
 
 ## Flags
-- IMAGES NOT GENERATED — OPENAI_API_KEY is not set; cdn.shopify.com is blocked by the environment's network policy (HTTP 403). The .gempages file contains visible placeholders for IMG-01…IMG-07.
+- IMAGES NOT GENERATED — Gemini 429 (2026-09-27): quota exceeded, free tier limit 0 for gemini-2.5-flash-preview-image; image generation needs a billed Gemini key (or OPENAI_API_KEY). SHOPIFY_STORE_DOMAIN/SHOPIFY_ADMIN_TOKEN are not set, so upload would fail too. The .gempages file contains visible placeholders for IMG-01…IMG-07.
 - TESTIMONIAL DATA INSUFFICIENT — no reviews supplied; both Meta ads blocked.
 - MISSING: product construction details (material, neckline, sleeves, length). Benefits stay on feel/cut/styling; image prompts rely on the reference photos.
 - Product photos could not be viewed, so none were reused as GemPage images.
