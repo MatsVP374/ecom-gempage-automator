@@ -22,7 +22,8 @@ const t = (s) => esc(s).replace(/(\d[\d.,/]*\+|\d+(?:\.\d+)?\s?\/\s?\d+)/g, '<sp
 const brand = (s) => t(s).replace(/Adina Fashion/g, '<span class="gp-brand">Adina Fashion</span>');
 const shekel = (n) => (n == null ? '' : `₪${n}`);
 
-function img(id, ctx, { width = 700, height = 467, eager = false, alt = '' } = {}) {
+// Every GemPage photo is 4:5 portrait (brand/image-rules.md), so the page keeps one rhythm on mobile.
+function img(id, ctx, { width = 640, height = 800, eager = false, alt = '' } = {}) {
   if (!id) return '';
   const p = ctx.planById[id];
   const url = p?.url || (p?.source === 'existing' && /^https?:\/\//.test(p.existing_image ?? '') ? p.existing_image : null);
@@ -64,7 +65,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
       '<hr class="gp-hr">',
       h ? `<p class="gp-byline2">${brand(`${cfg.founder.name_he} · ${h.byline.split('·').slice(1).join('·').trim() || cfg.brand} · ${h.place_date}`)}</p>` : '',
     );
-  if (by.hero) out.push(`<div class="gp-hero-photo">${img(by.hero.image, ctx, { width: 560, height: 560, eager: true, alt: by.hero.alt })}</div>`);
+  if (by.hero) out.push(`<div class="gp-hero-photo">${img(by.hero.image, ctx, { eager: true, alt: by.hero.alt })}</div>`);
   if (by.founder_story) {
     const g = String(by.founder_story.greeting ?? '');
     out.push('<div class="gp-letter gp-measure">');
@@ -110,7 +111,7 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     if (tb) out.push(`<div class="gp-stats-row">${(tb.items ?? []).map((i) => `<div><div class="gp-stat-num">${t(i.value)}</div><div class="gp-stat-label">${t(i.label)}</div></div>`).join('')}</div>`);
     out.push('</div>');
   }
-  if (by.packing) out.push(`<div class="gp-fold-photo">${img(by.packing.image, ctx, { width: 480, height: 480, alt: by.packing.caption })}</div>`, `<p class="gp-fold-cap">${t(by.packing.caption)}</p>`);
+  if (by.packing) out.push(`<div class="gp-fold-photo">${img(by.packing.image, ctx, { alt: by.packing.caption })}</div>`, `<p class="gp-fold-cap">${t(by.packing.caption)}</p>`);
   const fo = by.founder_observation;
   const sp = by.social_proof;
   if (fo || sp) {
@@ -267,7 +268,7 @@ export function buildGempages(p, { allowMissingImages = false, now = new Date() 
   return { file, name: `${p.slug}-founder-letter.gempages`, missingImages, pageId: ids.page, handle };
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   const a = parseArgs(process.argv.slice(2));
   const slug = a._[0];
   if (!slug) {

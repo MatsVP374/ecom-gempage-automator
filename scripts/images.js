@@ -250,7 +250,7 @@ export async function runImages(slug, { mode = 'all', provider = null, only = nu
   return summary;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   const a = parseArgs(process.argv.slice(2));
   const [slug, mode = 'all'] = a._;
   if (!slug || !['all', 'generate', 'upload', 'compare'].includes(mode)) {

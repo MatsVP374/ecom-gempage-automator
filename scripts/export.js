@@ -224,7 +224,7 @@ export function exportProduct(slug) {
   return written;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   const a = parseArgs(process.argv.slice(2));
   const slugs = a.all ? listSlugs() : a._;
   if (!slugs.length) {

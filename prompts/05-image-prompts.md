@@ -15,4 +15,4 @@ Voor **elk** beeld met `source: "generate"` precies één prompt:
 - `prompt` = één production-ready Engelse prompt volgens de vorm in `brand/image-rules.md`, met
   "No text in image.", de consistentiezin over de referentiebeelden en — bij elke persoon in beeld — de
   **castingzin** uit `brand/image-rules.md` (Israëlische vrouw 40–60, echte Israëlische look).
-- `aspect_ratio`: hero 4:5 of 3:4, details 1:1 of 4:5, packing 4:5.
+- `aspect_ratio`: **altijd `4:5`** voor elke GemPage-foto (hero, details, packing). Eén formaat = een rustige pagina op mobiel.

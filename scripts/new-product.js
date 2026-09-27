@@ -97,7 +97,7 @@ export function saveInput(slug, data, { create = false, force = false } = {}) {
   return input;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   const a = parseArgs(process.argv.slice(2));
   const slug = a._[0];
   if (!slug) {

@@ -21,6 +21,8 @@
   color:#211f1a;
 }
 .{{rootClassName}} img{max-width:100%;display:block;}
+.{{rootClassName}} .gp-hero-photo img,.{{rootClassName}} .gp-feature img,.{{rootClassName}} .gp-fold-photo img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;}
+.{{rootClassName}} .gp-img-missing{aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;}
 .{{rootClassName}} a{color:inherit;}
 
 .{{rootClassName}} .gp-measure{max-width:700px;margin:0 auto;}
@@ -92,7 +94,7 @@
 }
 .{{rootClassName}} .gp-feature h3{font-size:1.28rem;font-weight:700;text-transform:uppercase;}
 .{{rootClassName}} .gp-feature p{color:#3a3729;margin-bottom:18px;}
-.{{rootClassName}} .gp-feature img{border-radius:6px;margin-bottom:18px;}
+.{{rootClassName}} .gp-feature img{border-radius:6px;margin:0 auto 18px;max-width:560px;}
 
 .{{rootClassName}} .gp-review-card{
   background:#f4efe0;border-radius:8px;padding:20px 24px;text-align:right;
@@ -132,7 +134,7 @@
 .{{rootClassName}} .gp-stat-num{font-family:'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-weight:700;letter-spacing:.02em;font-size:1.7rem;color:#38452f;}
 .{{rootClassName}} .gp-stat-label{font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;color:#7a7565;margin-top:6px;}
 
-.{{rootClassName}} .gp-fold-photo{max-width:480px;margin:34px auto 8px;border-radius:6px;overflow:hidden;}
+.{{rootClassName}} .gp-fold-photo{max-width:560px;margin:34px auto 8px;border-radius:6px;overflow:hidden;}
 .{{rootClassName}} .gp-fold-cap{text-align:center;font-style:italic;font-size:.85rem;color:#7a7565;margin-bottom:26px;}
 
 .{{rootClassName}} .gp-signature{font-family:'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;font-style:italic;color:#38452f;margin:10px 0 40px;}
