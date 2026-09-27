@@ -36,6 +36,16 @@ light-olive skin, dark brown eyes, dark brown to black hair. Not Northern Europe
 catalogue model. Any other people in the frame are also Israelis in their 40s to 60s with the same natural Israeli look.
 ```
 
+## Echte foto, geen AI-look (elke prompt met een persoon)
+AI-beelden verraden zich door een gladde huid, gouden licht, een romig wazige achtergrond met lichtbolletjes en een
+geposeerde modellenglimlach. Daarom bevat elke prompt met een persoon letterlijk de **stijlzin** hieronder, en kies je
+gewoon licht (middagzon, schaduw, raamlicht) en gewone plekken (buurtcafé, eigen woonkamer, straat met scooters)
+in plaats van "golden hour", "string lights" of "dreamy". De validator controleert de stijlzin.
+
+```
+Photo style: an ordinary candid photo taken on a smartphone by a friend, not a professional shoot and not stock photography. Slightly imperfect framing, natural unretouched skin with visible pores, fine lines and wrinkles that fit her age, a few flyaway hairs, real fabric creases. Ordinary background with everyday details, only mildly out of focus (no creamy bokeh, no glowing light balls). Plain, uneven natural light (no golden-hour glow, no studio light, no HDR). No beauty filter, no airbrushing, no posed model smile. It must look like a real photo from an Israeli woman's phone, not like AI.
+```
+
 ## Image-generation prompt (stap 5)
 Elke foto met `source: "generate"` krijgt één losse, production-ready prompt. Minimaal deze velden:
 
@@ -50,8 +60,7 @@ She is [ACTION].
 Setting: [SETTING].
 The [SPECIFIC FEATURE] must be clearly visible because this photograph will accompany the section
 explaining [BENEFIT].
-Natural daylight. Realistic skin texture. Normal body proportions. Small Tel Aviv boutique/lifestyle
-photography. Not glossy fashion advertising. No text in image.
+[STIJLZIN] [CASTINGZIN] Normal body proportions. No text in image.
 The product design must remain consistent with the supplied reference images. Do not invent
 additional buttons, pockets, seams, materials or decorative elements.
 ```

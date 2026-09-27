@@ -287,6 +287,8 @@ export function validateProduct(slug, { stage } = {}) {
   const castingCheck = (w, prompt, age) => {
     if (!/\b(woman|women|she|her|man|people|hands?)\b/i.test(prompt)) return; // product-only shot
     if (!/Casting: a Jewish Israeli woman/.test(prompt)) err(`${w}: prompt misses the casting line (brand/image-rules.md → Casting)`);
+    if (!/Photo style: an ordinary candid photo taken on a smartphone/.test(prompt)) err(`${w}: prompt misses the photo-style line (brand/image-rules.md → Echte foto, geen AI-look)`);
+    if (/golden hour|string lights|dreamy|bokeh(?! ,| no)/i.test(prompt.replace(/no creamy bokeh|no golden-hour glow/g, ''))) warn(`${w}: AI-looking light/background wording (golden hour, string lights, dreamy, bokeh)`);
     const ages = [...`${age ?? ''} ${prompt}`.matchAll(/\b(?:about|aged|approximately|around)\s+(\d{2})\b/gi)].map((m) => +m[1]);
     ages.filter((n) => n < 40 || n > 60).forEach((n) => err(`${w}: age ${n} is outside 40–60`));
     if (/\b(blonde?|platinum|silver hair|scandinavian|nordic)\b/i.test(prompt.replace(/Not Northern European, not blonde/g, '')))

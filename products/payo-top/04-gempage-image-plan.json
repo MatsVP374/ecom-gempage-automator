@@ -10,13 +10,13 @@
       "existing_image": null,
       "product_color": "כחול",
       "model": "Israeli woman, about 52, shoulder-length wavy dark-brown hair, olive skin, warm smile",
-      "setting": "Tel Aviv café terrace, late afternoon",
-      "file": "images/IMG-01.png",
+      "setting": "ordinary neighbourhood café terrace in Tel Aviv, simple metal chairs, street with parked scooters behind",
+      "file": "images/IMG-01.jpg",
       "generated": {
         "provider": "gemini",
-        "model": "gemini-2.5-flash-image",
+        "model": "gemini-3-pro-image",
         "size": "4:5",
-        "at": "2026-09-27T19:44:02.795Z"
+        "at": "2026-09-27T19:47:28.260Z"
       }
     },
     {
@@ -65,7 +65,7 @@
       "existing_image": null,
       "product_color": "כחול",
       "model": "same woman as IMG-01 (about 52, shoulder-length wavy dark-brown hair, olive skin)",
-      "setting": "family dinner on a Tel Aviv balcony at dusk, string lights"
+      "setting": "family dinner on an ordinary Tel Aviv apartment balcony in the evening"
     },
     {
       "id": "IMG-06",
