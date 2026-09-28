@@ -8,7 +8,7 @@ import zlib from 'node:zlib';
 import crypto from 'node:crypto';
 import { setProductsDir, loadProduct } from '../scripts/lib.js';
 import { runImages, sizeFor, pickProvider } from '../scripts/images.js';
-import { buildGempages, zip } from '../scripts/gempages.js';
+import { buildGempages, zip, VALID_ROOT_CLASS } from '../scripts/gempages.js';
 import { writeDemo } from './fixture.js';
 
 // ---- mock OpenAI + Shopify + staged-upload target ----
@@ -228,4 +228,20 @@ test('.gempages refuses images without a URL unless explicitly allowed', () => {
   assert.throws(() => buildGempages(loadProduct(slug)), /IMG-03/);
   const r = buildGempages(loadProduct(slug), { allowMissingImages: true });
   assert.deepEqual(r.missingImages, ['IMG-03']);
+});
+
+test('.gempages: every element uid is a valid CSS class, so GemPages\' {{rootClassName}} selectors apply', () => {
+  // GemPages renders <div class="<uid> gp-custom-code"> and turns .{{rootClassName}} into .<uid>; a uid starting with a
+  // digit made the whole stylesheet invalid (unstyled draft). 200 builds → a digit-first uid would show up here.
+  const slug = writeDemo(dir);
+  const p = loadProduct(slug);
+  for (let i = 0; i < 200; i++) {
+    const r = buildGempages(p);
+    const page = JSON.parse(unzip(unzip(r.file)[`1_${r.pageId}.zip`])[`1_${r.pageId}.json`].toString());
+    const comp = JSON.parse(page.pageSections[0].component);
+    const code = comp.childrens[0].childrens[0];
+    for (const u of [comp.uid, comp.childrens[0].uid, code.uid]) assert.match(u, VALID_ROOT_CLASS);
+    assert.equal(code.advanced.editorData.rootClassName, '{{rootClassName}}');
+    assert.match(code.advanced.editorData.css, /^\.\{\{rootClassName\}\} \.gp-card\{/m);
+  }
 });

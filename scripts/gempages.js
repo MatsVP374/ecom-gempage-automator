@@ -244,7 +244,12 @@ export function zip(entries, date = new Date()) {
 // ---------- .gempages builder ----------
 // 18-digit ids like GemPages uses (kept as strings, then written as raw JSON numbers).
 const newId = () => String(600000000000000000n + (BigInt('0x' + crypto.randomBytes(8).toString('hex')) % 99999999999999999n));
-const uid = () => Array.from(crypto.randomBytes(10), (b) => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'[b % 62]).join('');
+// GemPages renders a Custom Code element as <div class="<uid> gp-custom-code"> and replaces {{rootClassName}} in its
+// CSS with that uid. A class selector cannot start with a digit (".3VlH… .gp-card" is invalid CSS and the browser drops
+// every rule), so element uids always start with a letter.
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const uid = () => Array.from(crypto.randomBytes(10), (b, i) => (i === 0 ? LETTERS[b % 52] : (LETTERS + '0123456789')[b % 62])).join('');
+export const VALID_ROOT_CLASS = /^[A-Za-z_][A-Za-z0-9_-]*$/;
 const stamp = (d) => d.toISOString().replace(/\.(\d{3})Z$/, '.$1000Z');
 
 export function buildGempages(p, { allowMissingImages = false, now = new Date() } = {}) {
@@ -269,6 +274,7 @@ export function buildGempages(p, { allowMissingImages = false, now = new Date() 
   code.uid = uid();
   code.advanced.editorData.html = html;
   code.advanced.editorData.css = css;
+  if (!VALID_ROOT_CLASS.test(code.uid)) throw new Error(`Custom Code uid "${code.uid}" is not a valid CSS class; its styles would not apply`);
   const component = JSON.stringify(comp);
 
   const I = (k) => `__ID_${k}__`; // replaced by raw 18-digit numbers after stringify (beyond JS number precision)
