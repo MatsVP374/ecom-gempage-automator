@@ -110,7 +110,7 @@ export function validateProduct(slug, { stage } = {}) {
     if (mockups.length && stage === 'publish')
       err(`MOCKUP REVIEWS — ${mockups.length} mockup testimonial(s) on this page; it must never be published (generated reviews may not appear as customer testimonials)`);
     if (input.mockup_reviews_allowed === true && stage === 'publish') err('input: mockup_reviews_allowed is set — this page is a mockup draft and may not be published');
-    if (mockups.length) flag(`MOCKUP REVIEWS ON DRAFT — ${mockups.length} generated review(s) rendered with a visible "ביקורת לדוגמה" label; this draft must not be published`);
+    if (mockups.length) flag(`MOCKUP REVIEWS ON DRAFT — ${mockups.length} generated review(s) rendered like the final page (marked only internally, data-review="mockup"); this draft must not be published`);
     for (const img of input.existing_product_images ?? [])
       if (!/^https?:\/\//.test(img) && !fs.existsSync(path.join(p.dir, img))) err(`input: existing image "${img}" not found in products/${slug}/`);
   }

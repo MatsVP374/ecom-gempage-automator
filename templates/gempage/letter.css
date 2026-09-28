@@ -248,7 +248,3 @@
 .{{rootClassName}} .gp-about-box strong{display:block;}
 .{{rootClassName}} .gp-letter,.{{rootClassName}} .gp-feature,.{{rootClassName}} .gp-measure{direction:rtl;}
 
-/* ---- Mockup reviews (draft only, never published): visibly not customer testimonials. */
-.{{rootClassName}} .gp-mockup-banner{direction:rtl;text-align:center;background:#8a1c1c;color:#fff;font-weight:700;font-size:.92rem;padding:14px 18px;border-radius:8px;margin-bottom:24px;}
-.{{rootClassName}} .gp-review-mockup{border:2px dashed #8a1c1c;}
-.{{rootClassName}} .gp-mockup-label{display:inline-block;direction:rtl;background:#8a1c1c;color:#fff;font-size:.72rem;font-weight:700;font-style:normal;padding:3px 9px;border-radius:4px;margin-bottom:8px;}

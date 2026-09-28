@@ -57,24 +57,16 @@ function reviewCard(r, ctx, lang) {
   return `<div class="gp-review-card gp-photo-review">${stars}<span class="gp-quote">”${t(r.text)}“</span><cite>— ${brand(who)}</cite></div>`;
 }
 
-// Fixed labels for mockup (generated) reviews — a preview must never look like genuine customer testimonials.
-export const MOCKUP_LABEL_HE = 'ביקורת לדוגמה · לא ביקורת אמיתית';
-export const MOCKUP_BANNER_HE = 'טיוטה פנימית: הביקורות בעמוד הזה הן דוגמאות שנכתבו לצורך בדיקה, לא ביקורות של לקוחות אמיתיות. לא לפרסום.';
-
 // A review supplied upstream with `benefit`: placed under that photo, verbatim and complete (no excerpt, no choice),
-// with its supplied name and rating. A mockup gets a visible label and never the "customer of Adina Fashion" line.
+// with its supplied name and rating. A mockup (generated, draft-only) looks exactly like the final page so the design
+// can be QA'd; it is marked only invisibly (data-review="mockup"), and the workflow keeps it off any published page.
 function suppliedCard(tm, ctx, lang) {
   if (!tm?.text) return '';
   const stars = tm.rating ? `<div class="gp-stars" aria-label="${tm.rating}/5">${'★'.repeat(tm.rating)}${'☆'.repeat(5 - tm.rating)}</div>` : '';
   const text = tm.text_he && lang === 'he' ? tm.text_he : tm.text;
-  if (tm.mockup) {
-    ctx.rendered.mockup++;
-    const who = tm.name || (lang === 'he' ? 'דוגמה' : 'Example');
-    return `<div class="gp-review-card gp-photo-review gp-review-mockup" data-review="mockup"><div class="gp-mockup-label">${esc(MOCKUP_LABEL_HE)}</div>${stars}<span class="gp-quote">”${t(text)}“</span><cite>— ${brand(who)}</cite></div>`;
-  }
-  ctx.rendered.customer++;
+  ctx.rendered[tm.mockup ? 'mockup' : 'customer']++;
   const who = tm.name ? `${tm.name}${tm.age ? `, ${tm.age}` : ''}` : lang === 'he' ? 'לקוחה של Adina Fashion' : 'Adina Fashion customer';
-  return `<div class="gp-review-card gp-photo-review">${stars}<span class="gp-quote">”${t(text)}“</span><cite>— ${brand(who)}</cite></div>`;
+  return `<div class="gp-review-card gp-photo-review"${tm.mockup ? ' data-review="mockup"' : ''}>${stars}<span class="gp-quote">”${t(text)}“</span><cite>— ${brand(who)}</cite></div>`;
 }
 
 // The routes to the real product page (brand/gempage-blueprint.md → Productroutes): product-box button + sticky bar.
@@ -218,8 +210,9 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
   // Always visible, straight to the product page.
   if (by.sticky_cta) out.push(`<div class="gp-sticky-bar"><a href="${esc(productUrl)}">${t(by.sticky_cta.text)}</a></div>`);
   out.push('</div>');
-  // A page with mockup reviews says so at the very top, before anything else in the letter.
-  if (ctx.rendered.mockup) out.splice(2, 0, `<div class="gp-mockup-banner" data-review="mockup">${esc(MOCKUP_BANNER_HE)}</div>`);
+  // Invisible page-level marker: a page with mockup reviews can be recognised in its HTML (and in the GemPages
+  // preview) without changing how it looks.
+  if (ctx.rendered.mockup) out[0] = out[0].replace('<div class="gp-page" ', '<div class="gp-page" data-reviews="mockup" ');
   const reviews = { ...ctx.rendered, rendered_as: ctx.rendered.mockup ? 'mockup' : ctx.rendered.customer ? 'customer' : 'none' };
   return { html: out.filter(Boolean).join('\n'), missingImages: [...new Set(ctx.missingImages)], reviews };
 }

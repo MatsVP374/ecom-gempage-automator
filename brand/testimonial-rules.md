@@ -31,8 +31,11 @@ Levert de input een testimonial met `benefit: n`, dan is de keuze al gemaakt: di
 **Mockups** (`mockup: true`, uit `reviews.type: MOCKUP_PLACEHOLDER`) zijn gegenereerde teksten, geen klanten:
 - alleen op een **draft die niet gepubliceerd wordt** (`input.mockup_reviews_allowed: true`, gezet door de bridge bij
   `publish: false`). Zonder die vlag worden ze niet gerenderd en geeft de validator een error;
-- alleen via hun `benefit`, met op elke kaart het label `ביקורת לדוגמה · לא ביקורת אמיתית` en bovenaan de pagina een
-  rode waarschuwingsbalk; nooit in `social_proof`, nooit geciteerd in de copy;
+- alleen via hun `benefit`; nooit in `social_proof`, nooit geciteerd in de copy;
+- de draft ziet er **precies zo uit als de uiteindelijke pagina** (voor design-QA): geen zichtbaar label of banner.
+  Intern blijven ze herkenbaar: `mockup: true` in `input.json`, `data-review="mockup"` op de kaart,
+  `data-reviews="mockup"` op `.gp-page`, `reviews.rendered_as: "mockup"` in het resultaat. Juist omdat je het niet
+  ziet, publiceert de workflow zo'n pagina nooit (hieronder) en publiceer je hem ook niet met de hand in GemPages;
 - **nooit bewijs** voor productfeiten of claims (stap 1 neemt ze niet op in `01-product-facts.json` → `testimonials`);
 - `node scripts/validate.js <slug> --stage publish` faalt zolang er een mockup op de pagina staat: zo'n pagina wordt
   nooit gepubliceerd.

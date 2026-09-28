@@ -280,8 +280,8 @@ Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle 
 
 - **Nooit feiten verzinnen** (materiaal, kleuren, maten, pasvorm, functies, prijzen, voorraad,
   medische voordelen, verzending, productprestaties). Niet in input/pagina/beelden/config → flaggen.
-- **Mockup-reviews zijn nooit klantreviews:** alleen op een niet-gepubliceerde draft, zichtbaar gelabeld, nooit bewijs,
-  nooit gepubliceerd (`validate.js --stage publish`). Aangeleverde reviewteksten worden nooit ingekort of herschreven.
+- **Mockup-reviews zijn nooit klantreviews:** alleen op een niet-gepubliceerde draft (die er voor design-QA uitziet als de
+  echte pagina, intern gemarkeerd), nooit bewijs, nooit gepubliceerd (`validate.js --stage publish`). Aangeleverde reviewteksten worden nooit ingekort of herschreven.
 - **Nooit een testimonial of klantervaring verzinnen.** Geen naam/leeftijd/vriendin/café/reis/
   aankoopverhaal/draagduur/situaties/resultaten die niet zijn aangeleverd. Zie `brand/testimonial-rules.md`.
 - **Geen nep-schaarste** ("nog 3 op voorraad", afteltimers). "בדקי אם המידה שלך עדיין במלאי" is de vaste CTA, geen voorraadclaim.

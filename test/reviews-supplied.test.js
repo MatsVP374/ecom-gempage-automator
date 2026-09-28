@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { setProductsDir, loadProduct } from '../scripts/lib.js';
-import { renderGpHtml, LETTER_CSS_TEMPLATE, MOCKUP_LABEL_HE, MOCKUP_BANNER_HE } from '../scripts/gempages.js';
+import { renderGpHtml, LETTER_CSS_TEMPLATE } from '../scripts/gempages.js';
 import { validateProduct } from '../scripts/validate.js';
 import { normaliseInput } from '../scripts/new-product.js';
 import { runRtlAudit } from '../scripts/rtl-audit.js';
@@ -46,18 +46,34 @@ test('input: benefit and mockup survive normalisation; absent fields keep the ol
   assert.ok(!('mockup_reviews_allowed' in normaliseInput('x', {})));
 });
 
-test('mockups on a draft (publish:false): rendered under their photos and visibly marked', () => {
+test('mockups on a draft (publish:false): rendered under their photos, no visible mockup UI, marked internally', () => {
   const r = render(writeDemo(dir, mockups()));
   const c = cards(r.html);
   assert.equal(c.length, 5, 'one card per existing benefit (benefit 6 has no photo in this template)');
   for (const card of c) {
-    assert.match(card, /gp-review-mockup/);
-    assert.ok(card.includes(MOCKUP_LABEL_HE));
-    assert.doesNotMatch(card, /לקוחה של Adina Fashion/, 'a mockup is never presented as a customer');
+    assert.match(card, /^<div class="gp-review-card gp-photo-review" data-review="mockup">/);
+    assert.doesNotMatch(card, /ביקורת לדוגמה|לא ביקורת אמיתית|gp-mockup|gp-review-mockup/);
   }
-  assert.ok(r.html.includes(`<div class="gp-mockup-banner" data-review="mockup">${MOCKUP_BANNER_HE}</div>`));
-  assert.ok(r.html.indexOf('gp-mockup-banner') < r.html.indexOf('gp-top-byline'), 'the banner opens the page');
+  assert.doesNotMatch(r.html, /gp-mockup-banner|טיוטה פנימית|לא לפרסום/, 'no banner');
+  assert.match(r.html, /^<div class="gp-page" data-reviews="mockup" /, 'page-level internal marker');
+  assert.doesNotMatch(LETTER_CSS_TEMPLATE(), /mockup/, 'no mockup styling in the page CSS');
   assert.deepEqual(r.reviews, { customer: 0, mockup: 5, rendered_as: 'mockup' });
+});
+
+test('a mockup draft looks exactly like the final page: identical markup apart from invisible data-* markers', () => {
+  const mock = render(writeDemo(dir, mockups()));
+  const realDir = fs.mkdtempSync(path.join(os.tmpdir(), 'adina-rev-real-'));
+  setProductsDir(realDir);
+  const real = render(
+    writeDemo(realDir, (d) => {
+      d.input.testimonials = SUPPLIED.map((r) => ({ ...r, source: 'Judge.me' }));
+      d.facts.testimonials = [];
+    }),
+  );
+  const strip = (h) => h.replace(/ data-reviews?="mockup"/g, '');
+  assert.equal(strip(mock.html), real.html);
+  assert.equal(real.reviews.rendered_as, 'customer');
+  assert.equal(mock.reviews.rendered_as, 'mockup');
 });
 
 test('mockups: supplied name, rating and text are kept verbatim (no excerpt, rewrite or correction)', () => {
@@ -86,7 +102,7 @@ test('mockups without draft permission are not rendered, and validation fails', 
   const slug = writeDemo(dir, mockups(false));
   const r = render(slug);
   assert.equal(cards(r.html).length, 0);
-  assert.doesNotMatch(r.html, /gp-mockup-banner/);
+  assert.doesNotMatch(r.html, /data-reviews?="mockup"/);
   assert.equal(r.reviews.rendered_as, 'none');
   assert.ok(validateProduct(slug).errors.some((e) => /mockup testimonial\(s\) without mockup_reviews_allowed/.test(e)));
 });
@@ -127,7 +143,7 @@ test('real supplied reviews with `benefit` render as customer reviews, verbatim,
   });
   const r = render(slug);
   assert.deepEqual(r.reviews, { customer: 5, mockup: 0, rendered_as: 'customer' });
-  assert.doesNotMatch(r.html, /gp-review-mockup|gp-mockup-banner/);
+  assert.doesNotMatch(r.html, /data-reviews?="mockup"/);
   assert.ok(plain(r.html).includes(`”${SUPPLIED[0].text}“`));
   assert.ok(!validateProduct(slug, { stage: 'publish' }).errors.some((e) => /MOCKUP|mockup/.test(e)));
 });
