@@ -118,6 +118,10 @@ ziet — `03-gempage-copy.he.json`,
   "launch_month": "2026-09"
 }
 ```
+Testimonials kunnen twee optionele velden hebben (aangeleverd via Activepieces): `benefit` (1–6: onder welke voordeelfoto,
+de GemPage plaatst hem dan zelf letterlijk) en `mockup: true` (gegenereerd, geen klant; alleen met
+`"mockup_reviews_allowed": true` op een draft die niet gepubliceerd wordt). Zie `brand/testimonial-rules.md`.
+
 Verplicht: `product_name`, `hebrew_product_name`, `product_type`, `regular_price`, `sale_price`,
 `promotion`, `sale_reason`, `colors`, `sizes`, `features`, `existing_product_page` (url of content),
 `existing_product_images`. Testimonials zijn nodig voor de **review onder elke GemPage-foto**
@@ -276,6 +280,8 @@ Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle 
 
 - **Nooit feiten verzinnen** (materiaal, kleuren, maten, pasvorm, functies, prijzen, voorraad,
   medische voordelen, verzending, productprestaties). Niet in input/pagina/beelden/config → flaggen.
+- **Mockup-reviews zijn nooit klantreviews:** alleen op een niet-gepubliceerde draft, zichtbaar gelabeld, nooit bewijs,
+  nooit gepubliceerd (`validate.js --stage publish`). Aangeleverde reviewteksten worden nooit ingekort of herschreven.
 - **Nooit een testimonial of klantervaring verzinnen.** Geen naam/leeftijd/vriendin/café/reis/
   aankoopverhaal/draagduur/situaties/resultaten die niet zijn aangeleverd. Zie `brand/testimonial-rules.md`.
 - **Geen nep-schaarste** ("nog 3 op voorraad", afteltimers). "בדקי אם המידה שלך עדיין במלאי" is de vaste CTA, geen voorraadclaim.

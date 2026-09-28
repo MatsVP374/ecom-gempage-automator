@@ -26,3 +26,5 @@ Alleen als de GemPages-koppeling (Gemcommerce MCP) in de sessie zit. Anders: de 
 6. Schrijf `10-gempages-upload.json` (shop, pagina, sectie, links, controles) en geef de gebruiker de links.
 
 **Nooit publiceren** (`gempages_publish_page`) zonder expliciete opdracht van de gebruiker; de pagina blijft DRAFT.
+Vóór elke publicatie: `node scripts/validate.js <slug> --stage publish` → 0 errors. Een pagina met mockup-reviews
+(`ביקורת לדוגמה`) faalt daar altijd en wordt nooit gepubliceerd, ook niet met opdracht.

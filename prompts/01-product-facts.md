@@ -15,7 +15,8 @@ Doel: één feitenblad waar alle volgende stappen op mogen bouwen, en **niets an
    Staat er iets op de pagina dat botst met input? Input wint, zet het conflict in `unverified`.
 4. `image_observations`: per beeld kort wat er te zien is (kleur, details, setting). Dit gebruik je
    in stap 4/5 als referentie.
-5. `testimonials`: per aangeleverde testimonial de concrete uitspraken die ze **echt** doet
+5. `testimonials`: per aangeleverde testimonial de concrete uitspraken die ze **echt** doet. Testimonials met
+   `mockup: true` zijn gegenereerd, geen klant: sla ze hier over en gebruik ze nergens als bewijs voor een feit of claim
    (`supported_statements`), of ze genoeg is voor een long-form ad (`sufficient_for_ad`) en wat
    ontbreekt (`gaps`, bv. "geen gebruikssituaties genoemd", "zegt niet hoe ze het product vond").
 6. `missing`: verplichte of belangrijke velden die ontbreken of leeg zijn.

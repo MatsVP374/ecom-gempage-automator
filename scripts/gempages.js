@@ -50,9 +50,31 @@ function img(id, ctx, { width = 640, height = 800, eager = false, alt = '' } = {
 function reviewCard(r, ctx, lang) {
   if (!r?.text) return '';
   const tm = ctx.testimonials[r.testimonial_id];
+  if (tm?.mockup) return ''; // mockups are never quoted from the copy; they only appear through their `benefit`
+  ctx.rendered.customer++;
   const who = tm?.name ? `${tm.name}${tm.age ? `, ${tm.age}` : ''}` : lang === 'he' ? 'לקוחה של Adina Fashion' : 'Adina Fashion customer';
   const stars = tm?.rating ? `<div class="gp-stars" aria-label="${tm.rating}/5">${'★'.repeat(tm.rating)}${'☆'.repeat(5 - tm.rating)}</div>` : '';
   return `<div class="gp-review-card gp-photo-review">${stars}<span class="gp-quote">”${t(r.text)}“</span><cite>— ${brand(who)}</cite></div>`;
+}
+
+// Fixed labels for mockup (generated) reviews — a preview must never look like genuine customer testimonials.
+export const MOCKUP_LABEL_HE = 'ביקורת לדוגמה · לא ביקורת אמיתית';
+export const MOCKUP_BANNER_HE = 'טיוטה פנימית: הביקורות בעמוד הזה הן דוגמאות שנכתבו לצורך בדיקה, לא ביקורות של לקוחות אמיתיות. לא לפרסום.';
+
+// A review supplied upstream with `benefit`: placed under that photo, verbatim and complete (no excerpt, no choice),
+// with its supplied name and rating. A mockup gets a visible label and never the "customer of Adina Fashion" line.
+function suppliedCard(tm, ctx, lang) {
+  if (!tm?.text) return '';
+  const stars = tm.rating ? `<div class="gp-stars" aria-label="${tm.rating}/5">${'★'.repeat(tm.rating)}${'☆'.repeat(5 - tm.rating)}</div>` : '';
+  const text = tm.text_he && lang === 'he' ? tm.text_he : tm.text;
+  if (tm.mockup) {
+    ctx.rendered.mockup++;
+    const who = tm.name || (lang === 'he' ? 'דוגמה' : 'Example');
+    return `<div class="gp-review-card gp-photo-review gp-review-mockup" data-review="mockup"><div class="gp-mockup-label">${esc(MOCKUP_LABEL_HE)}</div>${stars}<span class="gp-quote">”${t(text)}“</span><cite>— ${brand(who)}</cite></div>`;
+  }
+  ctx.rendered.customer++;
+  const who = tm.name ? `${tm.name}${tm.age ? `, ${tm.age}` : ''}` : lang === 'he' ? 'לקוחה של Adina Fashion' : 'Adina Fashion customer';
+  return `<div class="gp-review-card gp-photo-review">${stars}<span class="gp-quote">”${t(text)}“</span><cite>— ${brand(who)}</cite></div>`;
 }
 
 // The routes to the real product page (brand/gempage-blueprint.md → Productroutes): product-box button + sticky bar.
@@ -84,7 +106,11 @@ export function productRoutes(page, input, cfg = loadConfig()) {
 // Renders the founder letter in the Adina GemPages markup (gp-* classes).
 export function renderGpHtml(page, { plan = null, input = null } = {}) {
   const cfg = loadConfig();
-  const ctx = { planById: Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i])), missingImages: [], testimonials: Object.fromEntries((input?.testimonials ?? []).map((x) => [x.id, x])) };
+  const ctx = { planById: Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i])), missingImages: [], testimonials: Object.fromEntries((input?.testimonials ?? []).map((x) => [x.id, x])), rendered: { customer: 0, mockup: 0 } };
+  // Supplied reviews mapped to a benefit photo (first per benefit). Mockups only when this input is a mockup draft.
+  const supplied = {};
+  for (const x of input?.testimonials ?? [])
+    if (x.benefit != null && !(x.benefit in supplied) && (!x.mockup || input?.mockup_reviews_allowed === true)) supplied[x.benefit] = x;
   const by = Object.fromEntries((page.blocks ?? []).map((b) => [b.type, b]));
   const routes = productRoutes(page, input, cfg);
   const productUrl = routes.url || '#product';
@@ -120,7 +146,8 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     out.push('<div class="gp-features-wrap">');
     if (by.benefits.title) out.push(`<div class="gp-measure"><h2 class="gp-section-title">${t(by.benefits.title)}</h2></div>`);
     for (const i of by.benefits.items ?? []) {
-      out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: i.headline })}${reviewCard(i.review, ctx, page.lang)}</div>`);
+      const card = supplied[i.n] ? suppliedCard(supplied[i.n], ctx, page.lang) : reviewCard(i.review, ctx, page.lang);
+      out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: i.headline })}${card}</div>`);
     }
     out.push('</div>');
   }
@@ -191,7 +218,10 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
   // Always visible, straight to the product page.
   if (by.sticky_cta) out.push(`<div class="gp-sticky-bar"><a href="${esc(productUrl)}">${t(by.sticky_cta.text)}</a></div>`);
   out.push('</div>');
-  return { html: out.filter(Boolean).join('\n'), missingImages: [...new Set(ctx.missingImages)] };
+  // A page with mockup reviews says so at the very top, before anything else in the letter.
+  if (ctx.rendered.mockup) out.splice(2, 0, `<div class="gp-mockup-banner" data-review="mockup">${esc(MOCKUP_BANNER_HE)}</div>`);
+  const reviews = { ...ctx.rendered, rendered_as: ctx.rendered.mockup ? 'mockup' : ctx.rendered.customer ? 'customer' : 'none' };
+  return { html: out.filter(Boolean).join('\n'), missingImages: [...new Set(ctx.missingImages)], reviews };
 }
 
 // Standalone preview document (same markup/CSS as the GemPages import).

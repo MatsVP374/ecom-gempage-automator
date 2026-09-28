@@ -59,6 +59,10 @@ export function normaliseInput(slug, data = {}) {
       text_he: str(t.text_he) || null,
       rating: Number(t.rating) >= 1 && Number(t.rating) <= 5 ? Number(t.rating) : null,
       details: str(t.details),
+      // Supplied upstream (Activepieces): which benefit/photo the review belongs to, and whether it is a mockup
+      // (generated, not a customer). Only present when set, so existing inputs keep their shape.
+      ...(Number.isInteger(Number(t.benefit)) && Number(t.benefit) >= 1 && { benefit: Number(t.benefit) }),
+      ...(t.mockup === true && { mockup: true }),
     }))
     .filter((t) => t.text || t.details);
   return {
@@ -81,6 +85,8 @@ export function normaliseInput(slug, data = {}) {
     competitor_reference: str(data.competitor_reference),
     extra_info: str(data.extra_info),
     ugc_needed: data.ugc_needed === true || data.ugc_needed === 'true' || data.ugc_needed === 'on',
+    // Mockup reviews may be rendered (visibly marked) only on a draft that will not be published.
+    ...(data.mockup_reviews_allowed === true && { mockup_reviews_allowed: true }),
     launch_month: str(data.launch_month) || base.launch_month,
     created_at: data.created_at || base.created_at,
   };

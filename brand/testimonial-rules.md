@@ -19,3 +19,20 @@ controleert dat. De EN-master mag een vertaling tonen.
 naam · leeftijd · sterren · bron · situaties · resultaten. Naam, leeftijd en sterren typ je nooit in de copy: de
 GemPage haalt ze zelf uit `input.testimonials` (geen naam → "לקוחה של Adina Fashion", geen rating → geen sterren).
 Leeftijd alleen als de klant die zelf opgeeft.
+
+## Aangeleverde reviews met `benefit` (Activepieces) en mockups
+Levert de input een testimonial met `benefit: n`, dan is de keuze al gemaakt: die review hoort onder foto n.
+- De GemPage zet hem daar **zelf**, **volledig en letterlijk** (`text`, met de aangeleverde `name` en `rating`).
+  Claude kiest niet, kort niet in, herschrijft, vertaalt of corrigeert niet. In de copy staat bij dat voordeel dus
+  **geen** `review` (de validator geeft een error als het wel zo is).
+- Twee reviews voor hetzelfde voordeel → error. Een `benefit` zonder bijbehorend voordeel → warning, niet getoond.
+- Zonder `benefit` blijft het oude pad: Claude kiest per voordeel een passend letterlijk fragment.
+
+**Mockups** (`mockup: true`, uit `reviews.type: MOCKUP_PLACEHOLDER`) zijn gegenereerde teksten, geen klanten:
+- alleen op een **draft die niet gepubliceerd wordt** (`input.mockup_reviews_allowed: true`, gezet door de bridge bij
+  `publish: false`). Zonder die vlag worden ze niet gerenderd en geeft de validator een error;
+- alleen via hun `benefit`, met op elke kaart het label `ביקורת לדוגמה · לא ביקורת אמיתית` en bovenaan de pagina een
+  rode waarschuwingsbalk; nooit in `social_proof`, nooit geciteerd in de copy;
+- **nooit bewijs** voor productfeiten of claims (stap 1 neemt ze niet op in `01-product-facts.json` → `testimonials`);
+- `node scripts/validate.js <slug> --stage publish` faalt zolang er een mockup op de pagina staat: zo'n pagina wordt
+  nooit gepubliceerd.

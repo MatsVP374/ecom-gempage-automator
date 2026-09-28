@@ -34,3 +34,6 @@ Elk voordeel moet traceren naar feature-id's uit stap 1. Effecten zijn logische 
 feature, geen nieuwe prestatieclaims (zie `brand/fact-rules.md`).
 
 Er is **één** centraal probleem. Alles wat hierna komt (GemPage, beelden, creatives, en de ads die de gebruiker schrijft) gebruikt deze angle.
+
+**Aangeleverde strategie en reviews:** staan er in `input.extra_info` key benefits en hebben testimonials een `benefit`,
+houd de voordelen dan in die volgorde (voordeel n = key benefit n), zodat review `benefit: n` onder de juiste foto komt.

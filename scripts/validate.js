@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Validate a product against the data contract in CLAUDE.md, config/adina.json and the Adina rules.
-// Usage: node scripts/validate.js <slug> | --all   [--stage input|upload]   [--json]
+// Usage: node scripts/validate.js <slug> | --all   [--stage input|upload|publish]   [--json]
 //        --stage upload: also requires a fresh Hebrew naturalness pass (step 6c) — the gate before step 11.
+//        --stage publish: the gate before gempages_publish_page — also fails on mockup reviews.
 // Exit code 1 when any product has errors.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -99,6 +100,17 @@ export function validateProduct(slug, { stage } = {}) {
     if (new Set(ids).size !== ids.length) err('input: duplicate testimonial ids');
     (input.testimonials ?? []).forEach((t) => !isFilled(t.text) && err(`input: testimonial ${t.id} has no text`));
     if (!ids.length) flag('NO TESTIMONIALS SUPPLIED — the GemPage gets no customer review under its photos until real reviews are added to input.json');
+    // Supplied reviews (Activepieces): `benefit` maps a review to one benefit photo; `mockup` marks generated content.
+    const mapped = (input.testimonials ?? []).filter((t) => t.benefit != null);
+    const benefitNs = mapped.map((t) => t.benefit);
+    if (new Set(benefitNs).size !== benefitNs.length) err(`input: two testimonials map to the same benefit (${benefitNs.join(', ')}) — one review per photo`);
+    const mockups = (input.testimonials ?? []).filter((t) => t.mockup === true);
+    if (mockups.length && input.mockup_reviews_allowed !== true)
+      err(`input: ${mockups.length} mockup testimonial(s) without mockup_reviews_allowed — mockups are only for a draft that is not published`);
+    if (mockups.length && stage === 'publish')
+      err(`MOCKUP REVIEWS — ${mockups.length} mockup testimonial(s) on this page; it must never be published (generated reviews may not appear as customer testimonials)`);
+    if (input.mockup_reviews_allowed === true && stage === 'publish') err('input: mockup_reviews_allowed is set — this page is a mockup draft and may not be published');
+    if (mockups.length) flag(`MOCKUP REVIEWS ON DRAFT — ${mockups.length} generated review(s) rendered with a visible "ביקורת לדוגמה" label; this draft must not be published`);
     for (const img of input.existing_product_images ?? [])
       if (!/^https?:\/\//.test(img) && !fs.existsSync(path.join(p.dir, img))) err(`input: existing image "${img}" not found in products/${slug}/`);
   }
@@ -107,6 +119,9 @@ export function validateProduct(slug, { stage } = {}) {
   const colors = (input?.colors ?? []).map((c) => String(c).trim());
   const colorOk = (c) => colors.some((x) => x.toLowerCase() === String(c ?? '').trim().toLowerCase());
   const tIds = new Set((input?.testimonials ?? []).map((t) => t.id));
+  const mockupIds = new Set((input?.testimonials ?? []).filter((t) => t.mockup === true).map((t) => t.id));
+  // Supplied reviews with `benefit` are placed by the GemPage itself (verbatim), not chosen in the copy.
+  const suppliedFor = new Map((input?.testimonials ?? []).filter((t) => t.benefit != null && (!t.mockup || input?.mockup_reviews_allowed === true)).map((t) => [t.benefit, t]));
   const latinOk = new Set([
     ...LATIN_OK_BASE,
     ...String(input?.product_name ?? '').toLowerCase().split(/\W+/),
@@ -128,6 +143,7 @@ export function validateProduct(slug, { stage } = {}) {
     (facts.features ?? []).forEach((f) => !['input', 'product_page', 'image'].includes(f.source) && err(`01-product-facts: feature ${f.id} has no valid source`));
     (facts.testimonials ?? []).forEach((t) => {
       if (!tIds.has(t.id)) err(`01-product-facts: testimonial "${t.id}" does not exist in input`);
+      if (mockupIds.has(t.id)) err(`01-product-facts: testimonial "${t.id}" is a mockup — mockup reviews are never evidence for product facts`);
     });
   }
 
@@ -183,8 +199,11 @@ export function validateProduct(slug, { stage } = {}) {
       if (facts) (i.feature_ids ?? []).forEach((id) => !featureIds.has(id) && err(`${f}: benefit ${i.n} → unknown feature "${id}"`));
       if (!i.headline || !i.text) err(`${f}: benefit ${i.n} needs headline + text`);
       if (i.review) checkReview(f, `benefit ${i.n} review`, i.review, lang);
+      if (i.review && suppliedFor.has(i.n))
+        err(`${f}: benefit ${i.n} has a review in the copy, but testimonial ${suppliedFor.get(i.n).id} is supplied for this photo — remove the review from the copy (the page places the supplied one verbatim)`);
     });
-    const withReview = items.filter((i) => i.review?.text).length;
+    for (const [n, t] of suppliedFor) if (!items.some((i) => i.n === n)) warn(`${f}: testimonial ${t.id} is supplied for benefit ${n}, which does not exist — it is not shown`);
+    const withReview = items.filter((i) => i.review?.text || suppliedFor.has(i.n)).length;
     if (lang === 'he' && items.length && withReview < items.length)
       flag(`REVIEWS PER PHOTO: ${withReview}/${items.length} benefit photos have a real customer review — add testimonials that mention these benefits (never invented)`);
     const used = items.filter((i) => i.review?.text).map((i) => i.review.testimonial_id + '|' + i.review.text);
@@ -333,6 +352,7 @@ export function validateProduct(slug, { stage } = {}) {
   function checkReview(f, where, r, lang) {
     const tm = (input?.testimonials ?? []).find((x) => x.id === r.testimonial_id);
     if (!tm) return err(`${f}: ${where} → "${r.testimonial_id}" is not a testimonial in input.json`);
+    if (tm.mockup) return err(`${f}: ${where} quotes mockup testimonial ${tm.id} — mockups are placed only by their \`benefit\`, never quoted in the copy`);
     if (!isFilled(r.text)) return err(`${f}: ${where} has no text`);
     const norm = (s) => String(s ?? '').replace(/[\s"'״׳“”„.,!?;:—–-]+/g, '');
     if (lang === 'he' && ![tm.text, tm.text_he].some((src) => src && norm(src).includes(norm(r.text))))
@@ -408,7 +428,7 @@ export function validateProduct(slug, { stage } = {}) {
     }
 
     // Hebrew naturalness pass (step 6c, brand/hebrew-copy.md): required, and fresh, before the GemPage is uploaded.
-    const upload = stage === 'upload' ? err : warn;
+    const upload = stage === 'upload' || stage === 'publish' ? err : warn;
     const natural = mtime(FILES.naturalness);
     if (p.gempage.he && !p.naturalness) upload(`${FILES.naturalness} missing — the Hebrew naturalness pass (step 6c) has not been done`);
     else if (p.naturalness) {
@@ -449,7 +469,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   const a = parseArgs(process.argv.slice(2));
   const slugs = a.all ? listSlugs() : a._;
   if (!slugs.length) {
-    console.log(a.all ? 'No products yet.' : 'Usage: node scripts/validate.js <slug> | --all [--stage input|upload] [--json]');
+    console.log(a.all ? 'No products yet.' : 'Usage: node scripts/validate.js <slug> | --all [--stage input|upload|publish] [--json]');
     process.exit(a.all ? 0 : 1);
   }
   const results = slugs.map((s) => validateProduct(s, { stage: a.stage }));

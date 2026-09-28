@@ -13,6 +13,10 @@ en oneliners gaan dus niet mee (`brand/hebrew-copy.md`). `lang: "en"`, `dir: "lt
 - `founder_header.note` = het centrale probleem. `headline` = probleem-eerst, geen productnaam, geen korting.
 - `benefits` = de 5–6 benefits uit stap 2 (zelfde volgorde, `n`, `feature_ids`). De headline is het
   menselijke probleem, de tekst gaat feature → effect → leven.
+- **Aangeleverde reviews met `benefit`** (en alle `mockup: true`-testimonials): de GemPage zet ze zelf, letterlijk en
+  volledig, onder het voordeel met dat nummer. Schrijf bij dat voordeel **geen** `review`, citeer ze nergens (ook niet
+  in `social_proof`) en laat hun tekst ongemoeid (`brand/testimonial-rules.md`). Houd de voordelen in de volgorde van
+  `02-central-angle.json`, zodat `benefit: n` bij voordeel n hoort.
 - **Review per foto:** elk `benefits`-item krijgt `review: { testimonial_id, text }` als er een echte testimonial is
   die dát voordeel noemt. `text` = een **letterlijk** fragment uit de review (in de HE-versie woord voor woord uit
   `text` of `text_he`; in de EN-master een vertaling ervan). Geen passende review → `review` weglaten; nooit een

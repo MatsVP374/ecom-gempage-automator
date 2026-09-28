@@ -21,6 +21,8 @@ Schrijf de founder letter in het **Hebreeuws**, met dezelfde blokken, volgorde, 
   het voorvoegsel van `note`, `about.title`, `about.signoff` (= `founder.brand_line_he`), en de productroutes
   `cta.button` (`cta_he`) en `sticky_cta.text` (`sticky_cta_he`) met `{name}` = korte productnaam (vóór `|`), `{price}` = saleprijs.
 - `place_date`: `תל אביב · <Hebreeuwse maand> <jaar>` uit `input.launch_month`.
+- Aangeleverde reviews met `benefit` en mockups: geen `review` in de copy, de GemPage plaatst ze zelf letterlijk
+  (zie stap 3). Hun tekst wordt nooit aangepast, ook niet in 6b/6c.
 - `benefits[].review` en `social_proof.quotes`: dezelfde `testimonial_id` als de master, `text` letterlijk uit de
   Hebreeuwse review (`text`, of `text_he` als de review in een andere taal is). Niet herschrijven, alleen inkorten.
 - Productnaam exact `input.hebrew_product_name` in `offer_box.product_name`.
