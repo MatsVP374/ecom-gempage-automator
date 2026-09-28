@@ -86,3 +86,9 @@ angle** (geen nieuwe funnel):
 | B | `raw_boutique_offer` | Product in boetiekomgeving, prijs mag zichtbaar zijn, authentiek eerder dan gepolijst |
 | C | `everyday_use` | Product echt in gebruik, **andere** situatie/model/kleur dan A, zodat het account niet vier bijna identieke creatives test |
 | D | `designed_hook` | Product prominent + de centrale probleem-hook als tekst (`overlay_text_he`), bv. `למה נעל נוחה צריכה להיראות אורתופדית?`, met hooguit enkele voordelen + het aanbod |
+
+## Alt-tekst in de GemPage
+Een foto die direct naast haar eigen tekst staat (voordeelfoto onder de voordeelkop, verpakkingsfoto boven het
+bijschrift) krijgt `alt=""`: die tekst beschrijft haar al, en een kopie in de alt verschijnt als dubbele tekst (bij
+screenreaders, tekstextractie en als een beeld niet laadt). Alleen de hero heeft een eigen `hero.alt`.
+Nooit de Engelse `purpose` uit het beeldplan als alt.

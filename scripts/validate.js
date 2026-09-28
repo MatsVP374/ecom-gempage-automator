@@ -353,6 +353,8 @@ export function validateProduct(slug, { stage } = {}) {
     const tm = (input?.testimonials ?? []).find((x) => x.id === r.testimonial_id);
     if (!tm) return err(`${f}: ${where} → "${r.testimonial_id}" is not a testimonial in input.json`);
     if (tm.mockup) return err(`${f}: ${where} quotes mockup testimonial ${tm.id} — mockups are placed only by their \`benefit\`, never quoted in the copy`);
+    if (suppliedFor.get(tm.benefit) === tm)
+      return err(`${f}: ${where} quotes testimonial ${tm.id}, which is already placed under benefit ${tm.benefit} — it would appear twice`);
     if (!isFilled(r.text)) return err(`${f}: ${where} has no text`);
     const norm = (s) => String(s ?? '').replace(/[\s"'״׳“”„.,!?;:—–-]+/g, '');
     if (lang === 'he' && ![tm.text, tm.text_he].some((src) => src && norm(src).includes(norm(r.text))))

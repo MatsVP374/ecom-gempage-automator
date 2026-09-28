@@ -34,6 +34,8 @@ const brand = t;
 const shekel = (n) => (n == null ? '' : `₪${n}`);
 
 // Every GemPage photo is 4:5 portrait (brand/image-rules.md), so the page keeps one rhythm on mobile.
+// `alt` is written as given, never filled in: a photo next to its own headline or caption gets alt="" (the text beside
+// it already says it), so no text on the page is repeated in the image's alt.
 function img(id, ctx, { width = 640, height = 800, eager = false, alt = '' } = {}) {
   if (!id) return '';
   const p = ctx.planById[id];
@@ -42,15 +44,17 @@ function img(id, ctx, { width = 640, height = 800, eager = false, alt = '' } = {
     ctx.missingImages.push(id);
     return `<div class="gp-img-missing">📷 ${esc(id)}${p ? ` — ${esc(p.role)} · ${esc(p.purpose)}` : ''}</div>`;
   }
-  return `<img src="${esc(url)}" alt="${esc(alt || p?.purpose || '')}" loading="${eager ? 'eager' : 'lazy'}"${eager ? ' fetchpriority="high"' : ''} width="${width}" height="${height}">`;
+  return `<img src="${esc(url)}" alt="${esc(alt ?? '')}" loading="${eager ? 'eager' : 'lazy'}"${eager ? ' fetchpriority="high"' : ''} width="${width}" height="${height}">`;
 }
 
 // A real customer review card. Name/age/stars come from input.testimonials, never from the copy:
 // no name → "customer of Adina Fashion", no rating → no stars.
 function reviewCard(r, ctx, lang) {
-  if (!r?.text) return '';
+  if (!String(r?.text ?? '').trim()) return '';
   const tm = ctx.testimonials[r.testimonial_id];
   if (tm?.mockup) return ''; // mockups are never quoted from the copy; they only appear through their `benefit`
+  if (ctx.renderedIds.has(r.testimonial_id)) return ''; // a testimonial appears once on the page
+  ctx.renderedIds.add(r.testimonial_id);
   ctx.rendered.customer++;
   const who = tm?.name ? `${tm.name}${tm.age ? `, ${tm.age}` : ''}` : lang === 'he' ? 'לקוחה של Adina Fashion' : 'Adina Fashion customer';
   const stars = tm?.rating ? `<div class="gp-stars" aria-label="${tm.rating}/5">${'★'.repeat(tm.rating)}${'☆'.repeat(5 - tm.rating)}</div>` : '';
@@ -61,7 +65,8 @@ function reviewCard(r, ctx, lang) {
 // with its supplied name and rating. A mockup (generated, draft-only) looks exactly like the final page so the design
 // can be QA'd; it is marked only invisibly (data-review="mockup"), and the workflow keeps it off any published page.
 function suppliedCard(tm, ctx, lang) {
-  if (!tm?.text) return '';
+  if (!String(tm?.text ?? '').trim() || ctx.renderedIds.has(tm.id)) return '';
+  ctx.renderedIds.add(tm.id);
   const stars = tm.rating ? `<div class="gp-stars" aria-label="${tm.rating}/5">${'★'.repeat(tm.rating)}${'☆'.repeat(5 - tm.rating)}</div>` : '';
   const text = tm.text_he && lang === 'he' ? tm.text_he : tm.text;
   ctx.rendered[tm.mockup ? 'mockup' : 'customer']++;
@@ -98,7 +103,7 @@ export function productRoutes(page, input, cfg = loadConfig()) {
 // Renders the founder letter in the Adina GemPages markup (gp-* classes).
 export function renderGpHtml(page, { plan = null, input = null } = {}) {
   const cfg = loadConfig();
-  const ctx = { planById: Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i])), missingImages: [], testimonials: Object.fromEntries((input?.testimonials ?? []).map((x) => [x.id, x])), rendered: { customer: 0, mockup: 0 } };
+  const ctx = { planById: Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i])), missingImages: [], testimonials: Object.fromEntries((input?.testimonials ?? []).map((x) => [x.id, x])), rendered: { customer: 0, mockup: 0 }, renderedIds: new Set() };
   // Supplied reviews mapped to a benefit photo (first per benefit). Mockups only when this input is a mockup draft.
   const supplied = {};
   for (const x of input?.testimonials ?? [])
@@ -139,7 +144,9 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     if (by.benefits.title) out.push(`<div class="gp-measure"><h2 class="gp-section-title">${t(by.benefits.title)}</h2></div>`);
     for (const i of by.benefits.items ?? []) {
       const card = supplied[i.n] ? suppliedCard(supplied[i.n], ctx, page.lang) : reviewCard(i.review, ctx, page.lang);
-      out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: i.headline })}${card}</div>`);
+      // number → headline → body → photo → review card, each exactly once (the photo's alt stays empty: the headline
+      // above it already describes it).
+      out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: '' })}${card}</div>`);
     }
     out.push('</div>');
   }
@@ -171,16 +178,26 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     if (tb) out.push(`<div class="gp-stats-row">${(tb.items ?? []).map((i) => `<div><div class="gp-stat-num">${t(i.value)}</div><div class="gp-stat-label">${t(i.label)}</div></div>`).join('')}</div>`);
     out.push('</div>');
   }
-  if (by.packing) out.push(`<div class="gp-fold-photo">${img(by.packing.image, ctx, { alt: by.packing.caption })}</div>`, `<p class="gp-fold-cap">${t(by.packing.caption)}</p>`);
+  // The caption is the photo's text, shown once below it; the photo itself gets no alt copy of it.
+  if (by.packing) out.push(`<div class="gp-fold-photo">${img(by.packing.image, ctx, { alt: '' })}</div>`, by.packing.caption ? `<p class="gp-fold-cap">${t(by.packing.caption)}</p>` : '');
   const fo = by.founder_observation;
   const sp = by.social_proof;
-  if (fo || sp) {
+  // Social proof renders only what it has: the rating line and text when present, and the star row only together with
+  // an actual review card. Nothing to show → no wrapper, no stars, no empty space.
+  let social = '';
+  if (sp) {
+    const quote = (sp.quotes ?? []).slice(0, 1).map((r) => reviewCard(r, ctx, page.lang)).join('');
+    const rating = sp.rating && sp.reviews_label
+      ? `<div class="gp-rating-line">${t(page.lang === 'he' ? `${sp.rating} / ${cfg.trust.rating_scale} מתוך ${sp.reviews_label} ביקורות` : `${sp.rating} / ${cfg.trust.rating_scale} from ${sp.reviews_label} reviews`)}</div>`
+      : '';
+    const text = String(sp.text ?? '').trim() ? `<p>${t(sp.text)}</p>` : '';
+    const head = rating || text ? `<div class="gp-social">${quote ? '<div class="gp-stars">★★★★★</div>' : ''}${rating}${text}</div>` : '';
+    social = head + quote;
+  }
+  if (fo || social) {
     out.push('<div class="gp-measure">');
     if (fo) out.push(`<p>${t(fo.text)}</p>`, `<p class="gp-signature">— ${esc(cfg.founder.name_he)}</p>`);
-    if (sp) {
-      out.push(`<div class="gp-social"><div class="gp-stars">★★★★★</div><div class="gp-rating-line">${t(page.lang === 'he' ? `${sp.rating} / ${cfg.trust.rating_scale} מתוך ${sp.reviews_label} ביקורות` : `${sp.rating} / ${cfg.trust.rating_scale} from ${sp.reviews_label} reviews`)}</div><p>${t(sp.text)}</p></div>`);
-      for (const r of (sp.quotes ?? []).slice(0, 1)) out.push(reviewCard(r, ctx, page.lang));
-    }
+    if (social) out.push(social);
     out.push('</div>');
   }
   const ob = by.offer_box;
