@@ -88,7 +88,9 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
   const by = Object.fromEntries((page.blocks ?? []).map((b) => [b.type, b]));
   const routes = productRoutes(page, input, cfg);
   const productUrl = routes.url || '#product';
-  const out = [`<div aria-label="${esc(input?.product_name ?? 'Adina')} Founder Letter" dir="${esc(page.dir ?? 'rtl')}">`, '<div class="gp-card"><div class="gp-card-pad">'];
+  // .gp-page is our own root: direction and alignment are set here, not on the GemPages element around it (GemPages
+  // styles that element itself, e.g. text-align from its --ta variable), so nothing inside inherits from GemPages.
+  const out = [`<div class="gp-page" aria-label="${esc(input?.product_name ?? 'Adina')} Founder Letter" dir="${esc(page.dir ?? 'rtl')}" lang="${esc(page.lang ?? 'he')}">`, '<div class="gp-card"><div class="gp-card-pad">'];
   const h = by.founder_header;
   if (h)
     out.push(
@@ -173,7 +175,8 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
       out.push(
         `<h3>${t(ob.product_name)}</h3>`,
         `<div class="gp-rating"><span class="gp-stars">★★★★★</span> ${t(`${cfg.trust.rating}/${cfg.trust.rating_scale}`)}</div>`,
-        `<div class="gp-prices"><del class="gp-old">${t(shekel(ob.regular_price))}</del><span class="gp-new">${t(shekel(ob.sale_price))}</span></div>`,
+        // Approved Adina layout (RTL): sale price first = on the right, the struck regular price to its left.
+        `<div class="gp-prices"><span class="gp-new">${t(shekel(ob.sale_price))}</span><del class="gp-old">${t(shekel(ob.regular_price))}</del></div>`,
         `<ul class="gp-facts">${routes.facts.map((b) => `<li>${t(b)}</li>`).join('')}</ul>`,
         // The big button. This is where she orders.
         `<a class="gp-cta-btn gp-buy" href="${esc(productUrl)}">${t(routes.box)}</a>`,
@@ -274,6 +277,8 @@ export function buildGempages(p, { allowMissingImages = false, now = new Date() 
   code.uid = uid();
   code.advanced.editorData.html = html;
   code.advanced.editorData.css = css;
+  // GemPages renders this setting as --ta on the element wrapper (text-align:var(--ta)); keep it on the page's side.
+  code.settings.align = { desktop: page.dir === 'ltr' ? 'left' : 'right' };
   if (!VALID_ROOT_CLASS.test(code.uid)) throw new Error(`Custom Code uid "${code.uid}" is not a valid CSS class; its styles would not apply`);
   const component = JSON.stringify(comp);
 

@@ -9,6 +9,8 @@ Alleen als de GemPages-koppeling (Gemcommerce MCP) in de sessie zit. Anders: de 
    in de `.gempages`: 2 links naar de productpagina (knop + sticky), geen placeholders, en de `uid` van het
    Custom Code-element (`CSSCode`) begint met een letter. GemPages maakt van `.{{rootClassName}}` in de CSS
    `.<uid>`; begint die met een cijfer, dan is elke selector ongeldig en blijft de pagina zonder opmaak.
+   **RTL:** `node scripts/rtl-audit.js <slug>` geeft 0 issues op desktop én mobiel (de pagina in een LTR-host met
+   GemPages' `text-align:var(--ta)`). Exit 3 = Playwright ontbreekt: meld `RTL AUDIT SKIPPED` als flag.
 2. Winkel: `gempages_list_connected_shops` → `get_shop` (themeID).
 3. `gempages_validate_page_handle` (`<korte-naam>-founder-letter`) → `gempages_create_page`
    met `type: GP_STATIC`, **`status: DRAFT`**.
@@ -18,6 +20,8 @@ Alleen als de GemPages-koppeling (Gemcommerce MCP) in de sessie zit. Anders: de 
    reviews, knop, sticky → productpagina, RTL-isolatie, en **de opmaak**: de preview bevat
    `<style id="custom-css-<uid>">` met de volledige CSS én `class="<uid> gp-custom-code"`, en `<uid>` begint met een letter.
    Klopt dat niet: niet doorgaan, maar de sectie opnieuw bouwen (`node scripts/gempages.js <slug>`) en uploaden.
+   Daarna de echte preview: `node scripts/rtl-audit.js <slug> --url "<previewUrl>"` → 0 issues op desktop én mobiel.
+   Issues = niet doorgaan en de issues letterlijk melden (de preview is wat de klant ziet).
 6. Schrijf `10-gempages-upload.json` (shop, pagina, sectie, links, controles) en geef de gebruiker de links.
 
 **Nooit publiceren** (`gempages_publish_page`) zonder expliciete opdracht van de gebruiker; de pagina blijft DRAFT.

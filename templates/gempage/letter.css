@@ -22,8 +22,12 @@
 }
 .{{rootClassName}} img{max-width:100%;display:block;}
 
-/* RTL, explicitly on every text element (a theme or GemPages wrapper may reset direction/alignment). */
+/* RTL root. .{{rootClassName}} is the GemPages element itself: GemPages styles it with a stronger selector
+   (.gps.gpsi [style*="--ta:"]{text-align:var(--ta)}), so direction and alignment live on our own wrapper
+   .gp-page (dir="rtl") and everything inside inherits from there, never from GemPages or the theme. */
 .{{rootClassName}}{direction:rtl;text-align:right;}
+.{{rootClassName}} .gp-page{direction:rtl;text-align:right;unicode-bidi:isolate;}
+/* RTL, explicitly on every text element (a theme or GemPages wrapper may reset direction/alignment). */
 .{{rootClassName}} h1,.{{rootClassName}} h2,.{{rootClassName}} h3,.{{rootClassName}} p,.{{rootClassName}} li,
 .{{rootClassName}} blockquote,.{{rootClassName}} td,.{{rootClassName}} th,.{{rootClassName}} cite,
 .{{rootClassName}} .gp-review-card,.{{rootClassName}} .gp-quote{direction:rtl;text-align:right;}
@@ -222,3 +226,24 @@
 }
 .{{rootClassName}} .gp-sticky-bar a{display:block;}
 .{{rootClassName}} .gp-cta-sub{text-align:center;}
+
+/* ---- RTL per component: order and alignment that depend on direction are set on the component itself,
+   so one component moved into another context keeps the approved Adina layout. */
+/* numbered sections: number circle first = on the right, title after it */
+.{{rootClassName}} .gp-feature .gp-fh{direction:rtl;flex-direction:row;justify-content:flex-start;}
+.{{rootClassName}} .gp-fnum{direction:ltr;unicode-bidi:isolate;}
+/* comparison table: first column (row labels) on the right, product column on the left */
+.{{rootClassName}} .gp-cmp3{direction:rtl;}
+.{{rootClassName}} .gp-cmp-row{direction:rtl;}
+/* stats grid: first stat (sale price) top right */
+.{{rootClassName}} .gp-stats-row{direction:rtl;}
+/* price block: sale price first = on the right, struck old price to its left (as on the approved pages) */
+.{{rootClassName}} .gp-prices,.{{rootClassName}} .gp-sale-prices{direction:rtl;}
+/* check icon on the right of each fact; bundle rows read from the right */
+.{{rootClassName}} .gp-product-box ul,.{{rootClassName}} .gp-product-box li{direction:rtl;text-align:right;}
+/* CTAs: the arrow (←) ends the sentence, so it sits on the left */
+.{{rootClassName}} a.gp-buy,.{{rootClassName}} a.gp-cta-btn,.{{rootClassName}} .gp-sticky-bar,.{{rootClassName}} .gp-sticky-bar a{direction:rtl;}
+/* boxes with a heading line (about the author) read from the right */
+.{{rootClassName}} .gp-about-box,.{{rootClassName}} .gp-about-box strong{direction:rtl;text-align:right;}
+.{{rootClassName}} .gp-about-box strong{display:block;}
+.{{rootClassName}} .gp-letter,.{{rootClassName}} .gp-feature,.{{rootClassName}} .gp-measure{direction:rtl;}
