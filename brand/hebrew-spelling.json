@@ -1,5 +1,5 @@
 {
-  "_comment": "Eigen spellinglijst voor scripts/spellcheck.js. 'misspellings': fout → goed (error). 'masculine': mannelijke vorm → vrouwelijke vorm voor de lezer (warning; kan ook 'zij' zijn). 'reduplications': herhaalde woorden die wél kloppen. Vul aan zodra je een fout vindt.",
+  "_comment": "Eigen spellinglijst voor scripts/spellcheck.js. 'misspellings': fout → goed (error). 'masculine': mannelijke vorm → vrouwelijke vorm voor de lezer (warning; kan ook 'zij' zijn). 'reduplications': herhaalde woorden die wél kloppen. Vul aan zodra je een fout vindt. 'phrasing': vertaalde of AI-achtige formuleringen → wat je in plaats daarvan doet (warning; zie brand/hebrew-copy.md, stap 6c beslist). 'overused': woorden die op één pagina hooguit 2× mogen (warning).",
   "misspellings": {
     "מצויין": "מצוין",
     "בעיקבות": "בעקבות",
@@ -40,5 +40,58 @@
     "בדוק": "בדקי",
     "מוזמן": "מוזמנת"
   },
-  "reduplications": ["לאט", "סוף", "יום", "צעד", "קצת", "אחד", "אחת", "שוב", "פעם", "מאוד", "רק"]
+  "reduplications": [
+    "לאט",
+    "סוף",
+    "יום",
+    "צעד",
+    "קצת",
+    "אחד",
+    "אחת",
+    "שוב",
+    "פעם",
+    "מאוד",
+    "רק"
+  ],
+  "phrasing": {
+    "למה לא שתיהן": "vertaald uit 'why not both' — schrijf de gedachte opnieuw, bv. richting 'למה לבחור בין … כשאפשר לקבל את שניהם?'",
+    "למה לא שניהם": "vertaald uit 'why not both' — schrijf de gedachte opnieuw",
+    "מסודרת": "'מסודרת' betekent netjes/niet slordig, niet 'stijlvol' — bedoel je er goed uitzien: נראית טוב / מטופחת / אלגנטית / עם סטייל",
+    "מסודר": "'מסודר' betekent netjes, niet 'stijlvol' — kies het woord dat in deze context gewoon is",
+    "הינו": "stijf/formeel — schrijf gewoon 'הוא' of herformuleer",
+    "הינה": "stijf/formeel — schrijf gewoon 'היא' of herformuleer",
+    "ניתן ל": "stijf — 'אפשר ל…'",
+    "על מנת": "stijf — 'כדי'",
+    "עבורך": "stijf/vertaald ('for you') — 'לך'",
+    "מבלי": "stijf — 'בלי'",
+    "כמו כן": "stijf — herformuleer",
+    "בנוסף לכך": "stijf — herformuleer",
+    "חוויה": "reclamecliché — beschrijf wat ze echt voelt of doet",
+    "פתרון": "reclamecliché — beschrijf het concrete effect",
+    "משנה משחק": "vertaald ('game changer')",
+    "הגיע הזמן": "AI-/reclamecliché ('it's time to')",
+    "תגידי שלום": "vertaald ('say hello to')",
+    "ברוכה הבאה": "vertaald ('welcome to') — niet in een brief van Adina",
+    "בואי נדבר": "AI-cliché ('let's talk about')",
+    "לא עוד": "vertaald ('no more …') — herformuleer",
+    "לשדרג את": "reclamecliché ('upgrade your …')",
+    "להרים את הלוק": "reclamecliché",
+    "איכות פרימיום": "vaag en vertaald — noem het concrete feit",
+    "בסוף היום": "vertaald ('at the end of the day')",
+    "לעשות הבדל": "vertaald ('make a difference')",
+    "לשלב הבא": "vertaald ('to the next level')",
+    "מיליון דולר": "vertaald ('feel like a million dollars')",
+    "במיטבך": "vertaald ('at your best')",
+    "זה לא סתם": "AI-patroon ('it's not just X, it's Y')",
+    "לא רק": "AI-patroon als het steeds terugkomt ('not only … but also') — hooguit één keer per pagina"
+  },
+  "overused": [
+    "מושלם",
+    "מושלמת",
+    "באמת",
+    "פשוט",
+    "ממש",
+    "בדיוק",
+    "חוויה"
+  ]
 }

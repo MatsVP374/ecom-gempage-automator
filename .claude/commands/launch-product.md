@@ -15,6 +15,8 @@ Voer de volledige Adina Fashion launch-pipeline uit voor: `$ARGUMENTS`
    - Stap 5b = `node scripts/images.js <slug>` (Gemini of OpenAI → Shopify). Mislukt het, neem de foutmelding op als
      flag `IMAGES NOT GENERATED — …` en ga door.
    - Stap 6b (spellingcheck, `prompts/06b-spellcheck.md`) na stap 6 en opnieuw na stap 9.
+   - Stap 6c (Hebreeuwse natuurlijkheid, `prompts/06c-hebrew-naturalness.md`) direct na elke 6b, en als laatste vóór
+     een upload als de Hebreeuwse tekst daarna nog is veranderd. Standaard: `brand/hebrew-copy.md`.
    - Geen ad copy schrijven: die maakt de gebruiker zelf.
 5. Na stap 6 en 9 en aan het eind: `node scripts/validate.js <slug>` → fix errors tot 0.
 6. `node scripts/export.js <slug>`.

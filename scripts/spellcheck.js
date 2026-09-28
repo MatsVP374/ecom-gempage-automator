@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // Hebrew spelling & typography check for everything the customer sees: the GemPage (03-gempage-copy.he.json),
 // the creative overlay texts and the UGC voice-over.
-// Mechanical rules only (final letters, glued Latin, doubled words, niqqud, spacing, known misspellings from
-// brand/hebrew-spelling.json). Grammar and wording are proofread by Claude in step 6b (03-gempage-spellcheck.json).
+// Mechanical rules (final letters, glued Latin, doubled words, niqqud, spacing, known misspellings from
+// brand/hebrew-spelling.json) plus naturalness signals (translated/AI phrasing, repetitive structure) as warnings.
+// Grammar is proofread by Claude in step 6b (03-gempage-spellcheck.json), naturalness in step 6c (03-gempage-naturalness.json).
 // Usage: node scripts/spellcheck.js <slug> [--json]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -16,7 +17,13 @@ const IS_WORD = new RegExp(`^[${LETTER}]+$`);
 export function loadSpellingList() {
   const f = path.join(ROOT, 'brand', 'hebrew-spelling.json');
   const j = JSON.parse(fs.readFileSync(f, 'utf8'));
-  return { misspellings: j.misspellings ?? {}, masculine: j.masculine ?? {}, reduplications: new Set(j.reduplications ?? []) };
+  return {
+    misspellings: j.misspellings ?? {},
+    masculine: j.masculine ?? {},
+    reduplications: new Set(j.reduplications ?? []),
+    phrasing: j.phrasing ?? {},
+    overused: j.overused ?? [],
+  };
 }
 
 // Strip up to 3 one-letter prefixes (ו/ה/ב/ל/מ/ש/כ) and return every candidate stem, longest first.
@@ -66,6 +73,13 @@ export function checkHebrew(text, list = loadSpellingList()) {
   for (const m of s.matchAll(/[א-ת][,!?;][א-ת]/g)) add('warning', 'spacing', m[0], `geen spatie na leesteken: "${m[0]}"`);
   if (/[!?]{2,}|!{2,}/.test(s)) add('warning', 'punctuation', '', 'meerdere uitroep-/vraagtekens');
   if ((s.match(/\(/g) ?? []).length !== (s.match(/\)/g) ?? []).length) add('warning', 'punctuation', '', 'haakjes niet in paren');
+
+  // Naturalness (brand/hebrew-copy.md): translated or AI-like phrasing. Warnings — step 6c rewrites or keeps them.
+  for (const [phrase, advice] of Object.entries(list.phrasing ?? {})) {
+    const open = phrase.endsWith(' ל') ? '' : '(?![א-ת])'; // "ניתן ל" is followed by the verb
+    if (new RegExp(`(?<![א-ת])[${PREFIXES}]{0,2}${phrase}${open}`).test(s)) add('warning', 'phrasing', phrase, `natuurlijkheid: "${phrase}" — ${advice}`);
+  }
+  if (/(?<![א-ת])[א-ת]+ או [א-ת]+\?/.test(s)) add('warning', 'phrasing', '', 'natuurlijkheid: retorische keuzevraag ("X או Y?") klinkt vaak vertaald — schrijf de gedachte zoals een vrouw hem zou zeggen');
   return issues;
 }
 
@@ -89,13 +103,41 @@ export function spellcheckProduct(p) {
   const list = loadSpellingList();
   const issues = [];
   const all = hebrewStrings(p);
-  for (const { file, at, text } of all) for (const i of checkHebrew(text, list)) issues.push({ ...i, file, at });
+  // Reviews and quotes are the customer's own words (kept literally), so they get no naturalness advice.
+  const customerWords = /\.review\.text$|quotes\[\d+\]\.text$/;
+  for (const { file, at, text } of all)
+    for (const i of checkHebrew(text, list)) if (!(i.rule === 'phrasing' && customerWords.test(at))) issues.push({ ...i, file, at });
   // Spelling variants mixed within one product (Academy spelling: הכול, מאוד).
   const joined = all.map((x) => x.text).join(' ');
   for (const [a, b] of [['הכל', 'הכול'], ['מאד', 'מאוד']])
     if (new RegExp(`(^|[^א-ת])[${PREFIXES}]?${a}([^א-ת]|$)`).test(joined) && joined.includes(b))
       issues.push({ level: 'warning', rule: 'consistency', text: a, file: '*', at: '', message: `zowel "${a}" als "${b}" gebruikt — kies één spelling (${b})` });
+  issues.push(...repetitionIssues(p, all, list));
   return { checked: all.length, issues };
+}
+
+// Naturalness at page level: the same sentence shape over and over reads as AI-written (brand/hebrew-copy.md).
+export function repetitionIssues(p, all = hebrewStrings(p), list = loadSpellingList()) {
+  const issues = [];
+  const add = (at, message) => issues.push({ level: 'warning', rule: 'repetition', text: '', file: '03-gempage-copy.he.json', at, message });
+  const first = (t) => String(t ?? '').trim().split(/[\s,.:;!?—]+/)[0];
+  const blocks = Object.fromEntries((p.gempage?.he?.blocks ?? []).map((b) => [b.type, b]));
+  const heads = (blocks.benefits?.items ?? []).map((i) => i.headline).filter(Boolean);
+  const same = (arr, key) => {
+    const c = {};
+    arr.forEach((x) => (c[key(x)] = (c[key(x)] ?? 0) + 1));
+    return Object.entries(c).filter(([k, n]) => k && n >= 3);
+  };
+  for (const [w, n] of same(heads, first)) add('benefits.items[].headline', `natuurlijkheid: ${n} voordeel-koppen beginnen met "${w}" — varieer de bouw`);
+  if (heads.length >= 3 && heads.filter((h) => /\?\s*$/.test(h)).length >= 3) add('benefits.items[].headline', 'natuurlijkheid: 3+ voordeel-koppen zijn een vraag — varieer de bouw');
+  const parts = (blocks.founder_story?.parts ?? []).map((x) => x.text).filter(Boolean);
+  for (const [w, n] of same(parts, first)) add('founder_story.parts[]', `natuurlijkheid: ${n} alinea's beginnen met "${w}" — varieer de opening`);
+  const text = all.filter((x) => x.file === '03-gempage-copy.he.json').map((x) => x.text).join(' ');
+  for (const w of list.overused ?? []) {
+    const n = (text.match(new RegExp(`(?<![א-ת])[${PREFIXES}]?${w}(?![א-ת])`, 'g')) ?? []).length;
+    if (n > 2) add('*', `natuurlijkheid: "${w}" ${n}× op de pagina — hooguit 2×`);
+  }
+  return issues;
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {

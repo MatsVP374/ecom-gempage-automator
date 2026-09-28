@@ -4,7 +4,8 @@ Alleen als de GemPages-koppeling (Gemcommerce MCP) in de sessie zit. Anders: de 
 `output/<slug>-founder-letter.gempages` zelf (Pages → Import).
 
 1. **Laatste controle vóór upload** (alles moet slagen, anders niet uploaden):
-   `node scripts/validate.js <slug>` (0 errors) · `node scripts/spellcheck.js <slug>` (0 errors) ·
+   `node scripts/validate.js <slug> --stage upload` (0 errors; o.a. de Hebreeuwse natuurlijkheidsronde, stap 6c, is
+   gedaan ná de laatste wijziging aan de Hebreeuwse tekst; anders eerst 6c) · `node scripts/spellcheck.js <slug>` (0 errors) ·
    alle beeld-URL's uit `04-gempage-image-plan.json` geven 200 · de productpagina geeft 200 ·
    in de `.gempages`: 2 links naar de productpagina (knop + sticky), geen placeholders, en de `uid` van het
    Custom Code-element (`CSSCode`) begint met een letter. GemPages maakt van `.{{rootClassName}}` in de CSS

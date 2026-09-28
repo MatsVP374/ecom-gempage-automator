@@ -34,6 +34,7 @@ is de **single source of truth** waar alles na stap 2 op gebouwd wordt.
 | `brand/image-rules.md` | GemPage-beeldplan, promptformaat, statische creatives |
 | `brand/ad-system.md` | Hoe de GemPage aansluit op de ads van de gebruiker; UGC-script |
 | `brand/testimonial-rules.md` | Wat je met testimonials wel/niet mag |
+| `brand/hebrew-copy.md` | **De standaard voor de Hebreeuwse tekst**: natuurlijk Israëlisch Hebreeuws, geen vertaling, geen AI-patronen |
 | `brand/hebrew-style.md` | Hebreeuwse stijl en RTL |
 
 ## De pipeline
@@ -52,6 +53,7 @@ Commando: `/launch-product <slug>` (volledig) · `/launch-step <slug> <stap>` (�
 | 5b | Beelden genereren (Gemini of OpenAI) + uploaden (Shopify CDN) | `node scripts/images.js <slug>` | `images/IMG-xx.png`, `url` per beeld in `04-…plan.json` |
 | 6 | GemPage build / Hebreeuws | `prompts/06-gempage-build-he.md` | `03-gempage-copy.he.json` |
 | 6b | Hebreeuwse spellingcheck (script + proeflezen) | `prompts/06b-spellcheck.md` | `03-gempage-spellcheck.json` (+ fixes in de HE-teksten) |
+| 6c | Hebreeuwse natuurlijkheid (klinkt het als echte Israëlische copy?) | `prompts/06c-hebrew-naturalness.md` | `03-gempage-naturalness.json` (+ herschreven zinnen) |
 | 7 | Quality control (feiten, GemPage, beelden) | `prompts/07-quality-control.md` | `09-qa-report.md` (deel 1) |
 | 9 | Creative plan + UGC | `prompts/09-creative-plan.md` | `07-creative-plan.json`, `08-ugc.json` |
 | 10 | Final launch package | `prompts/10-final-package.md` | `09-qa-report.md` (compleet) + `output/` incl. **`<slug>-founder-letter.gempages`** |
@@ -71,6 +73,9 @@ Regels:
   meld dan de exacte foutmelding als flag `IMAGES NOT GENERATED — …` en ga door; de `.gempages` krijgt dan
   zichtbare placeholders. Genereer nooit beelden op een andere manier en verzin geen beeld-URL's.
 - Na stap 6 en 9: `node scripts/validate.js <slug>` en fix alle **errors** vóór je verdergaat.
+- **Hebreeuwse natuurlijkheid (6c)** na 6b, na stap 9, en als laatste vóór de upload: elke zin die grammaticaal klopt maar
+  niet klinkt als natuurlijk Israëlisch Hebreeuws voor vrouwen van 45–65+ wordt herschreven (`brand/hebrew-copy.md`).
+  `node scripts/validate.js <slug> --stage upload` weigert de upload zonder verse 6c.
 - **Spellingcheck (6b)** na stap 6 én opnieuw na stap 9: `node scripts/spellcheck.js <slug>` (sluitletters, geplakt
   Hebreeuws/Latijn, dubbele woorden, nikud, spaties, spelfouten uit `brand/hebrew-spelling.json`) plus proeflezen door jou
   (grammatica, vrouwelijke aanspreekvorm, natuurlijk Hebreeuws). Spelling-errors blokkeren de validatie.
@@ -247,6 +252,16 @@ Als `input.ugc_needed` false is: `{ "needed": false, "reason": "not requested" }
 ```
 `status` ∈ `clean | fixed`. Alleen spelling/grammatica/formulering verbeteren, nooit inhoud. `doubts` worden flags.
 
+### `03-gempage-naturalness.json`
+```json
+{ "status": "rewritten", "checked": ["03-gempage-copy.he.json"],
+  "rewrites": [{ "file": "…", "at": "headline.headline", "before": "…", "after": "…", "reason": "…" }],
+  "kept": [{ "text": "…", "why": "…" }],
+  "doubts": [{ "text": "…", "question": "…" }] }
+```
+`status` ∈ `clean | rewritten`. Alleen formulering, nooit feiten/claims/prijzen/ID's; vaste teksten en reviews blijven letterlijk
+(twijfel → `doubts`, wordt een flag).
+
 ### `09-qa-report.md`
 Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle flags, en "Voor de mens".
 
@@ -270,6 +285,8 @@ Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle 
 - Maar zodra ze overtuigd is, hoeft ze **niet te zoeken**: de knop in de productbox en de sticky CTA gaan direct naar de productpagina (blueprint → Productroutes).
 - **RTL-QA** bij elke pagina: expliciete RTL per tekstelement, geïsoleerde ₪/4.7/5/S–3XL/Adina Fashion (validator + mobiele preview).
 - Productnamen exact zoals aangeleverd.
+- **Hebreeuws wordt geschreven, niet vertaald**, en beoordeeld op natuurlijkheid, niet alleen op correctheid:
+  warm, persoonlijk, volwassen boetiek-Hebreeuws, vrouwelijke grammatica, geen AI-patronen (`brand/hebrew-copy.md`).
 - Geen medische claims.
 
 ## Eindchecklist (zo rapporteer je na `/launch-product`)
@@ -281,6 +298,7 @@ ADINA PRODUCT LAUNCH — <hebrew_product_name>
 ✓ Central angle created          "<central_problem>"
 ✓ GemPage copy complete          17 blocks · HE + EN master
 ✓ Hebrew spellcheck              0 errors · 4 corrections · 0 doubts
+✓ Hebrew naturalness             7 rewrites · 0 doubts
 ✓ 7 GemPage images planned       5 generate · 2 existing
 ✓ Image prompts complete         5
 ✓ Images generated + on Shopify  7/7

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Validate a product against the data contract in CLAUDE.md, config/adina.json and the Adina rules.
-// Usage: node scripts/validate.js <slug> | --all   [--stage input]   [--json]
+// Usage: node scripts/validate.js <slug> | --all   [--stage input|upload]   [--json]
+//        --stage upload: also requires a fresh Hebrew naturalness pass (step 6c) — the gate before step 11.
 // Exit code 1 when any product has errors.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -405,6 +406,17 @@ export function validateProduct(slug, { stage } = {}) {
       if (stale.length) warn(`${FILES.spellcheck} is older than ${stale.join(', ')} — proofread again (/launch-step <slug> spellcheck)`);
       (p.spellcheck.doubts ?? []).forEach((d) => flag(`SPELLING DOUBT — ${d.text ?? d}${d.question ? ': ' + d.question : ''}`));
     }
+
+    // Hebrew naturalness pass (step 6c, brand/hebrew-copy.md): required, and fresh, before the GemPage is uploaded.
+    const upload = stage === 'upload' ? err : warn;
+    const natural = mtime(FILES.naturalness);
+    if (p.gempage.he && !p.naturalness) upload(`${FILES.naturalness} missing — the Hebrew naturalness pass (step 6c) has not been done`);
+    else if (p.naturalness) {
+      if (!['clean', 'rewritten'].includes(p.naturalness.status)) err(`${FILES.naturalness}: status must be clean|rewritten`);
+      const stale = [FILES.gempageHe, FILES.creatives, FILES.ugc].filter((f) => mtime(f) > natural + 1000);
+      if (stale.length) upload(`${FILES.naturalness} is older than ${stale.join(', ')} — run the naturalness pass again (/launch-step <slug> naturalness)`);
+      (p.naturalness.doubts ?? []).forEach((d) => flag(`HEBREW DOUBT — ${d.text ?? d}${d.question ? ': ' + d.question : ''}`));
+    }
   }
 
   return summary();
@@ -437,7 +449,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   const a = parseArgs(process.argv.slice(2));
   const slugs = a.all ? listSlugs() : a._;
   if (!slugs.length) {
-    console.log(a.all ? 'No products yet.' : 'Usage: node scripts/validate.js <slug> | --all [--stage input] [--json]');
+    console.log(a.all ? 'No products yet.' : 'Usage: node scripts/validate.js <slug> | --all [--stage input|upload] [--json]');
     process.exit(a.all ? 0 : 1);
   }
   const results = slugs.map((s) => validateProduct(s, { stage: a.stage }));

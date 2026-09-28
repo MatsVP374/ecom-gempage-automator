@@ -19,6 +19,7 @@ INPUT NEW PRODUCT
   → [5b] Beelden genereren (OpenAI) + uploaden naar Shopify-CDN   ← script, volledig automatisch
   → [6] GemPage build (Hebreeuws)
   → [6b] Hebreeuwse spellingcheck  ← script + proeflezen door Claude
+  → [6c] Hebreeuwse natuurlijkheid ← klinkt het als echte Israëlische copy? (brand/hebrew-copy.md)
   → [7] Quality control
   → [9] Creative plan (4 statics + optioneel UGC)
   → [10] FINAL LAUNCH PACKAGE
@@ -106,6 +107,7 @@ products/<slug>/
 ├── 03-gempage-copy.en.json    founder letter, Engelse master (voor review)
 ├── 03-gempage-copy.he.json    founder letter, Hebreeuws (live)
 ├── 03-gempage-spellcheck.json spellingcheck: verbeteringen + twijfels
+├── 03-gempage-naturalness.json natuurlijkheidsronde: herschreven zinnen + twijfels
 ├── 04-gempage-image-plan.json ±7 beelden, elk gekoppeld aan een GemPage-blok
 ├── 05-image-prompts.json      production-ready prompts (13 vaste velden)
 ├── 07-creative-plan.json      4 statics (A discovery · B boutique/offer · C everyday · D designed hook)
@@ -157,7 +159,9 @@ De validator houdt de workflow eerlijk:
 - reviews: elke review hoort bij een echte testimonial en is in het Hebreeuws een letterlijk fragment ervan;
   meldt hoeveel voordeelfoto's nog geen review hebben
 - casting: Israëlische vrouwen van 40–60 in elke prompt met een persoon
-- Hebreeuwse spelling (zie Spellingcheck)
+- Hebreeuwse spelling (zie Spellingcheck) en natuurlijkheid: vertaalde/AI-formuleringen en herhaalde zinsbouw als
+  warning; zonder verse natuurlijkheidsronde (6c) weigert `--stage upload` de upload
+- RTL: `node scripts/rtl-audit.js <slug>` rendert de pagina (desktop + mobiel) zoals GemPages en controleert de RTL-layout
 
 `npm test` draait de testsuite (met een DEMO-fixture, geen echt product) + validatie van alle producten; ook in GitHub Actions.
 

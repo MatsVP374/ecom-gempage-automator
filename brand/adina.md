@@ -36,6 +36,9 @@ Ze praat over echte situaties, niet over "premium kwaliteit".
 - Nooit leeftijd als probleem neerzetten, nooit betuttelen. Ze weet wat ze wil.
 - Rustig. Geen uitroeptekenregens, geen emoji-regens, geen hype.
 
+In het Hebreeuws klinkt die stem als natuurlijk Israëlisch Hebreeuws van een boetiekeigenares, niet als een vertaling:
+zie `brand/hebrew-copy.md`.
+
 ## Wat Adina Fashion níet zegt
 - "Maak kennis met…", "Upgrade je garderobe", "De perfecte combinatie van comfort en stijl",
   "Dames, dit MOET je hebben!", "KOOP NU", nep-deadlines, verzonnen voorraadclaims.

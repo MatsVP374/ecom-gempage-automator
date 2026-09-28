@@ -16,7 +16,8 @@ Draai deze stap na stap 6 én opnieuw na stap 9 (de validator waarschuwt als een
    - vaste teksten uit `config/adina.json` en `input.hebrew_product_name` blijven **letterlijk** staan, ook als je ze anders zou schrijven
      (twijfel? zet het in `doubts`).
 3. Verbeter fouten direct in het bronbestand. Verander **geen inhoud**: geen nieuwe claims, prijzen, feiten of zinnen,
-   alleen spelling, grammatica en natuurlijkheid van de formulering.
+   alleen spelling en grammatica. Natuurlijkheid (klinkt het als echt Israëlisch Hebreeuws?) is stap 6c
+   (`prompts/06c-hebrew-naturalness.md`), die direct hierna komt.
 4. Kom je een fout tegen die de automatische check had moeten vangen (een spelfout die vaker voorkomt), voeg hem toe aan
    `brand/hebrew-spelling.json` → `misspellings`.
 5. Schrijf `03-gempage-spellcheck.json`:

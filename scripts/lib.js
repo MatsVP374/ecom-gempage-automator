@@ -17,6 +17,7 @@ export const FILES = {
   prompts: '05-image-prompts.json',
   gempageHe: '03-gempage-copy.he.json',
   spellcheck: '03-gempage-spellcheck.json',
+  naturalness: '03-gempage-naturalness.json',
   creatives: '07-creative-plan.json',
   ugc: '08-ugc.json',
   qa: '09-qa-report.md',
@@ -39,6 +40,7 @@ export const STEPS = [
   },
   { id: 'gempage-he', n: 6, label: 'GemPage build (HE)', file: FILES.gempageHe },
   { id: 'spellcheck', n: '6b', label: 'Spellcheck (HE)', file: FILES.spellcheck },
+  { id: 'naturalness', n: '6c', label: 'Hebrew naturalness (HE)', file: FILES.naturalness },
   { id: 'qc', n: 7, label: 'Quality control', file: FILES.qa },
   { id: 'creatives', n: 9, label: 'Creative plan + UGC', file: FILES.creatives },
   { id: 'package', n: 10, label: 'Launch package', file: 'output/launch-package.md' },
@@ -124,6 +126,7 @@ export function loadProduct(slug) {
     creatives: json(FILES.creatives),
     ugc: json(FILES.ugc),
     spellcheck: json(FILES.spellcheck),
+    naturalness: json(FILES.naturalness),
     qa: readText(path.join(dir, FILES.qa)),
     parseErrors,
   };

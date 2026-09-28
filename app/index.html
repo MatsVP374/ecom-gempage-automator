@@ -88,7 +88,7 @@ const api = async (path, opts = {}) => {
   return data;
 };
 const TABS = ['overview', 'input', 'angle', 'gempage', 'images', 'creatives', 'qa', 'export'];
-const STEP_ARGS = { facts: 'facts', angle: 'angle', gempage: 'gempage', 'image-plan': 'image-plan', 'image-prompts': 'image-prompts', 'gempage-he': 'gempage-he', spellcheck: 'spellcheck', qc: 'qc', creatives: 'creatives', package: 'package' };
+const STEP_ARGS = { facts: 'facts', angle: 'angle', gempage: 'gempage', 'image-plan': 'image-plan', 'image-prompts': 'image-prompts', 'gempage-he': 'gempage-he', spellcheck: 'spellcheck', naturalness: 'naturalness', qc: 'qc', creatives: 'creatives', package: 'package' };
 const state = { slug: null, tab: 'overview', data: null, lang: 'he', poll: null, creating: false };
 try { Object.assign(state, JSON.parse(localStorage.getItem('adina-ui') || '{}'), { data: null, poll: null, creating: false }); } catch {}
 const save = () => { try { localStorage.setItem('adina-ui', JSON.stringify({ slug: state.slug, tab: state.tab, lang: state.lang })); } catch {} };

@@ -4,7 +4,8 @@ Lees: `02-central-angle.json`, `01-product-facts.json`, `input.json`, `config/ad
 `brand/gempage-blueprint.md`, `brand/adina.md`.
 
 Schrijf de complete founder letter in het **Engels** als master (structuur + betekenis, voor
-review). Stap 6 schrijft de Hebreeuwse versie. `lang: "en"`, `dir: "ltr"`.
+review). Stap 6 schrijft de Hebreeuwse versie opnieuw vanuit de betekenis, niet zin voor zin; Engelse woordspelingen
+en oneliners gaan dus niet mee (`brand/hebrew-copy.md`). `lang: "en"`, `dir: "ltr"`.
 
 - Volg de 17 blokken en velden uit het datacontract in `CLAUDE.md`, **in die volgorde**.
 - Adina is de verteller ("I"). Het verhaal volgt `brand/gempage-blueprint.md`: probleem eerst,

@@ -180,6 +180,7 @@ export function writeDemo(productsDir, mutate = (d) => d, { omit = [] } = {}) {
     '07-creative-plan.json': d.creatives,
     '08-ugc.json': d.ugc,
     '03-gempage-spellcheck.json': { status: 'clean', checked: ['03-gempage-copy.he.json', '07-creative-plan.json'], corrections: [], doubts: [] },
+    '03-gempage-naturalness.json': { status: 'clean', checked: ['03-gempage-copy.he.json', '07-creative-plan.json'], rewrites: [], kept: [], doubts: [] },
   };
   for (const [name, data] of Object.entries(files)) if (!omit.includes(name)) fs.writeFileSync(path.join(dir, name), JSON.stringify(data, null, 2));
   if (!omit.includes('09-qa-report.md')) fs.writeFileSync(path.join(dir, '09-qa-report.md'), '# QA — demo\n');
