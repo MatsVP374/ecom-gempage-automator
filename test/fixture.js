@@ -64,6 +64,16 @@ export function demoProduct() {
     old_alternative_b: 'B',
     why_now: 'test',
     founder_letter_hook: 'test',
+    selection_story: {
+      opening: 'curiosity',
+      hook: 'test',
+      real_problem: 'Test problem',
+      what_changed_her_mind: 'test',
+      turning_point_feature_ids: ['f1'],
+      why_selected: 'test',
+      real_life: 'test',
+      offer_framing: 'supplied_sale_reason',
+    },
     benefits,
   };
   angle.questions.enabling_features = ['f1'];
@@ -84,7 +94,7 @@ export function demoProduct() {
           id: 'founder_story',
           type: 'founder_story',
           greeting: H ? 'שלום, אני עדינה.' : 'Hello',
-          parts: ['intro', 'observation', 'problem', 'alternatives', 'search', 'discovery'].map((role) => ({ role, text: T('story') })),
+          parts: ['hook', 'problem', 'turning_point', 'selection'].map((role) => ({ role, text: T('story') })),
         },
         { id: 'benefits', type: 'benefits', title: T('Benefits'), items: images.map((image, i) => ({ n: i + 1, headline: T('h'), text: T('t'), feature_ids: [`f${i + 1}`], image })) },
         { id: 'comparison', type: 'comparison', title: T('Compare'), columns: { a: T('A'), b: T('B'), product: T('P') }, rows: [1, 2, 3].map(() => ({ label: T('l'), a: '✗', b: '✗', product: '✓' })) },

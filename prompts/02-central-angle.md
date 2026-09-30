@@ -1,7 +1,7 @@
 # Stap 2: Marketing angle → `02-central-angle.json` (single source of truth)
 
 Lees: `01-product-facts.json`, `input.json` (vooral `central_problem_hint`, `known_customer_problems`),
-`brand/adina.md`, `brand/customer-avatar.md`, `config/adina.json`.
+`brand/adina.md` (vooral het founder-verhaal: Adina is selectief), `brand/customer-avatar.md`, `config/adina.json`.
 
 Beantwoord eerst de 10 vragen (`questions`):
 1. `who`: voor wie is dit product?
@@ -13,11 +13,27 @@ Beantwoord eerst de 10 vragen (`questions`):
 7. `adina_observation`: wat is Adina's observatie na 15+ jaar in de mode?
 8. `core_belief`: wat is het sterkste geloof achter het product, in één zin?
 9. `easiest_comparison`: welke vergelijking maakt het product het makkelijkst te begrijpen?
-10. `why_now`: waarom is er nu een reden om te kopen? (seizoen + `input.sale_reason`; geen verzonnen schaarste)
+10. `why_now`: hoe wordt het aanbod gebracht? Alleen `input.sale_reason` als die is aangeleverd; anders een tijdelijke
+    introductie-/boetiekprijs voor deze selectie, zonder reden. Nooit zelf einde seizoen, opruiming, sluiting,
+    overtollige/beperkte voorraad, "eerste lading" of schaarste aannemen.
 
 Leg dan de angle vast:
 `central_problem` · `customer_insight` · `product_solution` · `adina_belief` · `core_promise` ·
 `old_alternative_a` · `old_alternative_b` · `why_now` · `founder_letter_hook`.
+
+En het verhaal waarom dít product een plek in Adina's selectie verdiende (`selection_story`, zie `brand/adina.md`):
+- `opening`: hoe de brief opent, één van `skepticism` · `curiosity` · `familiar_problem` · `surprising_detail` ·
+  `disappointing_alternatives` · `overlooked`. Kies wat bij dít product past; niet elke brief met scepsis.
+- `hook`: Adina's eigen, productspecifieke eerste gedachte (vers geschreven, geen voorbeeldzin hergebruiken).
+- `real_problem`: wat ze aan dit soort producten vaak niet goed vindt / waar vrouwen mee worstelen (= `central_problem`,
+  uit de aangeleverde strategie en feiten).
+- `what_changed_her_mind` + `turning_point_feature_ids`: welke geverifieerde details haar van gedachten deden
+  veranderen, en welk alledaags voordeel dat oplevert.
+- `why_selected`: waarom ze het met een gerust hart aan haar klanten aanbeveelt en het een plek in haar boetiek gaf.
+- `real_life`: waar het in de dag, garderobe of routine van de klant past.
+- `offer_framing`: `supplied_sale_reason` (alleen als `input.sale_reason` gevuld is) of `introductory_offer`.
+Geen verzonnen gebeurtenissen: niet dat Adina het zelf droeg/testte (tenzij aangeleverd), geen klantreacties,
+verkoopcijfers, voorraad, inkoopverhalen of redenen voor de korting. `founder_letter_hook` = de `hook` in één zin.
 
 Voorbeeld (alleen ter illustratie, niet hergebruiken):
 ```
@@ -25,7 +41,8 @@ Problem:       Too cool for just a blouse, too warm for a coat.
 Alternatives:  Blouse only ↔ heavy coat
 Solution:      The layer in between.
 Adina belief:  A useful wardrobe piece should adapt as the day changes.
-Why now:       Transition into cooler weather / seasonal promotion.
+Opening:       overlooked: "I almost walked past it on the rail. Another in-between layer, I thought."
+Offer:         introductory boutique price (no sale_reason supplied).
 ```
 
 Tot slot `benefits`: de 5–6 sterkste voordelen, elk als

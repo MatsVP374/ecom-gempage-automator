@@ -34,7 +34,12 @@ const REQUIRED_FIELDS = {
   about: ['title', 'text', 'signoff'],
   sticky_cta: ['text'],
 };
-const STORY_ROLES = ['intro', 'observation', 'problem', 'alternatives', 'search', 'discovery'];
+// The founder letter explains why this product earned a place in Adina's selection (brand/adina.md → founder-verhaal).
+const STORY_ROLES = ['hook', 'problem', 'turning_point', 'selection'];
+// Letters written before that story (problem → search → discovery) still validate, with a warning.
+const LEGACY_STORY_ROLES = ['intro', 'observation', 'problem', 'alternatives', 'search', 'discovery'];
+const STORY_OPENINGS = ['skepticism', 'curiosity', 'familiar_problem', 'surprising_detail', 'disappointing_alternatives', 'overlooked'];
+const OFFER_FRAMINGS = ['supplied_sale_reason', 'introductory_offer'];
 const IMAGE_ROLES = ['hero', 'benefit_detail', 'functional_detail', 'functional_detail_2', 'real_life_use', 'variation', 'packing'];
 const PROMPT_FIELDS = ['subject', 'age', 'product', 'exact_color', 'styling', 'action', 'environment', 'framing', 'light', 'mood', 'must_be_visible', 'realism', 'must_not_change'];
 const HEBREW = /[֐-׿]/;
@@ -46,6 +51,16 @@ const FORBIDDEN = [
   { re: /7\s*[–-]\s*14|ימי עסקים|business days/i, msg: 'old shipping terms — shipping is "free with Israel Post" (config)' },
   { re: /only \d+ left|נשאר(?:ו)? רק \d+|last \d+ (?:pieces|units)/i, msg: 'stock/scarcity claim not supplied in input' },
   { re: /\bcures?\b|\bheals?\b|מרפא|ריפוי/i, msg: 'medical claim' },
+];
+// Reasons for a discount that may only appear when input.sale_reason itself gives that reason (never assumed).
+const SALE_REASONS = [
+  { re: /end[- ]of[- ](?:the[- ])?season|season(?:al)?[- ](?:end|sale|clearance)|סוף (?:ה)?עונה|סיום (?:ה)?עונה/i, what: 'end of season' },
+  { re: /clearance|clear(?:ing)?[- ]out|מכירת חיסול|חיסול/i, what: 'clearance' },
+  { re: /closing[- ](?:down|sale)|(?:store|shop|boutique) (?:is )?closing|סגירת (?:ה)?(?:חנות|בוטיק|עסק)/i, what: 'closing sale' },
+  { re: /overstock|excess (?:inventory|stock)|surplus (?:stock|inventory)|עודפי (?:מלאי|סחורה)|עודף מלאי/i, what: 'overstock / excess inventory' },
+  { re: /limited (?:stock|quantit(?:y|ies)|supply|edition)|while (?:stocks?|supplies) last|מלאי מוגבל|כמות מוגבלת|כמויות מוגבלות|(?:עד|ל)גמר המלאי/i, what: 'limited stock' },
+  { re: /first (?:batch|shipment|delivery|run|drop)|המשלוח הראשון|הסדרה הראשונה|המנה הראשונה|הקולקציה הראשונה/i, what: '"first batch"' },
+  { re: /selling (?:out|fast)|almost (?:gone|sold out)|last chance|הזדמנות אחרונה|נחטפ|אוזל/i, what: 'scarcity / urgency' },
 ];
 function walkStrings(obj, pathStr, out) {
   if (typeof obj === 'string') out.push([pathStr, obj]);
@@ -148,8 +163,22 @@ export function validateProduct(slug, { stage } = {}) {
   }
 
   // ---------- 02 angle ----------
+  const storyRoles = (lang) => (p.gempage[lang]?.blocks ?? []).find((b) => b.type === 'founder_story')?.parts?.map((x) => x.role).join();
+  const legacyStory = ['en', 'he'].some((l) => storyRoles(l) === LEGACY_STORY_ROLES.join());
   const angle = p.angle;
   if (angle) {
+    const st = angle.selection_story;
+    if (!st) (legacyStory ? warn : err)(`02-central-angle: no "selection_story" — why this product earned a place in Adina's selection (brand/adina.md → founder-verhaal)${legacyStory ? '; this letter uses the previous story arc' : ''}`);
+    else {
+      for (const k of ['hook', 'real_problem', 'what_changed_her_mind', 'why_selected', 'real_life']) if (!isFilled(st[k])) err(`02-central-angle: selection_story.${k} is empty`);
+      if (!STORY_OPENINGS.includes(st.opening)) err(`02-central-angle: selection_story.opening must be one of ${STORY_OPENINGS.join(' | ')}`);
+      if (!st.turning_point_feature_ids?.length) err('02-central-angle: selection_story.turning_point_feature_ids is empty — what changed her mind must be a verified feature');
+      if (facts) (st.turning_point_feature_ids ?? []).forEach((id) => !featureIds.has(id) && err(`02-central-angle: selection_story → unknown feature "${id}"`));
+      if (!OFFER_FRAMINGS.includes(st.offer_framing)) err(`02-central-angle: selection_story.offer_framing must be ${OFFER_FRAMINGS.join(' | ')}`);
+      else if (st.offer_framing === 'supplied_sale_reason' && !isFilled(input?.sale_reason))
+        err('02-central-angle: offer_framing is "supplied_sale_reason" but input.sale_reason is empty — use "introductory_offer", never invent a reason');
+    }
+    checkSaleReasons(angle, '02-central-angle', input, err);
     for (const k of ['central_problem', 'customer_insight', 'product_solution', 'adina_belief', 'core_promise', 'old_alternative_a', 'old_alternative_b', 'why_now', 'founder_letter_hook'])
       if (!isFilled(angle[k])) err(`02-central-angle: "${k}" is empty`);
     const q = angle.questions ?? {};
@@ -184,10 +213,13 @@ export function validateProduct(slug, { stage } = {}) {
     });
     // story: the product is the conclusion, not the opening
     const parts = by.founder_story?.parts ?? [];
-    if (parts.map((x) => x.role).join() !== STORY_ROLES.join()) err(`${f}: founder_story.parts roles must be ${STORY_ROLES.join(' → ')}`);
+    const legacyParts = parts.map((x) => x.role).join() === LEGACY_STORY_ROLES.join();
+    if (legacyParts) warn(`${f}: founder_story uses the previous story arc (${LEGACY_STORY_ROLES.join(' → ')}) — new letters use ${STORY_ROLES.join(' → ')}`);
+    else if (parts.map((x) => x.role).join() !== STORY_ROLES.join()) err(`${f}: founder_story.parts roles must be ${STORY_ROLES.join(' → ')}`);
     const names = [input?.product_name, input?.hebrew_product_name].filter((n) => n && n.length > 3);
-    const early = [by.founder_header?.note, by.headline?.headline, by.headline?.subtitle, ...parts.filter((x) => x.role !== 'discovery').map((x) => x.text)].join(' ');
-    names.forEach((n) => early.includes(n) && warn(`${f}: product name "${n}" appears before the discovery — the letter must not start by selling the product`));
+    const beforeTurn = legacyParts ? parts.filter((x) => x.role !== 'discovery') : parts.filter((x) => ['hook', 'problem'].includes(x.role));
+    const early = [by.founder_header?.note, by.headline?.headline, by.headline?.subtitle, ...beforeTurn.map((x) => x.text)].join(' ');
+    names.forEach((n) => early.includes(n) && warn(`${f}: product name "${n}" appears before ${legacyParts ? 'the discovery' : 'the turning point'} — the letter must not start by selling the product`));
     if (/₪|%|\bsale\b|\bdiscount\b|מבצע|הנחה/i.test([by.founder_header?.note, by.headline?.headline].join(' ')))
       err(`${f}: header/headline mentions price/discount — must be problem-first`);
     // benefits
@@ -291,6 +323,7 @@ export function validateProduct(slug, { stage } = {}) {
       checkHebrew(g, f, latinOk, err, warn);
     }
     checkForbidden(g, f, err);
+    checkSaleReasons(g, f, input, err);
     // images referenced must exist in plan
     if (p.plan) {
       const refs = [by.hero?.image, by.packing?.image, ...items.map((i) => i.image)].filter(Boolean);
@@ -426,6 +459,7 @@ export function validateProduct(slug, { stage } = {}) {
       walkStrings(p.creatives, '', []).forEach(([k, s]) => shekels(s).forEach((n) => !allowed.has(n) && err(`07-creative-plan.${k}: price ₪${n} is not the regular or sale price`)));
     }
     checkForbidden(p.creatives, '07-creative-plan', err);
+    checkSaleReasons(p.creatives, '07-creative-plan', input, err);
   }
   if (input?.ugc_needed && p.creatives && !p.ugc?.needed) err('08-ugc: input asks for UGC but 08-ugc.json has needed: false or is missing');
   if (p.ugc?.needed) {
@@ -433,6 +467,7 @@ export function validateProduct(slug, { stage } = {}) {
     if (!s.length) err('08-ugc: needed but no script');
     s.forEach((x, i) => !(x.voice_he && HEBREW.test(x.voice_he)) && err(`08-ugc: script[${i}] needs Hebrew voice_he`));
     checkForbidden(p.ugc, '08-ugc', err);
+    checkSaleReasons(p.ugc, '08-ugc', input, err);
   }
 
   // ---------- Hebrew spelling (scripts/spellcheck.js + Claude's proofread in 03-gempage-spellcheck.json) ----------
@@ -483,6 +518,17 @@ function checkForbidden(obj, where, err) {
   for (const [k, s] of walkStrings(obj, '', [])) {
     if (NON_COPY.test(k)) continue;
     for (const f of FORBIDDEN) if (f.re.test(s)) err(`${where}${k.startsWith('[') ? '' : '.'}${k}: ${f.msg} → "${s.match(f.re)[0]}"`);
+  }
+}
+
+// A reason for the discount is only allowed when the supplied input.sale_reason gives it (brand/adina.md → aanbod).
+function checkSaleReasons(obj, where, input, err) {
+  const supplied = `${input?.sale_reason ?? ''} ${input?.promotion ?? ''}`;
+  for (const [k, s] of walkStrings(obj, '', [])) {
+    if (NON_COPY.test(k)) continue;
+    for (const r of SALE_REASONS)
+      if (r.re.test(s) && !r.re.test(supplied))
+        err(`${where}${k.startsWith('[') ? '' : '.'}${k}: ${r.what} as a reason for the offer is not in input.sale_reason — never invent why it is discounted → "${s.match(r.re)[0]}"`);
   }
 }
 

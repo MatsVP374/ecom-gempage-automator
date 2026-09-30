@@ -54,8 +54,9 @@ test('input gate flags every missing required field and never fills it in', () =
   const slug = 'empty-product';
   saveInput(slug, { product_name: 'X' }, { create: true });
   const r = validateProduct(slug, { stage: 'input' });
-  for (const f of ['hebrew_product_name', 'regular_price', 'sale_price', 'colors', 'sizes', 'features', 'existing_product_page', 'existing_product_images', 'sale_reason'])
+  for (const f of ['hebrew_product_name', 'regular_price', 'sale_price', 'colors', 'sizes', 'features', 'existing_product_page', 'existing_product_images'])
     assert.ok(has(r.errors, new RegExp(`MISSING INPUT: ${f}`)), f);
+  assert.ok(!has(r.errors, /MISSING INPUT: sale_reason/), 'sale_reason is optional — never required, never invented');
   assert.ok(has(r.flags, /NO TESTIMONIALS/));
   const saved = JSON.parse(fs.readFileSync(path.join(dir, slug, 'input.json'), 'utf8'));
   assert.equal(saved.regular_price, null);

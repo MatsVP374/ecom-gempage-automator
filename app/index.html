@@ -195,8 +195,8 @@ function inputForm(i, { isNew }) {
       <div><label>Launch month</label><input name="launch_month" type="month" value="${v(i.launch_month)}"></div>
     </div>
     <div class="row">
-      <div><label>Promotion <b>*</b></label><input name="promotion" value="${v(i.promotion)}" placeholder="bv. 50% discount — seasonal promotion"></div>
-      <div><label>Current sale reason <b>*</b></label><input name="sale_reason" value="${v(i.sale_reason)}" placeholder="bv. End of Season Sale"></div>
+      <div><label>Promotion <b>*</b></label><input name="promotion" value="${v(i.promotion)}" placeholder="bv. 50% discount"></div>
+      <div><label>Current sale reason (optioneel)</label><input name="sale_reason" value="${v(i.sale_reason)}" placeholder="alleen een echte reden — leeg = introductieprijs"></div>
     </div>
     <div class="row">
       <div><label>Available colors <b>*</b> (komma-gescheiden, exact)</label><input name="colors" value="${comma(i.colors)}"></div>

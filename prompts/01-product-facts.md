@@ -7,6 +7,7 @@ beeld in `input.existing_product_images` / `products/<slug>/source/` (lokale bee
 Doel: één feitenblad waar alle volgende stappen op mogen bouwen, en **niets anders**.
 
 1. Neem naam, Hebreeuwse naam, type, prijzen, promotie, sale reason, kleuren en maten **exact** over uit input.
+   `sale_reason` is optioneel: leeg in input = leeg in de feiten (nooit zelf een reden invullen).
    Kleuren krijgen een Hebreeuwse vertaling in `he`, maar er komen geen kleuren bij.
 2. `features`: elk aangeleverd feature → `{ id: "f1".., fact, source: "input" }`. Features die je
    **aantoonbaar** op de productpagina leest → `source: "product_page"`. Wat je **duidelijk ziet** op een

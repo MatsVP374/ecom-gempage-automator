@@ -83,9 +83,10 @@ Nodig in `.env` (zie `.env.example`): `GEMINI_API_KEY` en/of `OPENAI_API_KEY`, `
 Template: `templates/product-input.md` (hetzelfde als het formulier in de UI).
 
 **Verplicht:** product name · Hebrew product name · product type · regular price · sale price ·
-promotion · current sale reason · available colors · available sizes · product features ·
+promotion · available colors · available sizes · product features ·
 existing product page (URL en/of geplakte tekst) · existing product images (URL's of bestanden in
-`products/<slug>/source/`).
+`products/<slug>/source/`). **Optioneel:** current sale reason (alleen een echte reden; leeg = tijdelijke
+introductieprijs, er wordt nooit een reden verzonnen).
 
 **Nodig voor de reviews onder de foto's:** echte customer reviews. Per review: de letterlijke tekst, de
 bron, en naam/leeftijd/sterren **alleen als je ze echt weet**. Tip: 5–6 reviews die elk een ander voordeel noemen.
@@ -155,6 +156,9 @@ De validator houdt de workflow eerlijk:
 - GemPage: exacte blokvolgorde, vaste Hebreeuwse teksten, probleem-eerst (geen korting of product in de header),
   bundel exact 10/15/20/25, trust-waarden uit config
 - oude logica geblokkeerd: "2e item 20%", "7–14 werkdagen", voorraadclaims, medische claims
+- verhaal: `founder_story` = hook → problem → turning_point → selection, met `selection_story` in de angle;
+  een reden voor de korting (einde seizoen, opruiming, sluiting, overtollige/beperkte voorraad, eerste lading,
+  schaarste) die niet in `input.sale_reason` staat is een fout (copy, angle, creatives, UGC)
 - beelden: elk beeld een doel en een blok, alle 13 promptvelden, geen regeneratie van bestaande foto's
 - reviews: elke review hoort bij een echte testimonial en is in het Hebreeuws een letterlijk fragment ervan;
   meldt hoeveel voordeelfoto's nog geen review hebben

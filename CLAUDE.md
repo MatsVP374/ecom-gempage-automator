@@ -98,8 +98,8 @@ ziet — `03-gempage-copy.he.json`,
   "product_type": "Soft knitted hooded cardigan",
   "regular_price": 319,
   "sale_price": 159,
-  "promotion": "50% discount — seasonal promotion",
-  "sale_reason": "End of season sale",
+  "promotion": "50% discount",
+  "sale_reason": "",
   "colors": ["Blue", "Black"],
   "sizes": ["S–5XL"],
   "features": ["soft knitted texture", "full front button closure"],
@@ -123,8 +123,9 @@ de GemPage plaatst hem dan zelf letterlijk) en `mockup: true` (gegenereerd, geen
 `"mockup_reviews_allowed": true` op een draft die niet gepubliceerd wordt). Zie `brand/testimonial-rules.md`.
 
 Verplicht: `product_name`, `hebrew_product_name`, `product_type`, `regular_price`, `sale_price`,
-`promotion`, `sale_reason`, `colors`, `sizes`, `features`, `existing_product_page` (url of content),
-`existing_product_images`. Testimonials zijn nodig voor de **review onder elke GemPage-foto**
+`promotion`, `colors`, `sizes`, `features`, `existing_product_page` (url of content),
+`existing_product_images`. `sale_reason` is optioneel: alleen een echte, aangeleverde reden voor de korting; leeg = het
+aanbod is een tijdelijke introductie-/boetiekprijs zonder reden (nooit zelf "einde seizoen" e.d. invullen). Testimonials zijn nodig voor de **review onder elke GemPage-foto**
 (zonder testimonials blijven die reviews weg). `text_he` alleen als de review niet in het Hebreeuws is; `rating` alleen als bekend.
 Shipping/returns komen uit `config/adina.json` (niet per product).
 
@@ -165,13 +166,19 @@ Shipping/returns komen uit `config/adina.json` (niet per product).
   "old_alternative_b": "…",
   "why_now": "…",
   "founder_letter_hook": "…",
+  "selection_story": {
+    "opening": "skepticism | curiosity | familiar_problem | surprising_detail | disappointing_alternatives | overlooked",
+    "hook": "…", "real_problem": "…", "what_changed_her_mind": "…", "turning_point_feature_ids": ["f2"],
+    "why_selected": "…", "real_life": "…", "offer_framing": "supplied_sale_reason | introductory_offer"
+  },
   "benefits": [
     { "n": 1, "human_problem": "…", "feature_ids": ["f1"], "practical_effect": "…",
       "real_life_benefit": "…", "situations": ["…"] }
   ]
 }
 ```
-5–6 `benefits`; elk `feature_ids` verwijst naar `01-product-facts.json`.
+5–6 `benefits`; elk `feature_ids` verwijst naar `01-product-facts.json`. `selection_story` = waarom dít product een plek in
+Adina's selectie verdiende (`brand/adina.md` → founder-verhaal); `supplied_sale_reason` alleen met een gevulde `input.sale_reason`.
 
 ### `03-gempage-copy.en.json` en `03-gempage-copy.he.json` (identieke blokstructuur)
 ```json
@@ -184,11 +191,11 @@ Vaste blokvolgorde (zie `brand/gempage-blueprint.md`), `id` = `type`:
 | `founder_header` | `byline`, `place_date`, `note`, `badge` |
 | `headline` | `headline`, `subtitle` |
 | `hero` | `image`, `alt` |
-| `founder_story` | `greeting`, `parts: [{ role, text }]` — roles in volgorde `intro`, `observation`, `problem`, `alternatives`, `search`, `discovery` |
+| `founder_story` | `greeting`, `parts: [{ role, text }]` — roles in volgorde `hook`, `problem`, `turning_point`, `selection` (producten van vóór dit verhaal: `intro` … `discovery`, alleen een waarschuwing) |
 | `benefits` | `title`, `items: [{ n, headline, text, feature_ids, image, review? }]` (5–6) · `review = { testimonial_id, text }`: letterlijk fragment van een echte review onder de foto |
 | `comparison` | `title`, `columns: { a, b, product }`, `rows: [{ label, a, b, product }]` (3–5) |
 | `founder_quote` | `quote`, `author` |
-| `sale` | `title`, `paragraphs: []`, `regular_price`, `sale_price`, `availability_note` (optioneel, alleen echte info) |
+| `sale` | `title`, `paragraphs: []`, `regular_price`, `sale_price`, `availability_note` (optioneel, alleen echte info). Reden voor de korting alleen uit `input.sale_reason`, anders tijdelijke introductieprijs |
 | `trust_bar` | `items: [{ value, label }]` (4) |
 | `packing` | `image`, `caption` |
 | `founder_observation` | `text` |
@@ -285,7 +292,8 @@ Checklist uit `prompts/10-final-package.md` met ☑/☐, validator-output, alle 
 - **Nooit een testimonial of klantervaring verzinnen.** Geen naam/leeftijd/vriendin/café/reis/
   aankoopverhaal/draagduur/situaties/resultaten die niet zijn aangeleverd. Zie `brand/testimonial-rules.md`.
 - **Geen nep-schaarste** ("nog 3 op voorraad", afteltimers). "בדקי אם המידה שלך עדיין במלאי" is de vaste CTA, geen voorraadclaim.
-- Aanbod komt **alleen** uit input (prijzen, promotie, sale reason) + `config/adina.json`
+- Aanbod komt **alleen** uit input (prijzen, promotie, sale reason als aangeleverd) + `config/adina.json`. Geen
+  verzonnen reden voor de korting (einde seizoen, opruiming, sluiting, voorraad, "eerste lading", schaarste)
   (bundel 10/15/20/25%, gratis verzending met Israel Post, 30 dagen retour, 4.7/5, 2,550+ reviews, 15+ jaar).
 - De GemPage begint **nooit** met het product of de korting; het product is de conclusie van Adina's verhaal.
 - Maar zodra ze overtuigd is, hoeft ze **niet te zoeken**: de knop in de productbox en de sticky CTA gaan direct naar de productpagina (blueprint → Productroutes).

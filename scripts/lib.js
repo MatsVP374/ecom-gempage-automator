@@ -142,7 +142,6 @@ export const REQUIRED_INPUT = [
   ['regular_price', 'sale section, offer box'],
   ['sale_price', 'sale section, offer box, sticky CTA'],
   ['promotion', 'sale section and ad descriptions'],
-  ['sale_reason', 'sale section ("why it is on sale now")'],
   ['colors', 'offer box, image prompts, creatives'],
   ['sizes', 'offer box'],
   ['features', 'benefits (every benefit must trace to a feature)'],

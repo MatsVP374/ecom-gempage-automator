@@ -9,6 +9,9 @@ PRODUCT
 
 GEMPAGE
 ☐ Eén centraal probleem? ☐ Founder-verhaal consistent met angle? ☐ Begint niet met het product/korting?
+☐ Legt de brief uit waarom dít product een plek in Adina's selectie kreeg (hook → probleem → omslag → keuze)? ☐ Hook vers
+  en productspecifiek, niet dezelfde opening als een eerdere brief? ☐ Geen verzonnen reden voor de korting, klantreacties,
+  voorraad of "ik droeg het zelf"?
 ☐ Voordelen onderbouwd? ☐ Vergelijking logisch? ☐ Aanbod correct? ☐ Hebreeuws natuurlijk? ☐ RTL ok?
 ☐ CTA correct (kleur-variant)? ☐ 2 productroutes (knop in productbox, sticky) → productpagina? ☐ Prijs niet vaker dan nodig (sale-tekst, trust bar, productbox)?
 ☐ RTL-QA op mobiel (390 px): ₪-prijzen, 4.7/5, 2,550+, S–3XL, Adina Fashion staan goed; oude prijs doorgestreept? ☐ Spellingcheck 0 errors en `03-gempage-spellcheck.json` actueel?

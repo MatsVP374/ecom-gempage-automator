@@ -1,15 +1,16 @@
 # GemPage blueprint — de vaste founder-letter advertorial
 
 De landingspagina is een **advertorial / brief van Adina**, geen standaard productpagina.
-**De GemPage begint nooit met het product.** Hij begint met een probleem dat ze herkent. Dan legt
-Adina uit waarom ze naar iets beters zocht, en dan wordt het product de oplossing. Pas later wordt
-de pagina commercieel.
+**De GemPage begint nooit met het product als verkoop.** Kernidee (`brand/adina.md` → founder-verhaal): Adina is
+selectief, en de brief legt uit **waarom dít product een plek in haar selectie verdiende**. Pas later wordt de pagina
+commercieel.
 
-Psychologie: PROBLEM → RECOGNITION → PERSONAL STORY → DISCOVERY → PRODUCT → SPECIFIC REAL-LIFE
-BENEFITS → FOUNDER STORY → OFFER. Niet: PRODUCT → 50% OFF → BUY NOW → FEATURE LIST.
+Verhaal: PERSOONLIJKE HOOK (aarzeling/scepsis/nieuwsgierigheid) → HET ECHTE PROBLEEM → WAT HAAR VAN GEDACHTEN DEED
+VERANDEREN → WAAROM ZE HET KOOS → ECHT LEVEN (voordelen + foto's) → AANBOD → PERSOONLIJKE AFSLUITING.
+Niet: PRODUCT → 50% OFF → BUY NOW → FEATURE LIST.
 
-De lezer denkt achtereenvolgens: *"Dat is precies wat ik meemaak"* → *"Dat klinkt handig"* →
-*"Ik wil weten wat Adina hierover zegt"* → pas later: *"Dat is eigenlijk een goed aanbod."*
+De lezer denkt achtereenvolgens: *"Dat herken ik"* → *"Wat zag Adina erin?"* → *"Als zij het goed genoeg vindt…"*
+→ pas later: *"Dat is eigenlijk een goed aanbod."*
 
 Vaste Hebreeuwse teksten komen uit `config/adina.json` → `landing_page`.
 Blokken hieronder = de `type`s in `03-gempage-copy.*.json`, in deze volgorde.
@@ -23,25 +24,28 @@ Blokken hieronder = de `type`s in `03-gempage-copy.*.json`, in deze volgorde.
 - `badge`: `מכתב מהמייסדת`
 
 ### 2. `headline`
-Grote, **probleem-eerst** headline, gebaseerd op 15+ jaar ervaring + het probleem van de klant +
-Adina's observatie. Subtitle die nieuwsgierig maakt naar wat Adina ontdekte.
+Grote headline vanuit Adina's hook of het probleem dat de klant herkent (bv. haar aanvankelijke twijfel over dit
+soort items). Subtitle die nieuwsgierig maakt naar wat Adina van gedachten deed veranderen.
 Niet openen met korting, specificaties of "koop nu". Geen productnaam in header/headline.
 
 ### 3. `hero`
-Lifestyle-foto (image plan `hero`): vrouw ±50–65, natuurlijke Israëlische/Tel Aviv-omgeving,
-product duidelijk zichtbaar, realistisch, spontaan, volwassen. Niet fashion-editorial, niet zichtbaar AI.
+Lifestyle-foto (image plan `hero`): casting volgens `brand/image-rules.md` → Casting, natuurlijke Israëlische/Tel
+Aviv-omgeving, product duidelijk zichtbaar, realistisch. Niet fashion-editorial, niet zichtbaar AI.
 
 ### 4. `founder_story`
-`greeting`: `שלום, אני עדינה.` De `parts` in deze volgorde:
-1. `intro`: 15+ jaar boetiek in Tel Aviv
-2. `observation`: wat ze klanten steeds hoort of ziet zeggen
-3. `problem`: het specifieke dagelijkse probleem (het centrale probleem uit stap 2)
-4. `alternatives`: waarom de bestaande opties (old alternative A/B) niet voldoen
-5. `search`: waar Adina naar ging zoeken
-6. `discovery`: de introductie van het product, als **conclusie** van haar zoektocht
+`greeting`: `שלום, אני עדינה.` De `parts` in deze volgorde (uit `02-central-angle.json` → `selection_story`):
+1. `hook`: Adina's persoonlijke, productspecifieke eerste gedachte: aarzeling, scepsis, nieuwsgierigheid, een bekend
+   klantprobleem, een verrassend detail, een teleurstellend alternatief, of dat ze het stuk eerst over het hoofd zag.
+2. `problem`: wat ze aan dit soort producten vaak niet goed vindt / waar vrouwen mee worstelen (het centrale probleem)
+3. `turning_point`: de specifieke details van dít product die haar van gedachten deden veranderen (ontdekking, geen specs)
+4. `selection`: waarom het een plek in haar boetiek kreeg: het lost het probleem op zoals zij het wil aanbevelen
+
+Het product (type, "deze trui") mag vanaf de hook genoemd worden; de **productnaam** pas vanaf `turning_point`.
+Geen twee brieven met dezelfde opening of zinsbouw. De 15+ jaar staan al in de byline en `about`; alleen noemen als
+het de hook natuurlijk sterker maakt.
 
 **Kort houden.** Elk deel 1–2 korte zinnen (max ~120 tekens), het hele verhaal max ~550 tekens. De kop max ~70
-tekens, zonder de 15+ jaar (die staan al in de byline en het intro). De lezer moet snel bij de voordelen en foto's zijn.
+tekens. De lezer moet snel bij de voordelen en foto's zijn.
 
 ### 5. `benefits`: 5–6 genummerde blokken
 Elk blok: `n`, een **benefit-headline** (menselijk probleem, geen feature), korte uitleg in Adina's stem
@@ -68,10 +72,15 @@ Eén zin die de hele positionering samenvat, in de geest van:
 *"Ik vind niet dat een vrouw [ongewenst compromis] zou moeten accepteren, alleen omdat ze [gewenste uitkomst] wil."* — עדינה
 Niet letterlijk die constructie. Hij moet natuurlijk bij het product passen.
 
-### 8. `sale`: waarom het product nu in de aanbieding is
+### 8. `sale`: het aanbod
 Geen apart groot prijsblok: de prijs staat in de tekst, in de trust bar en in de productbox. Dat is genoeg.
-Nu pas gaan we echt verkopen. Flow: natuurlijke sale reason (`input.sale_reason`) → huidige situatie →
-reguliere prijs → saleprijs → alleen **echte** urgentie/beschikbaarheid. Geen nep-schaarste.
+Nu pas gaan we verkopen, rustig. Flow: het stuk hoort nu bij Adina's selectie → reguliere prijs → saleprijs.
+- **Met `input.sale_reason`**: die reden (en alleen die) mag genoemd worden.
+- **Zonder `input.sale_reason`**: een tijdelijke introductie-/boetiekprijs voor deze selectie (bv. "voor de introductie
+  in de boetiek geldt nu een speciale prijs"), zonder een reden voor de korting te verzinnen.
+- Nooit uit jezelf: einde seizoen, opruiming, sluiting, overtollige of beperkte voorraad, "eerste lading", schaarste,
+  afteltijd. `availability_note` alleen met echte, aangeleverde beschikbaarheidsinfo. De validator blokkeert zulke
+  redenen als ze niet in `input.sale_reason` staan.
 
 ### 9. `trust_bar`: vier blokken
 Standaard: `₪<sale>` / מחיר מבצע · `15+` / שנים באופנה · `2,550+` / ביקורות · `30` / ימים להחזרה.
@@ -84,7 +93,8 @@ Caption in de stijl van: `ארוזה ומוכנה לצאת. כל הזמנה נא
 Doel: herinneren dat dit uit Adina's boetiek komt.
 
 ### 11. `founder_observation`
-Nog een korte persoonlijke observatie van Adina over het product of haar klanten.
+Nog een korte persoonlijke gedachte van Adina: waarom ze dit stuk met een gerust hart in haar selectie heeft (of hoe
+het in het leven van haar klanten past). Geen verzonnen klantreacties.
 
 ### 12. `social_proof`
 `★★★★★ 4.7/5` · `2,550+ ביקורות` + korte boutique/trust-copy. `quotes` alleen uit
@@ -122,7 +132,7 @@ uit `config.landing_page.cta_he`. `subtext`: verzending/retour.
 ### 16. `about`
 `אודות הכותבת`. Kort: Adina → oprichter → 15+ jaar → familieboetiek in Tel Aviv, samen met Daniel en Yael
 (`config.founder.family`) → korte persoonlijke
-gedachte over dit product → `מתל אביב, באהבה!`
+gedachte over dit product → `מתל אביב, באהבה!` (de persoonlijke afsluiting, vaste merkstijl)
 
 ### 17. `sticky_cta`
 `<korte naam> עכשיו ב־₪<sale> — לבחירת מידה וצבע` (1 kleur: `— לבחירת מידה`), uit `config.landing_page.sticky_cta_he`.

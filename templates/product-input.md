@@ -11,8 +11,8 @@ PRODUCT TYPE*:
 
 REGULAR PRICE* (₪):
 SALE PRICE* (₪):
-PROMOTION*:                      (bv. "50% discount — seasonal promotion")
-CURRENT SALE REASON*:            (bv. "End of Season Sale")
+PROMOTION*:                      (bv. "50% discount")
+CURRENT SALE REASON:             (optioneel — alleen een echte reden; leeg = tijdelijke introductieprijs, er wordt niets verzonnen)
 
 AVAILABLE COLORS*:               (komma-gescheiden, exact zoals verkocht)
 AVAILABLE SIZES*:                (bv. "S–5XL" of "36, 37, 38, 39, 40, 41")

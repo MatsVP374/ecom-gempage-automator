@@ -8,9 +8,13 @@ review). Stap 6 schrijft de Hebreeuwse versie opnieuw vanuit de betekenis, niet 
 en oneliners gaan dus niet mee (`brand/hebrew-copy.md`). `lang: "en"`, `dir: "ltr"`.
 
 - Volg de 17 blokken en velden uit het datacontract in `CLAUDE.md`, **in die volgorde**.
-- Adina is de verteller ("I"). Het verhaal volgt `brand/gempage-blueprint.md`: probleem eerst,
-  het product pas in `founder_story` → `discovery`.
-- `founder_header.note` = het centrale probleem. `headline` = probleem-eerst, geen productnaam, geen korting.
+- Adina is de verteller ("I"). Het verhaal volgt `brand/adina.md` → founder-verhaal en `brand/gempage-blueprint.md`:
+  Adina is selectief en legt uit waarom dít stuk een plek in haar selectie verdiende.
+  `founder_story.parts` = `hook` → `problem` → `turning_point` → `selection`, uit `02-central-angle.json` →
+  `selection_story`. Een verse, productspecifieke hook (geen voorbeeldzin, geen vaste openingszin die elke brief heeft);
+  de ontdekking als verhaal, niet als specificatielijst. Productnaam pas vanaf `turning_point`.
+- `founder_header.note` = het centrale probleem. `headline` = Adina's hook of het herkenbare probleem, geen
+  productnaam, geen korting.
 - `benefits` = de 5–6 benefits uit stap 2 (zelfde volgorde, `n`, `feature_ids`). De headline is het
   menselijke probleem, de tekst gaat feature → effect → leven.
 - **Aangeleverde reviews met `benefit`** (en alle `mockup: true`-testimonials): de GemPage zet ze zelf, letterlijk en
@@ -24,8 +28,11 @@ en oneliners gaan dus niet mee (`brand/hebrew-copy.md`). `lang: "en"`, `dir: "lt
   zet je er niet bij: die haalt de GemPage zelf uit `input.testimonials`.
 - `comparison.columns` = `old_alternative_a` / `old_alternative_b` / productnaam; 3–5 rijen, alleen feiten.
 - `founder_quote` = de positionering in één zin (`adina_belief`).
-- `sale`: `input.sale_reason` + prijzen uit input. `availability_note` alleen als de input echte
-  beschikbaarheidsinfo geeft, anders weglaten.
+- `sale` (volgens `selection_story.offer_framing`): prijzen uit input, rustig en natuurlijk. Met `input.sale_reason`
+  mag die reden (alleen die) genoemd worden. Zonder: een tijdelijke introductie-/boetiekprijs voor deze selectie,
+  zonder een reden te verzinnen. Nooit zelf einde seizoen, opruiming, sluiting, overtollige/beperkte voorraad,
+  "eerste lading", schaarste of afteltijd. `availability_note` alleen als de input echte beschikbaarheidsinfo geeft.
+- `founder_observation` en `about`: de persoonlijke afsluiting, warm in Adina's stem; geen verzonnen klantreacties.
 - `trust_bar`, `social_proof`, `offer_box.rating_line`, `bundle`, `cta`, `about.signoff`: waarden uit
   `config/adina.json`. `social_proof.quotes` alleen uit `input.testimonials`.
 - `cta.button`: bij 1 kleur de variant zonder kleur.
