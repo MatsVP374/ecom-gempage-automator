@@ -7,13 +7,20 @@ GemPage-blok. Geen willekeurige mooie foto's.
 
 | # | role | blok | Wat het bewijst |
 |---|---|---|---|
-| 1 | `hero` | `hero` | Vrouw 50–65 draagt/gebruikt het product, Tel Aviv of passende lifestyle-setting, product ruim genoeg in beeld om het te begrijpen, natuurlijk licht, spontaan |
+| 1 | `hero` | `hero` | Vrouw (zie Casting) draagt/gebruikt het product, Tel Aviv of passende lifestyle-setting, product ruim genoeg in beeld om het te begrijpen, natuurlijk licht, spontaan |
 | 2 | `benefit_detail` | `benefits` #n | Bewijst voordeel #1 (bv. materiaal, zachtheid, vorm) |
 | 3 | `functional_detail` | `benefits` #n | Bewijst een belangrijke feature (bv. voetbed, laagjes, knopen) |
 | 4 | `functional_detail_2` | `benefits` #n | Een andere feature (bv. gesp, kap, mouw) |
 | 5 | `real_life_use` | `benefits` #n | Product echt in gebruik in een dagelijkse situatie |
 | 6 | `variation` | `benefits` #n of `social_proof` | Andere vrouw en/of andere **echte** kleur, niet hetzelfde model als de hero |
 | 7 | `packing` | `packing` | Product, Adina's inpaktafel, handen, kraft/zijdepapier, eventueel andere echte kleuren op de achtergrond |
+| (8) | `customer_review` | `benefits` #1 → `review_image` | **Optioneel, max. één.** Een klantachtige foto bij review 1: een vrouw die het product in haar eigen dagelijkse leven draagt, zoals een tevreden klant het zou laten zien. Telt niet mee in de 7. |
+
+**Alleen als review 1 zelf getoond wordt.** Review 1 = de review onder voordeel 1 (de eerste social proof op de
+pagina). Het beeld zit ín die reviewkaart en rendert alleen samen met die kaart. Geen (geschikte) review 1 → geen
+`customer_review`-beeld in het plan en er wordt niets gegenereerd. Mockup-reviews (`MOCKUP_PLACEHOLDER`) staan alleen op
+een draft die niet gepubliceerd wordt; hun kaart én dit beeld komen nooit op een gepubliceerde pagina (validator,
+`--stage publish`, publish guard).
 
 Als een bestaand productbeeld een rol al goed dekt (bv. een scherpe detailfoto), zet dan
 `source: "existing"` met `existing_image`. Niet opnieuw genereren.
@@ -103,6 +110,16 @@ additional buttons, pockets, seams, materials or decorative elements.
 - Altijd: "No text in image", normale lichaamsverhoudingen, echte huidstructuur, geen AI-glans.
 - Velden: `age` = één leeftijd per foto binnen 45–60 (gevarieerd over de pagina); `styling` = modern, elegant,
   verzorgd (kapsel, make-up, accessoires); `light` = zacht en flatterend; `mood` = zelfverzekerd, ontspannen, warm.
+
+## Klantachtige foto bij review 1 (`customer_review`)
+- **Zelfde castingregels** als elke foto met een persoon: de castingzin en de stijlzin letterlijk, leeftijd 45–60
+  (gevarieerd t.o.v. de andere foto's), productnauwkeurigheid en 4:5 zoals altijd.
+- **Klantachtig:** een ontspannen, alledaags moment bij haar thuis of onderweg (balkon, woonkamer, café, straat), het
+  product goed zichtbaar, natuurlijke kadrering zoals een vriendin het met een telefoon zou maken. Geen spiegel-selfie
+  (spiegels verdubbelen personen), geen studio, geen model-pose.
+- **Past bij de review, verzint niets:** alleen een situatie die de review zelf noemt of die logisch uit het voordeel
+  volgt; geen kleur of situatie die de klant niet noemt als bewijs. Geen tekst of naam in beeld.
+- Het beeld wordt niet als "foto van de klant" aangekondigd: geen bijschrift of naam bij het beeld, `alt` leeg.
 
 ## Statische Meta-creatives (stap 9)
 Niet simpelweg de GemPage-foto's hergebruiken. Vier creatives, allemaal binnen **dezelfde centrale

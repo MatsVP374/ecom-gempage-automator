@@ -60,6 +60,8 @@ Altijd menselijk probleem → feature. Nooit andersom.
 **Onder elke foto een echte review** (zoals in de Anzhela-brief): een kort, letterlijk fragment van een klant die
 dát voordeel noemt, met haar naam (en leeftijd/sterren) uit `input.testimonials`, anders "לקוחה של Adina Fashion".
 Geen passende echte review → geen review onder die foto (de validator meldt `REVIEWS PER PHOTO: x/6`).
+Review 1 mag één klantachtige foto in de reviewkaart hebben (`review_image`, beeldrol `customer_review`); die verschijnt
+alleen als review 1 zelf getoond wordt, en nooit met een mockup-review op een gepubliceerde pagina.
 
 ### 6. `comparison`
 Titel in de trant van: `<product>, vergeleken met de keuzes die vrouwen normaal maken`.

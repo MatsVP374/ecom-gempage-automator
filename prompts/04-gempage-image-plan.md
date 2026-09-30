@@ -15,4 +15,8 @@ Lees: `03-gempage-copy.en.json`, `02-central-angle.json`, `01-product-facts.json
    foto dezelfde vrouw, setting of kleur. Varieer ook de leeftijd over de banden 45–50, 50–55 en 55–60.
 5. Werk de `image`-velden in `03-gempage-copy.en.json` bij zodat elk blok met een beeld naar het
    juiste `IMG-..` verwijst (hero, benefit-items, packing, eventueel social_proof).
-6. `existing_images_reviewed` = alle bestaande beelden die je bekeek; `notes` = wat je bewust niet genereert en waarom.
+6. **Optioneel: `customer_review`** (`block: "benefits"`, `benefit_n: 1`): één klantachtige foto bij review 1, alleen
+   als review 1 op deze pagina getoond wordt (een aangeleverde testimonial met `benefit: 1`, of een echte review onder
+   voordeel 1; een mockup telt alleen op een draft met `mockup_reviews_allowed`). Anders niet opnemen: het beeld zou nooit
+   verschijnen en mag niet gegenereerd worden. Zet het ID in `benefits.items[0].review_image` (EN en HE).
+7. `existing_images_reviewed` = alle bestaande beelden die je bekeek; `notes` = wat je bewust niet genereert en waarom.

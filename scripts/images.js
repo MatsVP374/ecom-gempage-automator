@@ -19,6 +19,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { loadProduct, loadEnv, parseArgs, writeJSON, FILES } from './lib.js';
 import { gql, userErrors } from './shopify-push.js';
+import { renderedReviewFor } from './gempages.js';
 
 const MAX_REFERENCES = 4;
 const EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' };
@@ -153,8 +154,14 @@ export async function runImages(slug, { mode = 'all', provider = null, only = nu
   const prompts = Object.fromEntries((p.prompts?.prompts ?? []).map((x) => [x.image_id, x]));
   const planFile = path.join(p.dir, FILES.plan);
   const imgDir = path.join(p.dir, 'images');
-  const pick = (i) => !only || only.includes(i.id);
+  // The customer-style photo of review 1 is only generated when review 1 renders on this page (never for a mockup review
+  // on a page that may be published, never when there is no review 1): no cost for a photo that cannot show.
+  const page = p.gempage?.he ?? p.gempage?.en;
+  const reviewOneRenders = !!renderedReviewFor(page, p.input, 1);
+  const pick = (i) => (!only || only.includes(i.id)) && (i.role !== 'customer_review' || reviewOneRenders);
   const summary = { generated: [], uploaded: [], skipped: [], errors: [], compared: [] };
+  for (const i of p.plan?.images ?? [])
+    if (i.role === 'customer_review' && !reviewOneRenders) summary.skipped.push(`${i.id}: review 1 does not render on this page — customer_review photo not generated`);
   const exists = (i) => i.file && fs.existsSync(path.join(p.dir, i.file));
 
   const refsCache = new Map();

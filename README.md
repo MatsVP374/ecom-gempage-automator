@@ -159,7 +159,9 @@ De validator houdt de workflow eerlijk:
 - verhaal: `founder_story` = hook → problem → turning_point → selection, met `selection_story` in de angle;
   een reden voor de korting (einde seizoen, opruiming, sluiting, overtollige/beperkte voorraad, eerste lading,
   schaarste) die niet in `input.sale_reason` staat is een fout (copy, angle, creatives, UGC)
-- beelden: elk beeld een doel en een blok, alle 13 promptvelden, geen regeneratie van bestaande foto's
+- beelden: elk beeld een doel en een blok, alle 13 promptvelden, geen regeneratie van bestaande foto's; de optionele
+  klantachtige foto bij review 1 (`customer_review`) alleen als review 1 zelf getoond wordt (anders niet gepland en niet
+  gegenereerd), nooit met een mockup-review op een gepubliceerde pagina
 - reviews: elke review hoort bij een echte testimonial en is in het Hebreeuws een letterlijk fragment ervan;
   meldt hoeveel voordeelfoto's nog geen review hebben
 - casting: elke prompt met een persoon heeft de casting- en stijlzin uit `brand/image-rules.md`; leeftijd 45–60

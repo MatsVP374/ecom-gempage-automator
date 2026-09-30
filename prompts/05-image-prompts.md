@@ -19,4 +19,7 @@ Voor **elk** beeld met `source: "generate"` precies één prompt:
 - `age`: één leeftijd per foto binnen 45–60 en **gevarieerd** over de pagina (bijv. 47, 53, 57 — verschillende banden
   45–50 / 50–55 / 55–60, niet allemaal dezelfde). `styling` modern en elegant, `light` zacht en flatterend,
   `mood` zelfverzekerd, ontspannen en warm. Geen woorden uit de vermijdlijst in `brand/image-rules.md` → Casting.
+- `customer_review` (klantachtige foto bij review 1): zelfde velden, casting- en stijlzin; klantachtig en alledaags
+  volgens `brand/image-rules.md` → Klantachtige foto bij review 1. Alleen een situatie die de review noemt of die uit het
+  voordeel volgt.
 - `aspect_ratio`: **altijd `4:5`** voor elke GemPage-foto (hero, details, packing). Eén formaat = een rustige pagina op mobiel.

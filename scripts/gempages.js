@@ -47,9 +47,14 @@ function img(id, ctx, { width = 640, height = 800, eager = false, alt = '' } = {
   return `<img src="${esc(url)}" alt="${esc(alt ?? '')}" loading="${eager ? 'eager' : 'lazy'}"${eager ? ' fetchpriority="high"' : ''} width="${width}" height="${height}">`;
 }
 
+// The customer-style photo of review 1 (image plan role `customer_review`). It is built only inside a review card that
+// renders, so it can never appear without its review: no eligible review 1 (none supplied, or a mockup on a page that
+// may be published) → no card → no photo, and no missing-image placeholder either.
+const reviewPhoto = (id, ctx) => (id ? `<div class="gp-review-photo">${img(id, ctx, { width: 440, height: 550, alt: '' })}</div>` : '');
+
 // A real customer review card. Name/age/stars come from input.testimonials, never from the copy:
 // no name → "customer of Adina Fashion", no rating → no stars.
-function reviewCard(r, ctx, lang) {
+function reviewCard(r, ctx, lang, photo = null) {
   if (!String(r?.text ?? '').trim()) return '';
   const tm = ctx.testimonials[r.testimonial_id];
   if (tm?.mockup) return ''; // mockups are never quoted from the copy; they only appear through their `benefit`
@@ -58,20 +63,40 @@ function reviewCard(r, ctx, lang) {
   ctx.rendered.customer++;
   const who = tm?.name ? `${tm.name}${tm.age ? `, ${tm.age}` : ''}` : lang === 'he' ? 'לקוחה של Adina Fashion' : 'Adina Fashion customer';
   const stars = tm?.rating ? `<div class="gp-stars" aria-label="${tm.rating}/5">${'★'.repeat(tm.rating)}${'☆'.repeat(5 - tm.rating)}</div>` : '';
-  return `<div class="gp-review-card gp-photo-review">${stars}<span class="gp-quote">”${t(r.text)}“</span><cite>— ${brand(who)}</cite></div>`;
+  return `<div class="gp-review-card gp-photo-review">${reviewPhoto(photo, ctx)}${stars}<span class="gp-quote">”${t(r.text)}“</span><cite>— ${brand(who)}</cite></div>`;
 }
 
 // A review supplied upstream with `benefit`: placed under that photo, verbatim and complete (no excerpt, no choice),
 // with its supplied name and rating. A mockup (generated, draft-only) looks exactly like the final page so the design
 // can be QA'd; it is marked only invisibly (data-review="mockup"), and the workflow keeps it off any published page.
-function suppliedCard(tm, ctx, lang) {
+function suppliedCard(tm, ctx, lang, photo = null) {
   if (!String(tm?.text ?? '').trim() || ctx.renderedIds.has(tm.id)) return '';
   ctx.renderedIds.add(tm.id);
   const stars = tm.rating ? `<div class="gp-stars" aria-label="${tm.rating}/5">${'★'.repeat(tm.rating)}${'☆'.repeat(5 - tm.rating)}</div>` : '';
   const text = tm.text_he && lang === 'he' ? tm.text_he : tm.text;
   ctx.rendered[tm.mockup ? 'mockup' : 'customer']++;
   const who = tm.name ? `${tm.name}${tm.age ? `, ${tm.age}` : ''}` : lang === 'he' ? 'לקוחה של Adina Fashion' : 'Adina Fashion customer';
-  return `<div class="gp-review-card gp-photo-review"${tm.mockup ? ' data-review="mockup"' : ''}>${stars}<span class="gp-quote">”${t(text)}“</span><cite>— ${brand(who)}</cite></div>`;
+  return `<div class="gp-review-card gp-photo-review"${tm.mockup ? ' data-review="mockup"' : ''}>${reviewPhoto(photo, ctx)}${stars}<span class="gp-quote">”${t(text)}“</span><cite>— ${brand(who)}</cite></div>`;
+}
+
+// Supplied reviews mapped to a benefit photo (first per benefit). Mockups only when this input is a mockup draft.
+function suppliedByBenefit(input) {
+  const supplied = {};
+  for (const x of input?.testimonials ?? [])
+    if (x.benefit != null && !(x.benefit in supplied) && (!x.mockup || input?.mockup_reviews_allowed === true)) supplied[x.benefit] = x;
+  return supplied;
+}
+
+// The review that renders under benefit n, by the same rules as the cards: the supplied one for that benefit, else the
+// copy's own review (never a mockup). null = no review card there. { testimonial, mockup }.
+export function renderedReviewFor(page, input, n = 1) {
+  const supplied = suppliedByBenefit(input);
+  if (supplied[n]) return String(supplied[n].text ?? '').trim() ? { testimonial: supplied[n], mockup: supplied[n].mockup === true } : null;
+  const item = (page?.blocks ?? []).find((b) => b.type === 'benefits')?.items?.find((i) => i.n === n);
+  const r = item?.review;
+  if (!String(r?.text ?? '').trim()) return null;
+  const tm = (input?.testimonials ?? []).find((x) => x.id === r.testimonial_id);
+  return tm?.mockup ? null : { testimonial: tm ?? null, mockup: false };
 }
 
 // The routes to the real product page (brand/gempage-blueprint.md → Productroutes): product-box button + sticky bar.
@@ -104,10 +129,7 @@ export function productRoutes(page, input, cfg = loadConfig()) {
 export function renderGpHtml(page, { plan = null, input = null } = {}) {
   const cfg = loadConfig();
   const ctx = { planById: Object.fromEntries((plan?.images ?? []).map((i) => [i.id, i])), missingImages: [], testimonials: Object.fromEntries((input?.testimonials ?? []).map((x) => [x.id, x])), rendered: { customer: 0, mockup: 0 }, renderedIds: new Set() };
-  // Supplied reviews mapped to a benefit photo (first per benefit). Mockups only when this input is a mockup draft.
-  const supplied = {};
-  for (const x of input?.testimonials ?? [])
-    if (x.benefit != null && !(x.benefit in supplied) && (!x.mockup || input?.mockup_reviews_allowed === true)) supplied[x.benefit] = x;
+  const supplied = suppliedByBenefit(input);
   const by = Object.fromEntries((page.blocks ?? []).map((b) => [b.type, b]));
   const routes = productRoutes(page, input, cfg);
   const productUrl = routes.url || '#product';
@@ -143,7 +165,9 @@ export function renderGpHtml(page, { plan = null, input = null } = {}) {
     out.push('<div class="gp-features-wrap">');
     if (by.benefits.title) out.push(`<div class="gp-measure"><h2 class="gp-section-title">${t(by.benefits.title)}</h2></div>`);
     for (const i of by.benefits.items ?? []) {
-      const card = supplied[i.n] ? suppliedCard(supplied[i.n], ctx, page.lang) : reviewCard(i.review, ctx, page.lang);
+      // Review 1 may carry one customer-style photo (review_image); it renders only inside its own review card.
+      const photo = i.n === 1 ? i.review_image : null;
+      const card = supplied[i.n] ? suppliedCard(supplied[i.n], ctx, page.lang, photo) : reviewCard(i.review, ctx, page.lang, photo);
       // number → headline → body → photo → review card, each exactly once (the photo's alt stays empty: the headline
       // above it already describes it).
       out.push(`<div class="gp-feature gp-measure"><div class="gp-fh"><span class="gp-fnum">${esc(i.n)}</span><h3>${t(i.headline)}</h3></div><p>${t(i.text)}</p>${img(i.image, ctx, { alt: '' })}${card}</div>`);

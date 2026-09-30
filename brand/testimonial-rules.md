@@ -39,3 +39,8 @@ Levert de input een testimonial met `benefit: n`, dan is de keuze al gemaakt: di
 - **nooit bewijs** voor productfeiten of claims (stap 1 neemt ze niet op in `01-product-facts.json` → `testimonials`);
 - `node scripts/validate.js <slug> --stage publish` faalt zolang er een mockup op de pagina staat: zo'n pagina wordt
   nooit gepubliceerd.
+
+## Foto bij review 1
+Review 1 (onder voordeel 1) mag één klantachtige foto hebben (`customer_review`, `brand/image-rules.md`). Die zit in de
+reviewkaart en is er alleen als review 1 zelf getoond wordt. Een mockup-review en zijn foto komen nooit op een
+gepubliceerde pagina; zonder review 1 wordt de foto niet gepland en niet gegenereerd.

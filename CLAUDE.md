@@ -192,7 +192,7 @@ Vaste blokvolgorde (zie `brand/gempage-blueprint.md`), `id` = `type`:
 | `headline` | `headline`, `subtitle` |
 | `hero` | `image`, `alt` |
 | `founder_story` | `greeting`, `parts: [{ role, text }]` — roles in volgorde `hook`, `problem`, `turning_point`, `selection` (producten van vóór dit verhaal: `intro` … `discovery`, alleen een waarschuwing) |
-| `benefits` | `title`, `items: [{ n, headline, text, feature_ids, image, review? }]` (5–6) · `review = { testimonial_id, text }`: letterlijk fragment van een echte review onder de foto |
+| `benefits` | `title`, `items: [{ n, headline, text, feature_ids, image, review?, review_image? }]` (5–6) · `review = { testimonial_id, text }`: letterlijk fragment van een echte review onder de foto · `review_image` alleen op item 1: het `customer_review`-beeld, rendert alleen in de kaart van review 1 als die getoond wordt |
 | `comparison` | `title`, `columns: { a, b, product }`, `rows: [{ label, a, b, product }]` (3–5) |
 | `founder_quote` | `quote`, `author` |
 | `sale` | `title`, `paragraphs: []`, `regular_price`, `sale_price`, `availability_note` (optioneel, alleen echte info). Reden voor de korting alleen uit `input.sale_reason`, anders tijdelijke introductieprijs |
@@ -220,7 +220,8 @@ Vaste blokvolgorde (zie `brand/gempage-blueprint.md`), `id` = `type`:
   "notes": "…"
 }
 ```
-`role` ∈ `hero | benefit_detail | functional_detail | functional_detail_2 | real_life_use | variation | packing`.
+`role` ∈ `hero | benefit_detail | functional_detail | functional_detail_2 | real_life_use | variation | packing | customer_review`.
+`customer_review` is optioneel (max. één, `benefits` #1): alleen als review 1 op de pagina getoond wordt; nooit bij een mockup op een pagina die gepubliceerd wordt.
 `source` ∈ `generate | existing` (bij `existing`: `existing_image` = bestaand productbeeld; dat wordt niet opnieuw gegenereerd).
 `product_color` = exact een kleur uit input.
 

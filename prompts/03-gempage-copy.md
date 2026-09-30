@@ -26,6 +26,8 @@ en oneliners gaan dus niet mee (`brand/hebrew-copy.md`). `lang: "en"`, `dir: "lt
   `text` of `text_he`; in de EN-master een vertaling ervan). Geen passende review → `review` weglaten; nooit een
   review verbuigen naar een voordeel dat de klant niet noemde. Elk fragment maar één keer. Naam, leeftijd en sterren
   zet je er niet bij: die haalt de GemPage zelf uit `input.testimonials`.
+- `benefits.items[0].review_image`: alleen als het beeldplan een `customer_review`-beeld heeft (stap 4 vult het in).
+  Het beeld rendert in de kaart van review 1 en alleen als die kaart zelf getoond wordt.
 - `comparison.columns` = `old_alternative_a` / `old_alternative_b` / productnaam; 3–5 rijen, alleen feiten.
 - `founder_quote` = de positionering in één zin (`adina_belief`).
 - `sale` (volgens `selection_story.offer_framing`): prijzen uit input, rustig en natuurlijk. Met `input.sale_reason`

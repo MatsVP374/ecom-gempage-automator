@@ -9,7 +9,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { loadProduct, loadConfig, listSlugs, parseArgs, missingInput, isFilled, FILES } from './lib.js';
 import { spellcheckProduct } from './spellcheck.js';
-import { productRoutes, renderGpHtml, LTR_RUN } from './gempages.js';
+import { productRoutes, renderGpHtml, renderedReviewFor, LTR_RUN } from './gempages.js';
 
 export const BLOCK_ORDER = [
   'founder_header', 'headline', 'hero', 'founder_story', 'benefits', 'comparison', 'founder_quote', 'sale',
@@ -40,7 +40,9 @@ const STORY_ROLES = ['hook', 'problem', 'turning_point', 'selection'];
 const LEGACY_STORY_ROLES = ['intro', 'observation', 'problem', 'alternatives', 'search', 'discovery'];
 const STORY_OPENINGS = ['skepticism', 'curiosity', 'familiar_problem', 'surprising_detail', 'disappointing_alternatives', 'overlooked'];
 const OFFER_FRAMINGS = ['supplied_sale_reason', 'introductory_offer'];
-const IMAGE_ROLES = ['hero', 'benefit_detail', 'functional_detail', 'functional_detail_2', 'real_life_use', 'variation', 'packing'];
+const IMAGE_ROLES = ['hero', 'benefit_detail', 'functional_detail', 'functional_detail_2', 'real_life_use', 'variation', 'packing', 'customer_review'];
+// Optional: one customer-style photo with review 1 (benefits item 1 → review_image). Not counted in image_count.
+const REVIEW_PHOTO_ROLE = 'customer_review';
 const PROMPT_FIELDS = ['subject', 'age', 'product', 'exact_color', 'styling', 'action', 'environment', 'framing', 'light', 'mood', 'must_be_visible', 'realism', 'must_not_change'];
 const HEBREW = /[֐-׿]/;
 const LATIN_OK_BASE = ['adina', 'fashion', 'cm', 'kg', 'x', 'xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl', 'a', 'v', 'bit', 'visa', 'paypal', 'mastercard', 'apple', 'google', 'pay', 'ugc'];
@@ -69,7 +71,7 @@ function walkStrings(obj, pathStr, out) {
   return out;
 }
 // Keys whose values are identifiers, not customer-facing copy.
-const NON_COPY = /(^|\.)(lang|dir|type|id|image|role|feature_ids|testimonial_id|angle|source|review_en|trace|claim)(\[\d+\])?$|\.trace\[/;
+const NON_COPY = /(^|\.)(lang|dir|type|id|image|role|feature_ids|review_image|testimonial_id|angle|source|review_en|trace|claim)(\[\d+\])?$|\.trace\[/;
 
 const shekels = (text) => [...String(text ?? '').matchAll(/₪\s?([\d,]+)|([\d,]+)\s?₪/g)].map((m) => Number((m[1] ?? m[2]).replace(/,/g, '')));
 const words = (s) => new Set(String(s ?? '').toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter((w) => w.length > 2));
@@ -234,6 +236,14 @@ export function validateProduct(slug, { stage } = {}) {
       if (i.review && suppliedFor.has(i.n))
         err(`${f}: benefit ${i.n} has a review in the copy, but testimonial ${suppliedFor.get(i.n).id} is supplied for this photo — remove the review from the copy (the page places the supplied one verbatim)`);
     });
+    items.forEach((i) => {
+      if (i.review_image == null) return;
+      if (i.n !== 1) err(`${f}: benefit ${i.n} has a review_image — only review 1 carries a customer-style photo`);
+      const ri = (p.plan?.images ?? []).find((x) => x.id === i.review_image);
+      if (p.plan && ri?.role !== REVIEW_PHOTO_ROLE) err(`${f}: benefit ${i.n} review_image "${i.review_image}" is not a ${REVIEW_PHOTO_ROLE} image in the image plan`);
+    });
+    for (const x of (p.plan?.images ?? []).filter((x) => x.role === REVIEW_PHOTO_ROLE))
+      if (!items.some((i) => i.n === 1 && i.review_image === x.id)) err(`${f}: benefit 1 has no review_image "${x.id}" — the ${REVIEW_PHOTO_ROLE} image is not placed with review 1`);
     for (const [n, t] of suppliedFor) if (!items.some((i) => i.n === n)) warn(`${f}: testimonial ${t.id} is supplied for benefit ${n}, which does not exist — it is not shown`);
     const withReview = items.filter((i) => i.review?.text || suppliedFor.has(i.n)).length;
     if (lang === 'he' && items.length && withReview < items.length)
@@ -340,7 +350,8 @@ export function validateProduct(slug, { stage } = {}) {
   const page = p.gempage.he ?? p.gempage.en;
   if (plan) {
     const imgs = plan.images ?? [];
-    if (imgs.length !== (cfg.landing_page.image_count ?? 7)) warn(`04-gempage-image-plan: ${imgs.length} images (blueprint: ${cfg.landing_page.image_count ?? 7})`);
+    const storyImgs = imgs.filter((i) => i.role !== REVIEW_PHOTO_ROLE);
+    if (storyImgs.length !== (cfg.landing_page.image_count ?? 7)) warn(`04-gempage-image-plan: ${storyImgs.length} images (blueprint: ${cfg.landing_page.image_count ?? 7}, plus optionally one ${REVIEW_PHOTO_ROLE})`);
     if (planIds.size !== imgs.length) err('04-gempage-image-plan: duplicate image ids');
     const blockTypes = new Set((page?.blocks ?? []).map((b) => b.type));
     const benefitNs = new Set(((page?.blocks ?? []).find((b) => b.type === 'benefits')?.items ?? []).map((i) => i.n));
@@ -359,6 +370,15 @@ export function validateProduct(slug, { stage } = {}) {
       }
     });
     for (const r of ['hero', 'packing']) if (!imgs.some((i) => i.role === r)) err(`04-gempage-image-plan: no "${r}" image`);
+    // The customer-style review photo: at most one, with review 1, and only when review 1 itself renders on this page.
+    const reviewPhotos = imgs.filter((i) => i.role === REVIEW_PHOTO_ROLE);
+    if (reviewPhotos.length > 1) err(`04-gempage-image-plan: ${reviewPhotos.length} "${REVIEW_PHOTO_ROLE}" images — at most one (review 1)`);
+    for (const i of reviewPhotos) {
+      const w = `04-gempage-image-plan ${i.id}`;
+      if (i.block !== 'benefits' || i.benefit_n !== 1) err(`${w}: a ${REVIEW_PHOTO_ROLE} image belongs to review 1 (block "benefits", benefit_n 1)`);
+      if (page && !renderedReviewFor(page, input, 1))
+        err(`${w}: review 1 is not eligible to render (no customer review for benefit 1, or only a mockup on a page that may be published) — remove this image from the plan; it would never show and must not be generated`);
+    }
     const hero = imgs.find((i) => i.role === 'hero');
     const variation = imgs.find((i) => i.role === 'variation');
     if (hero && variation && hero.product_color === variation.product_color && hero.model === variation.model)
@@ -493,6 +513,13 @@ export function validateProduct(slug, { stage } = {}) {
       if (stale.length) upload(`${FILES.naturalness} is older than ${stale.join(', ')} — run the naturalness pass again (/launch-step <slug> naturalness)`);
       (p.naturalness.doubts ?? []).forEach((d) => flag(`HEBREW DOUBT — ${d.text ?? d}${d.question ? ': ' + d.question : ''}`));
     }
+  }
+
+  // Publish gate on what the page actually renders: no mockup review, and so no mockup review photo, on a published page.
+  if (stage === 'publish' && p.gempage.he) {
+    const { html } = renderGpHtml(p.gempage.he, { plan: p.plan, input });
+    if (/data-review="mockup"/.test(html))
+      err(`MOCKUP REVIEWS — the rendered page contains mockup review cards${[...html.matchAll(/data-review="mockup">(.*?)<\/cite><\/div>/g)].some((m) => m[1].includes('gp-review-photo')) ? ' (including the review 1 photo)' : ''}; it must never be published`);
   }
 
   return summary();
