@@ -14,5 +14,9 @@ Voor **elk** beeld met `source: "generate"` precies één prompt:
 - `reference_images` = de bestaande productbeelden die als referentie moeten dienen.
 - `prompt` = één production-ready Engelse prompt volgens de vorm in `brand/image-rules.md`, met
   "No text in image.", de consistentiezin over de referentiebeelden en — bij elke persoon in beeld — de
-  **castingzin** uit `brand/image-rules.md` (Israëlische vrouw 40–60, echte Israëlische look).
+  **castingzin** én de **stijlzin** (`Photo style: a natural, flattering lifestyle photo…`) letterlijk uit `brand/image-rules.md`
+  (aantrekkelijke Israëlische vrouw van ongeveer 45–58, verzorgd en aspirationeel; `[45–58]` vervangen door de leeftijd).
+- `age`: één leeftijd per foto binnen 45–60 en **gevarieerd** over de pagina (bijv. 47, 53, 57 — verschillende banden
+  45–50 / 50–55 / 55–60, niet allemaal dezelfde). `styling` modern en elegant, `light` zacht en flatterend,
+  `mood` zelfverzekerd, ontspannen en warm. Geen woorden uit de vermijdlijst in `brand/image-rules.md` → Casting.
 - `aspect_ratio`: **altijd `4:5`** voor elke GemPage-foto (hero, details, packing). Eén formaat = een rustige pagina op mobiel.

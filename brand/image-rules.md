@@ -21,29 +21,55 @@ Als een bestaand productbeeld een rol al goed dekt (bv. een scherpe detailfoto),
 Variatie: niet elke foto hetzelfde model, dezelfde setting of dezelfde kleur. Kleuren alleen uit input.
 
 ## Casting (elke foto met mensen: GemPage, statics, UGC)
-- **Israëlische vrouwen van 40–60.** `age` in de prompt ligt altijd tussen 40 en 60; varieer over de foto's (bv. 44, 50, 55, 58).
-- **Ze moeten er echt Israëlisch uitzien**: warme olijf- tot licht-olijfkleurige huid, donkerbruine ogen, donkerbruin tot
-  zwart haar (vaak golvend/krullend; grijze strepen mag). Afwisselen tussen Mizrachi- en Asjkenazisch-Israëlische looks.
-- **Niet**: blond/platinablond, Noord-Europees of Scandinavisch uiterlijk, Amerikaans catalogusmodel, zilvergrijs "oma"-type.
-- Andere mensen in beeld (familie, vriendinnen, man) zijn ook Israëliërs van 40–60 met dezelfde natuurlijke look.
-- Omgeving herkenbaar Israëlisch: Tel Avivse flat of balkon met rolluiken, Jeruzalem-steen, shuk, café-terras.
-- Elke prompt bevat daarom letterlijk de **castingzin** (zie hieronder). De validator controleert leeftijd en castingzin.
+De doelgroep is volwassen (45–65+), maar de beelden zijn **aspirationeel**: de vrouw op de foto is iemand die de
+klant wil zijn, niet een afspiegeling van ouder worden. Volwassen en herkenbaar, maar jeugdig, verzorgd en stijlvol.
 
-Castingzin (Engels, in elke prompt met een persoon):
+- **Aantrekkelijke Israëlische/mediterrane vrouwen van ongeveer 45–58.** `age` in de prompt ligt tussen 45 en 60
+  (de validator geeft een error daarbuiten); de hoofdmoot 45–58.
+- **Varieer de leeftijd over de foto's van één pagina**, in banden: bv. één rond 45–50, één rond 50–55, één rond
+  55–60 (in `fields.age` en in de prompt: "aged about 47", "aged about 53", "aged about 57"). Niet elke foto dezelfde
+  leeftijd; de validator waarschuwt als alle personen binnen 5 jaar van elkaar liggen.
+- **Uitstraling:** stijlvol, gezond, energiek, zelfverzekerd en verzorgd. Warme mediterrane/Israëlische trekken
+  (olijf- tot licht-olijfkleurige huid, donkerbruine ogen, donkerbruin tot zwart haar), een **flatterend, modern
+  natuurlijk kapsel** (zachte slag, golvend of strak geknipt), **subtiele, elegante make-up**. Afwisselen tussen
+  Mizrachi- en Asjkenazisch-Israëlische looks.
+- **Echt en passend bij haar leeftijd:** realistische huidstructuur met poriën en leeftijdspassende trekken, maar niet
+  aangezet: geen overdreven rimpels, geen "oud gemaakt" gezicht.
+- **Styling:** moderne, elegante Israëlische styling die bij Adina Fashion past: het product (exact, zie
+  productnauwkeurigheid) met eigentijdse, verzorgde combinaties en discrete accessoires (sieraad, tas, zonnebril).
+- **Omgeving herkenbaar Israëlisch en verzorgd:** lichte Tel Avivse flat of balkon, Jeruzalem-steen, een mooi café-
+  terras, de boulevard, een lichte boetiek.
+- Andere mensen in beeld (vriendinnen, familie, partner) hebben dezelfde verzorgde Israëlische look, in hun 40s–50s.
+
+**Vermijden** (nooit in de prompt vragen; de validator geeft een error op deze woorden buiten de vaste zinnen):
+- er oud/bejaard uitziende modellen (`elderly`, `old woman`, `senior`), breekbaar of fragiel (`frail`);
+- grijs/zilver haar als standaard (`grey/gray hair`, `silver hair`, `grey-haired`) — alleen als het product/de input
+  daar echt om vraagt;
+- overdreven rimpels of veroudering (`wrinkled`, `deep wrinkles`, `aged face`);
+- het stereotiepe oma-/senior-beeld (`grandmother`, `granny`, `retiree`, rollator, breiwerk, schommelstoel);
+- gedateerde kapsels of kleding (permanent, "mom haircut", ouderwetse vesten), onflatterende gezichtsuitdrukkingen
+  (knijpogen, dubbele kin door camerahoek van onder, geforceerde grijns);
+- kunstmatige beauty-filter- of plastic huid (airbrush, gladgestreken huid, "flawless skin").
+- Ook niet: blond/platinablond, Noord-Europees of Scandinavisch uiterlijk, Amerikaans catalogusmodel.
+
+Elke prompt met een persoon bevat daarom letterlijk de **castingzin** en de **stijlzin** hieronder. De validator
+controleert beide, de leeftijd en de vermijdlijst.
+
+Castingzin (Engels, in elke prompt met een persoon; vul de leeftijd per foto in):
 ```
-Casting: a Jewish Israeli woman aged about [40–60], with a natural Israeli Mediterranean look — warm olive or
-light-olive skin, dark brown eyes, dark brown to black hair. Not Northern European, not blonde, not an American
-catalogue model. Any other people in the frame are also Israelis in their 40s to 60s with the same natural Israeli look.
+Casting: a Jewish Israeli woman aged about [45–58], attractive, stylish and well-groomed, with a warm Israeli Mediterranean look — olive or light-olive skin, dark brown eyes, dark brown to black hair in a flattering, modern natural style, subtle elegant makeup. She looks healthy, energetic and confident: mature and relatable, yet youthful and aspirational. Not elderly, not frail, not a grandmother type, no grey or silver hair, no dated hairstyle or clothing. Not Northern European, not blonde, not an American catalogue model. Any other people in the frame are equally attractive, well-groomed Israelis in their 40s to 50s with the same look.
 ```
 
-## Echte foto, geen AI-look (elke prompt met een persoon)
-AI-beelden verraden zich door een gladde huid, gouden licht, een romig wazige achtergrond met lichtbolletjes en een
-geposeerde modellenglimlach. Daarom bevat elke prompt met een persoon letterlijk de **stijlzin** hieronder, en kies je
-gewoon licht (middagzon, schaduw, raamlicht) en gewone plekken (buurtcafé, eigen woonkamer, straat met scooters)
-in plaats van "golden hour", "string lights" of "dreamy". De validator controleert de stijlzin.
+## Echte, flatterende foto — geen AI-look (elke prompt met een persoon)
+Echt, maar op haar mooist: zoals een goede Israëlische boetiek haar eigen klanten fotografeert. AI-beelden verraden
+zich door een plastic huid, gouden gloed, een romig wazige achtergrond met lichtbolletjes en een stijve modellenpose;
+een onflatterende telefoonfoto (hard middaglicht, lelijke hoek, moe gezicht) maakt de vrouw juist ouder. Daarom
+bevat elke prompt met een persoon letterlijk de **stijlzin** hieronder. Kies zacht, flatterend daglicht (open schaduw,
+helder raamlicht, zachte ochtend- of namiddagzon) en mooie, gewone plekken; niet "golden hour", "string lights" of
+"dreamy". De validator controleert de stijlzin.
 
 ```
-Photo style: an ordinary candid photo taken on a smartphone by a friend, not a professional shoot and not stock photography. Slightly imperfect framing, natural unretouched skin with visible pores, fine lines and wrinkles that fit her age, a few flyaway hairs, real fabric creases. Ordinary background with everyday details, only mildly out of focus (no creamy bokeh, no glowing light balls). Plain, uneven natural light (no golden-hour glow, no studio light, no HDR). No beauty filter, no airbrushing, no posed model smile. It must look like a real photo from an Israeli woman's phone, not like AI.
+Photo style: a natural, flattering lifestyle photo, like an Israeli fashion boutique's own shoot of a real customer — candid and believable, not stock photography and not an AI render. Soft, flattering natural light (open shade, bright window light or soft daylight; no harsh overhead sun, no studio flash, no HDR, no golden-hour haze). Realistic skin texture with natural pores and age-appropriate features, no exaggerated wrinkles or ageing, no beauty filter, no airbrushed or plastic skin. A relaxed, genuine expression — a warm natural smile or calm confidence; no stiff model pose, no unflattering expression or camera angle. An attractive everyday Israeli setting with real details, only gently out of focus (no creamy bokeh, no glowing light balls). Real fabric drape and creases. It must look like a real photo of a real Israeli woman at her best, not like AI.
 ```
 
 **Formaat: elke GemPage-foto is 4:5 (staand).** Geen mix van breed, vierkant en staand: op mobiel moet elke foto
@@ -62,7 +88,7 @@ Elke foto met `source: "generate"` krijgt één losse, production-ready prompt. 
 
 Vorm van de volledige `prompt` (Engels):
 ```
-Create a realistic candid lifestyle photograph of an Israeli woman approximately [40–60] years old
+Create a realistic, flattering lifestyle photograph of a stylish Israeli woman approximately [45–58] years old
 wearing [PRODUCT — exact description from facts] in [EXACT COLOR].
 She is [ACTION].
 Setting: [SETTING].
@@ -75,6 +101,8 @@ additional buttons, pockets, seams, materials or decorative elements.
 - Beschrijf het product alleen met geverifieerde feiten en wat zichtbaar is op de referentiebeelden.
 - `reference_images` = de bestaande productbeelden die de generator als referentie moet gebruiken.
 - Altijd: "No text in image", normale lichaamsverhoudingen, echte huidstructuur, geen AI-glans.
+- Velden: `age` = één leeftijd per foto binnen 45–60 (gevarieerd over de pagina); `styling` = modern, elegant,
+  verzorgd (kapsel, make-up, accessoires); `light` = zacht en flatterend; `mood` = zelfverzekerd, ontspannen, warm.
 
 ## Statische Meta-creatives (stap 9)
 Niet simpelweg de GemPage-foto's hergebruiken. Vier creatives, allemaal binnen **dezelfde centrale

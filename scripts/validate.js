@@ -336,16 +336,33 @@ export function validateProduct(slug, { stage } = {}) {
     }
   }
 
-  // Casting (brand/image-rules.md): every person is an Israeli woman of 40–60 with an Israeli look.
-  const castingCheck = (w, prompt, age) => {
+  // Casting (brand/image-rules.md): every person is an attractive, well-groomed Israeli woman of about 45–58, ages varied
+  // across the page, never styled old. Prompts written under the previous rules (candid smartphone style line, 40–60)
+  // only get a warning, so existing products keep validating.
+  const CASTING_SENTENCE = /Casting: a Jewish Israeli woman[^]*?with the same look\./g;
+  const STYLE_SENTENCE = /Photo style: a natural, flattering lifestyle photo[^]*?not like AI\./g;
+  const LEGACY_STYLE = /Photo style: an ordinary candid photo taken on a smartphone/;
+  const AVOID = /\b(elderly|old (?:woman|lady)|senior|frail|gr[ae]y[- ]haired|(?:gr[ae]y|silver|white) hair|wrinkl(?:ed|es)|aged face|grandmother|grandma|granny|retiree|airbrush(?:ed)?|flawless skin|plastic skin|beauty filter)\b/gi;
+  const negated = (text, at) => /\b(?:no|not|nor|without|never)\b[^.,;:]*$/i.test(text.slice(Math.max(0, at - 40), at));
+  const castingAges = []; // ages of the 05 prompts with a person, for the variation check
+  const castingCheck = (w, prompt, age, { collect = false } = {}) => {
     if (!/\b(woman|women|she|her|man|people|hands?)\b/i.test(prompt)) return; // product-only shot
+    const legacy = LEGACY_STYLE.test(prompt);
     if (!/Casting: a Jewish Israeli woman/.test(prompt)) err(`${w}: prompt misses the casting line (brand/image-rules.md → Casting)`);
-    if (!/Photo style: an ordinary candid photo taken on a smartphone/.test(prompt)) err(`${w}: prompt misses the photo-style line (brand/image-rules.md → Echte foto, geen AI-look)`);
-    if (/golden hour|string lights|dreamy|bokeh(?! ,| no)/i.test(prompt.replace(/no creamy bokeh|no golden-hour glow/g, ''))) warn(`${w}: AI-looking light/background wording (golden hour, string lights, dreamy, bokeh)`);
+    if (legacy) warn(`${w}: prompt uses the old casting rules (candid smartphone style line) — new prompts use the current casting and photo-style lines from brand/image-rules.md`);
+    else if (!/Photo style: a natural, flattering lifestyle photo/.test(prompt)) err(`${w}: prompt misses the photo-style line (brand/image-rules.md → Echte, flatterende foto)`);
+    const free = prompt.replace(CASTING_SENTENCE, ' ').replace(STYLE_SENTENCE, ' ');
+    if (/golden hour|string lights|dreamy|bokeh(?! ,| no)/i.test(free.replace(/no creamy bokeh|no golden-hour glow/g, ''))) warn(`${w}: AI-looking light/background wording (golden hour, string lights, dreamy, bokeh)`);
     const ages = [...`${age ?? ''} ${prompt}`.matchAll(/\b(?:about|aged|approximately|around)\s+(\d{2})\b/gi)].map((m) => +m[1]);
-    ages.filter((n) => n < 40 || n > 60).forEach((n) => err(`${w}: age ${n} is outside 40–60`));
-    if (/\b(blonde?|platinum|silver hair|scandinavian|nordic)\b/i.test(prompt.replace(/Not Northern European, not blonde/g, '')))
+    const [lo, hi] = legacy ? [40, 60] : [45, 60];
+    ages.filter((n) => n < lo || n > hi).forEach((n) => err(`${w}: age ${n} is outside ${lo}–${hi}`));
+    const own = Number.parseInt(age, 10);
+    if (collect && !legacy && Number.isFinite(own)) castingAges.push(own);
+    if (/\b(blonde?|platinum|silver hair|scandinavian|nordic)\b/i.test(free.replace(/Not Northern European, not blonde/g, '')))
       err(`${w}: casting describes a non-Israeli look (blonde/silver/Nordic)`);
+    if (!legacy)
+      for (const m of free.matchAll(AVOID))
+        if (!negated(free, m.index)) err(`${w}: "${m[0]}" styles the model old or unflattering — see the avoid list in brand/image-rules.md → Casting`);
   };
 
   // A review on the page must be a real testimonial; in Hebrew its text must be a verbatim excerpt of it.
@@ -378,12 +395,14 @@ export function validateProduct(slug, { stage } = {}) {
       else {
         if (!/no text/i.test(x.prompt)) warn(`${w}: prompt should say "No text in image"`);
         if (!/reference/i.test(x.prompt)) warn(`${w}: prompt should require consistency with the reference images`);
-        castingCheck(w, x.prompt, x.fields?.age);
+        castingCheck(w, x.prompt, x.fields?.age, { collect: true });
       }
       if (!x.reference_images?.length) warn(`${w}: no reference_images`);
       if (x.aspect_ratio !== '4:5') err(`${w}: aspect_ratio must be 4:5 — every GemPage photo has the same portrait format (mobile)`);
       if (/\bmirror|reflection\b/i.test(`${x.fields?.action ?? ''} ${x.fields?.framing ?? ''}`)) warn(`${w}: mirrors/reflections tend to duplicate the person — avoid them`);
     });
+    if (castingAges.length >= 3 && Math.max(...castingAges) - Math.min(...castingAges) < 5)
+      warn(`05-image-prompts: all model ages lie within 5 years (${castingAges.join(', ')}) — vary them across 45–50, 50–55 and 55–60`);
   }
 
   // ---------- 07 creatives + 08 ugc ----------

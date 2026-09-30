@@ -10,7 +10,7 @@ probleem-hook in het Hebreeuws, hooguit enkele voordelen + het aanbod).
 - Niet simpelweg GemPage-foto's hergebruiken. Wel dezelfde angle.
 - Per creative: `concept`, `visual`, `product_color` (inputkleur),
   `format` (4:5 feed / 9:16 stories), `prompt` (production-ready, zelfde realisme- en
-  consistentie- en castingregels (Israëlische vrouwen 40–60) als de GemPage-prompts; bij tekst-overlay: tekst wordt in de editor toegevoegd,
+  consistentie- en castingregels (aantrekkelijke, verzorgde Israëlische vrouwen van ~45–58, gevarieerd; zie `brand/image-rules.md` → Casting) als de GemPage-prompts; bij tekst-overlay: tekst wordt in de editor toegevoegd,
   "no text in image" in de prompt).
 
 ## UGC

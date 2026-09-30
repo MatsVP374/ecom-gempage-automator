@@ -158,7 +158,10 @@ De validator houdt de workflow eerlijk:
 - beelden: elk beeld een doel en een blok, alle 13 promptvelden, geen regeneratie van bestaande foto's
 - reviews: elke review hoort bij een echte testimonial en is in het Hebreeuws een letterlijk fragment ervan;
   meldt hoeveel voordeelfoto's nog geen review hebben
-- casting: Israëlische vrouwen van 40–60 in elke prompt met een persoon
+- casting: elke prompt met een persoon heeft de casting- en stijlzin uit `brand/image-rules.md`; leeftijd 45–60
+  (fout daarbuiten), gevarieerd over de pagina (waarschuwing als alle leeftijden binnen 5 jaar liggen); geen
+  woorden uit de vermijdlijst (elderly, grey/silver hair, grandmother, wrinkled, …). Oude prompts met de vorige
+  stijlzin geven alleen een waarschuwing (vorige regels, 40–60).
 - Hebreeuwse spelling (zie Spellingcheck) en natuurlijkheid: vertaalde/AI-formuleringen en herhaalde zinsbouw als
   warning; zonder verse natuurlijkheidsronde (6c) weigert `--stage upload` de upload
 - RTL: `node scripts/rtl-audit.js <slug>` rendert de pagina (desktop + mobiel) zoals GemPages en controleert de RTL-layout

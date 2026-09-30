@@ -1,7 +1,7 @@
 # Klant
 
 ## Wie
-Israëlische vrouw van ongeveer **45–65+**. De sterkste copy spreekt vooral vrouwen van **50–65** aan. Op foto's: Israëlische vrouwen van **40–60** met een echt Israëlische look (zie `brand/image-rules.md` → Casting).
+Israëlische vrouw van ongeveer **45–65+**. De sterkste copy spreekt vooral vrouwen van **50–65** aan. Op foto's: aantrekkelijke, verzorgde Israëlische vrouwen van ongeveer **45–58** (gevarieerd per foto) met een echt Israëlische, mediterrane look — volwassen en herkenbaar, maar jeugdig en aspirationeel: zo wil zij er zelf uitzien. Nooit oudelijk, broos of 'oma' (zie `brand/image-rules.md` → Casting).
 
 Ze wil er nog steeds vrouwelijk, elegant en goed gekleed uitzien, maar is **niet meer bereid comfort
 op te offeren** alleen omdat iets er goed uitziet. Ze is een volwassen vrouw die weet wat ze mooi
